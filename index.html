@@ -757,14 +757,9 @@
         // Immediately show the pic as your message (lightweight & intuitive)
         addMessage('user', currentText, { image: dataUrl });
 
-        // Right away: analyze and generate the gay vibe + captions + visuals
-        const typing = showTyping();
-        // Small delay feels like "thinking" but quick
-        await new Promise(r => setTimeout(r, 400));
-
+        // Directly captionize and gayify - no extra press needed
         const { reaction, captions } = await processGayImage(dataUrl);
         const gayified = await gayifyImage(dataUrl);
-        removeTyping(typing);
 
         addMessage('bot', reaction, { image: dataUrl, gayifiedImage: gayified, captions });
 
