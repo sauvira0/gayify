@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💅 gayify • make it gayer</title>
+  <meta name="description" content="A hilarious chatbot that turns anything you say into the most extra, gay, yassified version possible. Periodt.">
+  <meta name="theme-color" content="#c026ff">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="gayify • make anything gayer 💅">
+  <meta property="og:description" content="Type anything. Watch it become fabulously extra. A silly fun gay translator chatbot.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sauvira0.github.io/gayify/">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="gayify • make it gayer 💅">
+  <meta name="twitter:description" content="The chatbot that makes everything you say 1000% gayer. YASSS.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap');
+    
+    :root {
+      --pink: #ff69b4;
+    }
+    
+    body {
+      font-family: 'Inter', system_ui, sans-serif;
+    }
+    
+    .title-font {
+      font-family: 'Playfair Display', Georgia, serif;
+      letter-spacing: -0.02em;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .message-bubble {
+      max-width: 75%;
+      padding: 14px 18px;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    .user-bubble {
+      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      color: white;
+      border-radius: 20px 20px 4px 20px;
+      box-shadow: 0 4px 15px -2px rgb(255 105 180 / 0.3);
+    }
+
+    .bot-bubble {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f1e7ff;
+      border-radius: 20px 20px 20px 4px;
+    }
+
+    .message-bubble p {
+      margin: 0;
+    }
+
+    .gay-text {
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .chat-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 105, 180, 0.3) transparent;
+    }
+
+    .chat-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 105, 180, 0.3);
+      border-radius: 20px;
+    }
+
+    .pride-gradient {
+      background: linear-gradient(90deg, #ff69b4, #c026ff, #6366f1, #ff69b4);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pride-shift 3s linear infinite;
+    }
+
+    @keyframes pride-shift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .sparkle {
+      animation: sparkle-anim 1.2s ease forwards;
+    }
+
+    .flair {
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+
+    .chat-input {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .chat-input:focus {
+      box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .gay-button {
+      background: linear-gradient(135deg, #ff69b4, #c026ff);
+      transition: all 0.2s ease;
+    }
+    
+    .gay-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgb(255 105 180 / 0.3), 0 4px 6px -4px rgb(255 105 180 / 0.3);
+    }
+
+    .gay-button:active {
+      transform: scale(0.985);
+    }
+
+    .message-enter {
+      animation: message-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes message-pop {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .bot-avatar {
+      background: linear-gradient(135deg, #c026ff, #ff69b4);
+      box-shadow: 0 0 0 3px rgba(192, 38, 255, 0.2);
+    }
+
+    .typing-dot {
+      animation: typing-bounce 1.2s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+    .rainbow-text {
+      background: linear-gradient(to right, #ff69b4, #c026ff, #6366f1, #ff69b4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: pride-shift 2.5s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-white min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-[720px]">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3 px-1">
+      <div class="flex items-center gap-x-3">
+        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-3xl shadow-inner"
+             style="background: linear-gradient(135deg, #ff69b4, #c026ff);">
+          💅
+        </div>
+        <div>
+          <h1 class="text-4xl font-semibold title-font tracking-tighter">
+            <span class="rainbow-text">gayify</span>
+          </h1>
+          <p class="text-[10px] text-pink-300/70 -mt-1 tracking-[1px]">MAKE IT GAYER™</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-x-2">
+        <div onclick="clearChat()" 
+             class="flex items-center gap-x-2 px-4 py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-sm cursor-pointer transition-colors active:bg-white/15">
+          <i class="fa-solid fa-trash text-xs"></i>
+          <span class="hidden sm:inline text-xs font-medium text-white/70">CLEAR</span>
+        </div>
+        <div onclick="window.open('https://github.com/sauvira0/gayify', '_blank')" 
+             class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15">
+          <i class="fa-brands fa-github"></i>
+          <span class="hidden sm:inline text-[10px] font-medium text-white/70">SOURCE</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-2xl bg-white/5 text-[10px] font-mono tracking-widest text-pink-300/60 border border-white/10">
+          100% CERTIFIED
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Card -->
+    <div class="chat-container rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col" style="height: 620px;">
+      
+      <!-- Chat Header -->
+      <div class="px-6 py-4 border-b border-white/10 bg-black/20 flex items-center gap-x-3">
+        <div class="bot-avatar w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-lg shadow-inner">
+          👑
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-x-2">
+            <span class="font-semibold text-lg tracking-tight">Miss Thing</span>
+            <div class="px-2 py-px rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold tracking-wider">ONLINE</div>
+          </div>
+          <div class="text-xs text-white/50 -mt-0.5">Your personal gay translator</div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] text-pink-400/70 font-medium">SLAY MODE</div>
+          <div class="flex gap-px justify-end mt-0.5">
+            <div class="w-2 h-2 rounded-full bg-pink-400"></div>
+            <div class="w-2 h-2 rounded-full bg-violet-400"></div>
+            <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div id="messages" 
+           class="chat-scroll flex-1 p-6 space-y-5 overflow-y-auto bg-zinc-950/60">
+        <!-- Messages injected by JS -->
+      </div>
+
+      <!-- Input Area -->
+      <div class="p-4 border-t border-white/10 bg-black/30">
+        <div class="flex items-center gap-x-3">
+          <div class="flex-1 relative">
+            <input 
+              id="message-input"
+              type="text" 
+              class="chat-input w-full bg-zinc-900 border border-white/10 focus:border-pink-400/60 placeholder:text-white/30 text-white rounded-3xl py-3.5 px-5 text-[15px] outline-none"
+              placeholder="Say something... I'll make it gayer 💅"
+              autocomplete="off"
+              onkeypress="if (event.key === 'Enter') sendMessage()">
+          </div>
+          
+          <button onclick="sendMessage()"
+                  class="gay-button flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-3xl text-white shadow-lg active:scale-[0.96]">
+            <i class="fa-solid fa-paper-plane text-lg"></i>
+          </button>
+        </div>
+        
+        <div class="flex justify-center gap-x-1.5 mt-3">
+          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">I had a rough day</div>
+          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">This meeting is so boring</div>
+          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">I love my cat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-3 px-1 flex flex-col items-center gap-y-1">
+      <p class="text-[10px] text-white/30 tracking-wide">Everything you say, but gayer. Not liable for sudden dance breaks. 🌈</p>
+      <p class="text-[10px] text-white/25">open source • hosted on GitHub Pages</p>
+    </div>
+  </div>
+
+  <script>
+    // Tailwind script
+    function initTailwind() {
+      document.documentElement.style.setProperty('--accent-pink', '#ff69b4');
+    }
+
+    // Gayify function - the heart of the app
+    function gayify(text) {
+      if (!text || !text.trim()) {
+        return "Don't leave your bestie hanging, spill the tea! ☕💅";
+      }
+
+      let msg = text.trim();
+      const lower = msg.toLowerCase();
+
+      // Special fun responses for common phrases
+      const specialCases = [
+        { test: /\b(hello|hi|hey|sup|yo)\b/i, reply: "Hiiiiii bestie!!! Oh my god you're here, the girls are so back 💖✨" },
+        { test: /\b(how are you|how r u|hru)\b/i, reply: "I'm thriving, I'm serving, I'm literally unstoppable today queen. How are WE doing? 🌈" },
+        { test: /\b(thank|thanks|thx)\b/i, reply: "No YOU thank you for being the moment. We're all just trying to match your energy 💅" },
+        { test: /\b(love you|i love you)\b/i, reply: "STOP IT I love YOU more, this is not a competition but I am winning 💖💖💖" },
+        { test: /\b(sorry)\b/i, reply: "Absolutely NOT. We don't do apologies here, we do growth and main character moments only ✨" },
+        { test: /\b(good morning|gm)\b/i, reply: "Good morning to you too, gorgeous. The sun is literally gagging at how good you look today 🌅💅" },
+        { test: /\b(good night|gn|sleep)\b/i, reply: "Sleep tight angel, dream of fierce outfits and dramatic entrances. I'll be right here when you wake up 💖" },
+        { test: /\b(bored|boring)\b/i, reply: "Bored? Honey we are about to change that narrative. What's the tea? I'm ready to make it ICONIC" },
+        { test: /\b(tired|exhausted)\b/i, reply: "Oh the way you're giving exhausted but still that face card? We are resting and looking expensive while we do it 🛌💅" },
+        { test: /\b(hungry)\b/i, reply: "Same bestie. Should we go get something that slays? I'm thinking pasta and a little drama on the side 🍝" },
+      ];
+
+      for (const sc of specialCases) {
+        if (sc.test.test(lower)) {
+          return sc.reply;
+        }
+      }
+
+      // Word replacements for flamboyance
+      const replacements = {
+        "i am": "I am literally",
+        "im ": "I'm so ",
+        "i'm ": "I'm so ",
+        "i love": "I'm obsessed with",
+        "good": "fabulous",
+        "great": "iconic",
+        "nice": "slaying",
+        "cool": "serving",
+        "bad": "not the vibe",
+        "terrible": "a whole tragedy",
+        "amazing": "fierce",
+        "beautiful": "stunning",
+        "pretty": "gorgeous",
+        "happy": "thriving",
+        "sad": "in my feels",
+        "angry": "serving rage",
+        "love": "obsessed with",
+        "hate": "cannot with",
+        "like": "am living for",
+        "friend": "bestie",
+        "friends": "besties",
+        "yes": "YASSS",
+        "yeah": "YASSS",
+        "no": "absolutely not",
+        "maybe": "the girls are fighting",
+        "work": "the grind (but make it fashion)",
+        "meeting": "gathering of the girls",
+        "day": "whole moment",
+        "night": "vibe",
+        "fun": "a serve",
+        "boring": "giving nothing",
+        "tired": "depleted but still that girl",
+      };
+
+      let transformed = msg;
+
+      // Apply replacements (case insensitive but try to preserve some casing)
+      Object.keys(replacements).forEach(key => {
+        const regex = new RegExp(`\\b${key}\\b`, 'gi');
+        transformed = transformed.replace(regex, (match) => {
+          const replacement = replacements[key];
+          // Simple title case preservation for start of sentence-ish
+          if (match[0] === match[0].toUpperCase() && replacement[0]) {
+            return replacement[0].toUpperCase() + replacement.slice(1);
+          }
+          return replacement;
+        });
+      });
+
+      // Fun prefix pool
+      const prefixes = [
+        "Oh honey, ",
+        "Bestie, ",
+        "YASSS queen, ",
+        "The way ",
+        "Not you ",
+        "Periodt — ",
+        "Girllll, ",
+        "Oh my god, ",
+        "Literally, ",
+        "Slay, ",
+        "The girls and I agree: ",
+        "Hold on — ",
+        "Excuse me while I scream, ",
+      ];
+
+      // Flair suffixes
+      const suffixes = [
+        " and that's on periodt.",
+        ", I am obsessed.",
+        ". We love to see it.",
+        " 💅",
+        ". Slay.",
+        ", get into it!",
+        " and the girls are gagged.",
+        ". The tea is piping.",
+        ", queen!",
+        ". Main character behavior.",
+        " — we are so back.",
+      ];
+
+      // Choose prefix
+      let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+
+      // Avoid awkward double "the way the way"
+      if (transformed.toLowerCase().startsWith('the way') && prefix.toLowerCase().includes('the way')) {
+        prefix = "Bestie, ";
+      }
+
+      let result = prefix + transformed;
+
+      // Random intensifiers
+      const intensifiers = ["literally ", "so ", "giving ", "major ", "iconic ", "fierce ", "unhinged ", "expensive "];
+      if (Math.random() > 0.55) {
+        const int = intensifiers[Math.floor(Math.random() * intensifiers.length)];
+        // Insert after first few words if possible
+        const parts = result.split(' ');
+        if (parts.length > 2) {
+          const insertAt = Math.min(2, Math.floor(parts.length * 0.3));
+          parts.splice(insertAt, 0, int);
+          result = parts.join(' ');
+        } else {
+          result = result.replace(/^(\S+\s+\S+\s*)/, `$1${int}`);
+        }
+      }
+
+      // Add a suffix
+      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+      result = result.trim() + suffix;
+
+      // Emoji sprinkles (gay classic)
+      const emojis = ["💅", "✨", "🌈", "💖", "🔥", "👑", "💃🏻", "🕺", "🌸", "🍒", "🦄", "💎"];
+      let emojiStr = "";
+      if (Math.random() > 0.4) emojiStr += " " + emojis[Math.floor(Math.random() * emojis.length)];
+      if (Math.random() > 0.75) emojiStr += emojis[Math.floor(Math.random() * emojis.length)];
+      if (Math.random() > 0.92) emojiStr += " " + emojis[Math.floor(Math.random() * emojis.length)];
+
+      result += emojiStr;
+
+      // Dramatic capitalization for emphasis sometimes
+      if (Math.random() > 0.8) {
+        result = result.replace(/\b(giving|serving|obsessed|slay|fierce|iconic|thriving)\b/gi, (m) => m.toUpperCase());
+      }
+
+      // Final polish: make sure it ends cute
+      return result.trim();
+    }
+
+    // Chat state
+    let messages = [];
+
+    function addMessage(role, text, isGayified = false) {
+      const container = document.getElementById('messages');
+      
+      const messageEl = document.createElement('div');
+      messageEl.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
+      
+      if (role === 'user') {
+        messageEl.innerHTML = `
+          <div class="max-w-[75%]">
+            <div class="user-bubble message-bubble text-[15px]">
+              <p>${escapeHtml(text)}</p>
+            </div>
+            <div class="text-right pr-1 mt-0.5">
+              <span class="text-[9px] text-white/30">you</span>
+            </div>
+          </div>
+        `;
+      } else {
+        const copyBtn = `
+          <button onclick="copyGayVersion(this)" 
+                  class="ml-2 text-pink-400/60 hover:text-pink-400 transition-colors text-xs flex items-center gap-x-1 opacity-70 hover:opacity-100">
+            <i class="fa-solid fa-copy text-[10px]"></i>
+            <span class="hidden sm:inline text-[9px]">copy</span>
+          </button>
+        `;
+        
+        messageEl.innerHTML = `
+          <div class="flex gap-x-3 max-w-[82%]">
+            <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
+              👑
+            </div>
+            <div class="flex-1">
+              <div class="bot-bubble message-bubble gay-text text-[15px]">
+                <p>${escapeHtml(text)}</p>
+              </div>
+              <div class="flex items-center pl-1 mt-0.5 gap-x-2">
+                <span class="text-[9px] text-pink-300/60 font-medium">miss thing</span>
+                ${copyBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      container.appendChild(messageEl);
+      container.scrollTop = container.scrollHeight;
+      
+      // Save to state
+      messages.push({ role, text, isGayified });
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showTyping() {
+      const container = document.getElementById('messages');
+      const typingEl = document.createElement('div');
+      typingEl.id = 'typing-indicator';
+      typingEl.className = `flex justify-start`;
+      typingEl.innerHTML = `
+        <div class="flex gap-x-3 max-w-[82%]">
+          <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
+            👑
+          </div>
+          <div class="flex-1">
+            <div class="bot-bubble message-bubble flex items-center gap-x-[5px] py-[13px]">
+              <div class="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot"></div>
+              <div class="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot"></div>
+              <div class="w-1.5 h-1.5 bg-white/60 rounded-full typing-dot"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      container.appendChild(typingEl);
+      container.scrollTop = container.scrollHeight;
+      return typingEl;
+    }
+
+    function removeTyping(typingEl) {
+      if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('message-input');
+      const value = input.value.trim();
+      
+      if (!value) return;
+      
+      // Add user message
+      addMessage('user', value);
+      input.value = '';
+      
+      // Show typing
+      const typing = showTyping();
+      
+      // Simulate "thinking" for comedy effect
+      await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
+      
+      removeTyping(typing);
+      
+      // Generate gay version
+      const gayResponse = gayify(value);
+      
+      // Add bot message
+      addMessage('bot', gayResponse, true);
+      
+      // Occasionally add a second spicy follow-up (10% chance)
+      if (Math.random() < 0.1) {
+        setTimeout(() => {
+          const followUps = [
+            "Now tell me the real tea though...",
+            "But like... was it giving?",
+            "Be honest, did you eat?",
+            "I'm living for this, go on.",
+            "And what did she say??"
+          ];
+          const follow = followUps[Math.floor(Math.random() * followUps.length)];
+          addMessage('bot', follow);
+        }, 1100);
+      }
+    }
+
+    function copyGayVersion(btn) {
+      const bubble = btn.closest('.flex').querySelector('.bot-bubble p');
+      if (!bubble) return;
+      
+      const text = bubble.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check text-[10px]"></i> <span class="hidden sm:inline text-[9px]">copied!</span>`;
+        btn.disabled = true;
+        
+        setTimeout(() => {
+          btn.innerHTML = original;
+          btn.disabled = false;
+        }, 1600);
+      }).catch(() => {
+        // fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+    }
+
+    function useQuickPrompt(n) {
+      const prompts = [
+        "I had a rough day",
+        "This meeting is so boring",
+        "I love my cat"
+      ];
+      const input = document.getElementById('message-input');
+      input.value = prompts[n];
+      
+      // Send immediately for convenience
+      setTimeout(() => {
+        sendMessage();
+      }, 60);
+    }
+
+    function clearChat() {
+      const container = document.getElementById('messages');
+      container.innerHTML = '';
+      messages = [];
+      
+      // Re-add welcome
+      setTimeout(() => {
+        addWelcomeMessage();
+      }, 120);
+    }
+
+    function addWelcomeMessage() {
+      const container = document.getElementById('messages');
+      
+      // If already has messages, don't spam
+      if (container.children.length > 0) return;
+      
+      const welcome = document.createElement('div');
+      welcome.className = `flex justify-start message-enter`;
+      welcome.innerHTML = `
+        <div class="flex gap-x-3 max-w-[82%]">
+          <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
+            👑
+          </div>
+          <div class="flex-1">
+            <div class="bot-bubble message-bubble gay-text text-[15px]">
+              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag.</p>
+            </div>
+            <div class="pl-1 mt-0.5">
+              <span class="text-[9px] text-pink-300/60 font-medium">miss thing</span>
+            </div>
+          </div>
+        </div>
+      `;
+      container.appendChild(welcome);
+      container.scrollTop = container.scrollHeight;
+      
+      messages.push({ role: 'bot', text: "Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag." });
+    }
+
+    function addEasterEggHint() {
+      // subtle, only once
+      setTimeout(() => {
+        const container = document.getElementById('messages');
+        if (container.children.length < 3) {
+          // user hasn't chatted much
+        }
+      }, 28000);
+    }
+
+    // Keyboard shortcut hint
+    function setupKeyboard() {
+      document.addEventListener('keydown', function(e) {
+        if (e.metaKey && e.key === "/") {
+          e.preventDefault();
+          document.getElementById('message-input').focus();
+        }
+      });
+      
+      // Focus input on load
+      setTimeout(() => {
+        const inp = document.getElementById('message-input');
+        if (inp) inp.focus();
+      }, 650);
+    }
+
+    // Initialize everything
+    function init() {
+      initTailwind();
+      
+      const container = document.getElementById('messages');
+      
+      // Seed the chat with welcome
+      addWelcomeMessage();
+      
+      // Fun little second message after delay (only if still empty-ish)
+      setTimeout(() => {
+        if (container.children.length === 1) {
+          // Add a cute prompt
+          const tip = document.createElement('div');
+          tip.className = `flex justify-start opacity-60`;
+          tip.innerHTML = `
+            <div class="flex gap-x-3 max-w-[82%] pl-11">
+              <div class="text-[10px] text-white/40">try: "i made pasta" or "my boss is annoying"</div>
+            </div>
+          `;
+          container.appendChild(tip);
+          container.scrollTop = container.scrollHeight;
+        }
+      }, 5200);
+      
+      setupKeyboard();
+      addEasterEggHint();
+      
+      // Bonus: press "?" to get a random gayified example
+      document.addEventListener('keypress', function(e) {
+        if (e.key === '?' && document.activeElement.tagName === "BODY") {
+          e.preventDefault();
+          const examples = [
+            "I just got a promotion",
+            "My dog ate my homework",
+            "This coffee tastes weird",
+            "I finally cleaned my room"
+          ];
+          const ex = examples[Math.floor(Math.random() * examples.length)];
+          const input = document.getElementById('message-input');
+          input.value = ex;
+          sendMessage();
+        }
+      });
+      
+      // Dev console joke
+      console.log('%c[ gayify ] The gayest chatbot in the land. Everything is gayer now.', 'color:#ff69b4');
+    }
+
+    // Boot
+    window.onload = init;
+  </script>
+</body>
+</html>
