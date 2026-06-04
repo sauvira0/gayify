@@ -43,6 +43,7 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 - Typing indicator + slight delay for comedic timing
 - Fully responsive (works great on phone too)
 - Keyboard friendly (press Enter to send, focus is automatic)
+- **NEW: Upload a picture** (click the image icon or drag & drop) — ChakkaAI reads the colors, pose & vibe client-side and serves you flamboyant gay captions + a styled "gayified" version of your pic. Pure fun, zero data leaves your device.
 
 ## Examples
 
