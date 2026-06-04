@@ -208,6 +208,16 @@
       </div>
       
       <div class="flex items-center gap-x-1 sm:gap-x-2">
+        <div id="slay-score" class="flex items-center gap-x-1 px-2 py-1 rounded-2xl bg-white/5 text-xs font-mono text-pink-300/80 border border-white/10 cursor-help" title="Your session slay points. Level up for titles!">
+          <span class="hidden xs:inline">SLAY</span>
+          <span id="slay-value">0</span>
+          <span id="slay-level" class="text-[10px] text-pink-400/60"></span>
+        </div>
+        <div onclick="toggleVoice()" 
+             class="flex items-center gap-x-1 px-2 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Toggle ChakkaAI voice (sassy mode)">
+          <i class="fa-solid fa-microphone" id="voice-icon"></i>
+          <span class="hidden sm:inline text-[10px] font-medium text-white/70">VOICE</span>
+        </div>
         <div onclick="clearChat()" 
              class="flex items-center gap-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-sm cursor-pointer transition-colors active:bg-white/15">
           <i class="fa-solid fa-trash text-xs"></i>
@@ -217,6 +227,11 @@
              class="flex items-center gap-x-1.5 px-3.5 py-1.5 rounded-2xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-xs cursor-pointer transition-colors active:bg-pink-500/40">
           <i class="fa-solid fa-share-alt"></i>
           <span class="hidden sm:inline text-[10px] font-semibold">SHARE</span>
+        </div>
+        <div onclick="createMemeCard()" 
+             class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Export this gay moment as a meme card">
+          <i class="fa-solid fa-download"></i>
+          <span class="hidden sm:inline text-[10px] font-medium text-white/70">MEME</span>
         </div>
         <div onclick="window.open('https://github.com/sauvira0/gayify', '_blank')" 
              class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15">
@@ -632,6 +647,81 @@
       addMessage('bot', reaction + " ✨ (fresh version)", { image: lastUploadedImage, gayifiedImage: gayified, captions });
     }
 
+    async function createMemeCard() {
+      // Find the last meaningful bot message (text or image)
+      let lastBot = null;
+      for (let i = messages.length - 1; i >= 0; i--) {
+        if (messages[i].role === 'bot' && (messages[i].text || messages[i].image)) {
+          lastBot = messages[i];
+          break;
+        }
+      }
+      if (!lastBot) {
+        showToast("Say or upload something first, queen!");
+        return;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 800;
+      canvas.height = lastBot.image ? 600 : 400;
+      const ctx = canvas.getContext('2d');
+
+      // Background gradient (pride vibes)
+      const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, '#2a0a2a');
+      grad.addColorStop(0.5, '#1a0520');
+      grad.addColorStop(1, '#0f0015');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Border
+      ctx.strokeStyle = '#ff69b4';
+      ctx.lineWidth = 12;
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+      // Title
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 36px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('💅 GAYIFY CERTIFIED 💅', canvas.width / 2, 60);
+
+      let y = 100;
+
+      if (lastBot.image) {
+        const img = new Image();
+        await new Promise(r => { img.onload = r; img.src = lastBot.gayifiedImage || lastBot.image; });
+        const maxH = 280;
+        const scale = Math.min(1, maxH / img.height);
+        const w = img.width * scale;
+        const h = img.height * scale;
+        const x = (canvas.width - w) / 2;
+        ctx.drawImage(img, x, y, w, h);
+        y += h + 30;
+      }
+
+      // The gay text
+      ctx.fillStyle = '#ff69b4';
+      ctx.font = 'bold 22px system-ui, sans-serif';
+      const lines = (lastBot.text || 'This moment is serving everything').match(/.{1,45}/g) || [];
+      lines.forEach((line, i) => {
+        ctx.fillText(line, canvas.width / 2, y + i * 28);
+      });
+      y += lines.length * 28 + 40;
+
+      // Footer
+      ctx.fillStyle = '#c026ff';
+      ctx.font = '16px system-ui, sans-serif';
+      ctx.fillText('ChakkaAI • Make It Gayer™ • gayify', canvas.width / 2, canvas.height - 40);
+
+      // Download
+      const link = document.createElement('a');
+      link.download = 'gayify-moment.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      showToast("Meme card downloaded! Post it everywhere 💖");
+    }
+
     function triggerImageUpload() {
       const input = document.getElementById('image-input');
       if (input) input.click();
@@ -697,6 +787,16 @@
     let messages = [];
     let lastUploadedImage = null; // for regenerate feature
     let attachedImage = null; // for sending text + pic together
+    let slayScore = 0;
+    let voiceEnabled = false;
+    const gayLevels = [
+      { min: 0, title: "Baby Gay", emoji: "🌱" },
+      { min: 5, title: "Twink in Training", emoji: "💅" },
+      { min: 15, title: "Fierce Queen", emoji: "👑" },
+      { min: 30, title: "Mother of the House", emoji: "🏠" },
+      { min: 50, title: "Legendary Cuntress", emoji: "🔥" },
+      { min: 80, title: "Gay Icon", emoji: "🌈" }
+    ];
 
     function addMessage(role, text = '', optionsOrIsGayified = false) {
       const container = document.getElementById('messages');
@@ -790,6 +890,18 @@
       
       // Save to state (supports images + captions for the session)
       messages.push({ role, text, image, gayifiedImage, captions, isGayified });
+
+      // Increment slay score for addictiveness
+      if (role === 'user' || role === 'bot') {
+        updateSlayScore(role === 'user' ? 1 : 2); // bot responses give more points
+      }
+
+      // Voice mode - speak bot lines with sass
+      if (role === 'bot' && text) {
+        setTimeout(() => {
+          if (typeof speakText === 'function') speakText(text);
+        }, 250);
+      }
     }
 
     function escapeHtml(str) {
@@ -867,6 +979,7 @@
         removeTyping(typing);
         
         addMessage('bot', reaction, { image: picData, gayifiedImage: gayified, captions });
+        if (Math.random() > 0.5) triggerConfetti();
         return;
       }
       
@@ -940,6 +1053,11 @@
       const container = document.getElementById('messages');
       container.innerHTML = '';
       messages = [];
+      slayScore = 0;
+      lastUploadedImage = null;
+      attachedImage = null;
+      updateSlayScore(0);
+      clearAttachedImage();
       
       // Re-add welcome
       setTimeout(() => {
@@ -1015,6 +1133,119 @@
       messages.push({ role: 'bot', text: "Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag." });
     }
 
+    function updateSlayScore(increment = 1) {
+      slayScore += increment;
+      const valueEl = document.getElementById('slay-value');
+      const levelEl = document.getElementById('slay-level');
+      if (valueEl) valueEl.textContent = slayScore;
+
+      // Find current level
+      let level = gayLevels[0];
+      for (let i = gayLevels.length - 1; i >= 0; i--) {
+        if (slayScore >= gayLevels[i].min) {
+          level = gayLevels[i];
+          break;
+        }
+      }
+
+      if (levelEl) levelEl.textContent = `${level.emoji} ${level.title}`;
+
+      // Level up effect
+      if (slayScore > 0 && (slayScore % 10 === 0 || slayScore === 5 || slayScore === 15 || slayScore === 30 || slayScore === 50 || slayScore === 80)) {
+        showToast(`${level.emoji} Level up! You're now ${level.title}!`);
+        triggerConfetti();
+        playSlayChime();
+      }
+    }
+
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      const icon = document.getElementById('voice-icon');
+      if (icon) {
+        icon.classList.toggle('text-pink-400', voiceEnabled);
+        icon.classList.toggle('fa-microphone', !voiceEnabled);
+        icon.classList.toggle('fa-microphone-slash', voiceEnabled);
+      }
+      showToast(voiceEnabled ? "Voice on, darling. ChakkaAI is ready to read you to filth 💅" : "Voice off. Back to text, queen.");
+    }
+
+    function speakText(text) {
+      if (!voiceEnabled || !('speechSynthesis' in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.15; // slightly fast for sass
+      utterance.pitch = 1.4; // higher for camp
+      utterance.volume = 0.9;
+      // Try to pick a fun voice if available
+      const voices = speechSynthesis.getVoices();
+      const preferred = voices.find(v => /female|woman|samantha|karen|en-us/i.test(v.name)) || voices[0];
+      if (preferred) utterance.voice = preferred;
+      speechSynthesis.speak(utterance);
+    }
+
+    function triggerConfetti() {
+      const colors = ['#ff69b4', '#c026ff', '#6366f1', '#ff1493', '#ffd700'];
+      const confettiContainer = document.createElement('div');
+      confettiContainer.style.position = 'fixed';
+      confettiContainer.style.top = '0';
+      confettiContainer.style.left = '0';
+      confettiContainer.style.width = '100%';
+      confettiContainer.style.height = '100%';
+      confettiContainer.style.pointerEvents = 'none';
+      confettiContainer.style.zIndex = '9999';
+      document.body.appendChild(confettiContainer);
+
+      for (let i = 0; i < 80; i++) {
+        const piece = document.createElement('div');
+        piece.style.position = 'absolute';
+        piece.style.width = '8px';
+        piece.style.height = '8px';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.top = '-10px';
+        piece.style.opacity = Math.random() + 0.5;
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confettiContainer.appendChild(piece);
+
+        const duration = 1500 + Math.random() * 2000;
+        const angle = Math.random() * 60 + 30; // downward angle
+        piece.animate([
+          { transform: `translateY(0) rotate(0deg)`, opacity: piece.style.opacity },
+          { transform: `translateY(${window.innerHeight + 50}px) rotate(${Math.random() * 720 - 360}deg)`, opacity: 0 }
+        ], {
+          duration: duration,
+          easing: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+        }).onfinish = () => piece.remove();
+      }
+
+      setTimeout(() => confettiContainer.remove(), 4000);
+    }
+
+    function playSlayChime() {
+      try {
+        const audio = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 880;
+        gain.gain.value = 0.3;
+        const filter = audio.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 1200;
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audio.destination);
+        osc.start();
+        setTimeout(() => {
+          osc.frequency.value = 1320;
+          setTimeout(() => {
+            gain.gain.value = 0;
+            osc.stop();
+          }, 180);
+        }, 120);
+      } catch(e) {}
+    }
+
     function addEasterEggHint() {
       // subtle, only once
       setTimeout(() => {
@@ -1088,6 +1319,17 @@
       
       // Dev console joke
       console.log('%c[ gayify ] The gayest chatbot in the land. Everything is gayer now.', 'color:#ff69b4');
+
+      // Init slay score display
+      updateSlayScore(0);
+      const voiceIconInit = document.getElementById('voice-icon');
+      if (voiceIconInit) {
+        voiceIconInit.classList.add('fa-microphone');
+      }
+      // Preload voices for speech
+      if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices();
+      }
 
       // Wire up image upload input (for the camera button)
       const imageInput = document.getElementById('image-input');
