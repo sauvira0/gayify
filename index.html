@@ -637,6 +637,26 @@
       if (input) input.click();
     }
 
+    function setAttachedImage(dataUrl) {
+      attachedImage = dataUrl;
+      const preview = document.getElementById('image-preview');
+      const thumb = document.getElementById('preview-thumb');
+      if (preview && thumb) {
+        thumb.src = dataUrl;
+        preview.classList.remove('hidden');
+        preview.classList.add('flex');
+      }
+    }
+
+    function clearAttachedImage() {
+      attachedImage = null;
+      const preview = document.getElementById('image-preview');
+      if (preview) {
+        preview.classList.remove('flex');
+        preview.classList.add('hidden');
+      }
+    }
+
     async function handleImageUpload(file) {
       if (!file || !file.type.startsWith('image/')) {
         showToast("Only image files please, bestie!");
@@ -650,26 +670,15 @@
       const reader = new FileReader();
       reader.onload = async (e) => {
         let dataUrl = e.target.result;
-
-        // resize to keep memory reasonable + faster
         dataUrl = await resizeImage(dataUrl, 650);
         lastUploadedImage = dataUrl;
 
-        // Support typing a message + pic (e.g. "new outfit" + photo)
-        const currentText = document.getElementById('message-input').value.trim();
-        addMessage('user', currentText, { image: dataUrl });
-        document.getElementById('message-input').value = '';
+        // Set as attached (shows preview) so user can type a message with the pic
+        setAttachedImage(dataUrl);
 
-        // Show typing while "analyzing" the vibe
-        const typing = showTyping();
-        await new Promise(r => setTimeout(r, 650));
-
-        const { reaction, captions } = await processGayImage(dataUrl);
-        const gayified = await gayifyImage(dataUrl); // actual visual transformation
-        removeTyping(typing);
-
-        // Bot responds with original + gayified pic + captions
-        addMessage('bot', reaction, { image: dataUrl, gayifiedImage: gayified, captions });
+        // Clear the file input
+        const input = document.getElementById('image-input');
+        if (input) input.value = '';
       };
       reader.readAsDataURL(file);
     }
@@ -838,24 +847,37 @@
       const input = document.getElementById('message-input');
       const value = input.value.trim();
       
-      if (!value) return;
+      const hasImage = !!attachedImage;
+      if (!value && !hasImage) return;
       
-      // Add user message
-      addMessage('user', value);
+      // Add user message (text + optional attached pic)
+      addMessage('user', value, hasImage ? { image: attachedImage } : {});
+      
+      // If there was an attached pic, trigger the full gayification flow
+      if (hasImage) {
+        const picData = attachedImage;
+        clearAttachedImage();
+        input.value = '';
+        
+        const typing = showTyping();
+        await new Promise(r => setTimeout(r, 650));
+        
+        const { reaction, captions } = await processGayImage(picData);
+        const gayified = await gayifyImage(picData);
+        removeTyping(typing);
+        
+        addMessage('bot', reaction, { image: picData, gayifiedImage: gayified, captions });
+        return;
+      }
+      
       input.value = '';
       
-      // Show typing
+      // Normal text gayify
       const typing = showTyping();
-      
-      // Simulate "thinking" for comedy effect
       await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
-      
       removeTyping(typing);
       
-      // Generate gay version
       const gayResponse = gayify(value);
-      
-      // Add bot message
       addMessage('bot', gayResponse, { isGayified: true });
       
       // Occasionally add a second spicy follow-up (10% chance)
