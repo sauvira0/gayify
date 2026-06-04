@@ -263,6 +263,13 @@
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
         <div class="flex items-center gap-x-3">
+          <!-- Image attachment preview (shows when pic is attached to text) -->
+          <div id="image-preview" class="hidden items-center gap-x-2 bg-white/5 rounded-2xl p-1 pr-2 text-xs">
+            <img id="preview-thumb" class="w-8 h-8 rounded-xl object-cover" alt="preview">
+            <span class="text-pink-300/80">pic attached</span>
+            <button onclick="clearAttachedImage()" class="text-pink-400 hover:text-white px-1">×</button>
+          </div>
+
           <div class="flex-1 relative">
             <input 
               id="message-input"
@@ -557,6 +564,74 @@
       return { reaction, captions, vibe };
     }
 
+    // Real visual gayification using Canvas - makes the picture itself more "gay"
+    async function gayifyImage(originalDataUrl, seed = Math.random()) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+
+          // Base vibrant gay filter - push towards pink/purple/rainbow energy
+          const hueShift = (seed * 40) - 10; // -10 to +30 deg towards pink-purple
+          ctx.filter = `saturate(1.9) hue-rotate(${hueShift}deg) contrast(1.15) brightness(1.08)`;
+          ctx.drawImage(img, 0, 0);
+
+          // Add some sparkles / glitter for extra gay
+          ctx.filter = 'none';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          const sparkleCount = 25 + Math.floor(seed * 15);
+          for (let i = 0; i < sparkleCount; i++) {
+            const x = (Math.sin(i * 12.3 + seed) * 0.5 + 0.5) * canvas.width;
+            const y = (Math.cos(i * 7.7 + seed * 2) * 0.5 + 0.5) * canvas.height;
+            const size = 1.5 + Math.random() * 3.5;
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fill();
+
+            // tiny cross sparkle
+            if (i % 3 === 0) {
+              ctx.fillRect(x - size*1.8, y-0.8, size*3.6, 1.6);
+              ctx.fillRect(x-0.8, y - size*1.8, 1.6, size*3.6);
+            }
+          }
+
+          // Optional subtle rainbow edge glow
+          ctx.strokeStyle = `hsla(${(seed*80 + 300) % 360}, 90%, 75%, 0.6)`;
+          ctx.lineWidth = Math.max(4, canvas.width * 0.012);
+          ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+          // Draw a cute caption overlay at the bottom if we want
+          // (we'll mostly rely on text captions, but a small tag)
+          ctx.fillStyle = 'rgba(255, 105, 180, 0.85)';
+          ctx.font = `${Math.max(14, canvas.height * 0.045)}px system-ui, sans-serif`;
+          ctx.textAlign = 'center';
+          const tag = 'GAYIFIED 💅';
+          const textWidth = ctx.measureText(tag).width + 20;
+          ctx.fillRect(canvas.width/2 - textWidth/2, canvas.height - 32, textWidth, 26);
+          ctx.fillStyle = 'white';
+          ctx.fillText(tag, canvas.width / 2, canvas.height - 14);
+
+          resolve(canvas.toDataURL('image/jpeg', 0.9));
+        };
+        img.src = originalDataUrl;
+      });
+    }
+
+    async function regenerateLastGayPic() {
+      if (!lastUploadedImage) {
+        showToast("Upload a pic first to regenerate!");
+        return;
+      }
+      const typing = showTyping();
+      const { reaction, captions } = await processGayImage(lastUploadedImage);
+      const gayified = await gayifyImage(lastUploadedImage, Math.random());
+      removeTyping(typing);
+      addMessage('bot', reaction + " ✨ (fresh version)", { image: lastUploadedImage, gayifiedImage: gayified, captions });
+    }
+
     function triggerImageUpload() {
       const input = document.getElementById('image-input');
       if (input) input.click();
@@ -578,19 +653,23 @@
 
         // resize to keep memory reasonable + faster
         dataUrl = await resizeImage(dataUrl, 650);
+        lastUploadedImage = dataUrl;
 
-        // Add as user "message" (image only)
-        addMessage('user', '', { image: dataUrl });
+        // Support typing a message + pic (e.g. "new outfit" + photo)
+        const currentText = document.getElementById('message-input').value.trim();
+        addMessage('user', currentText, { image: dataUrl });
+        document.getElementById('message-input').value = '';
 
         // Show typing while "analyzing" the vibe
         const typing = showTyping();
         await new Promise(r => setTimeout(r, 650));
 
         const { reaction, captions } = await processGayImage(dataUrl);
+        const gayified = await gayifyImage(dataUrl); // actual visual transformation
         removeTyping(typing);
 
-        // Bot responds with the gayified pic + captions
-        addMessage('bot', reaction, { image: dataUrl, captions });
+        // Bot responds with original + gayified pic + captions
+        addMessage('bot', reaction, { image: dataUrl, gayifiedImage: gayified, captions });
       };
       reader.readAsDataURL(file);
     }
@@ -607,6 +686,8 @@
     // - Refreshing the page also starts fresh.
     // This guarantees privacy and ephemerality when you share https://sauvira0.github.io/gayify/ with friends.
     let messages = [];
+    let lastUploadedImage = null; // for regenerate feature
+    let attachedImage = null; // for sending text + pic together
 
     function addMessage(role, text = '', optionsOrIsGayified = false) {
       const container = document.getElementById('messages');
@@ -617,7 +698,7 @@
       } else if (typeof optionsOrIsGayified === 'boolean') {
         options.isGayified = optionsOrIsGayified;
       }
-      const { image = null, captions = null, isGayified = false } = options;
+      const { image = null, gayifiedImage = null, captions = null, isGayified = false } = options;
 
       const messageEl = document.createElement('div');
       messageEl.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} message-enter`;
@@ -650,7 +731,13 @@
         `;
         
         let inner = '';
-        if (image) {
+        if (image && gayifiedImage) {
+          // Show original + gayified side by side for maximum drama
+          inner += `<div class="grid grid-cols-2 gap-2 mb-2">`;
+          inner += `<div><div class="text-[9px] text-white/50 mb-0.5">Original</div><img src="${image}" class="w-full rounded-xl" style="max-height:160px; object-fit:cover;" alt="original"></div>`;
+          inner += `<div><div class="text-[9px] text-pink-300/80 mb-0.5">Gayified 💅</div><img src="${gayifiedImage}" class="w-full rounded-xl gay-image" style="max-height:160px; object-fit:cover;" alt="gayified"></div>`;
+          inner += `</div>`;
+        } else if (image) {
           inner += `<img src="${image}" class="max-w-full rounded-2xl mb-2 gay-image" style="max-height:220px; object-fit:cover;" alt="gayified pic">`;
         }
         if (text) {
@@ -667,6 +754,7 @@
               </button>
             </div>`;
           });
+          inner += `<button onclick="regenerateLastGayPic()" class="mt-1 text-[10px] px-2 py-0.5 bg-pink-500/20 hover:bg-pink-500/30 rounded-full text-pink-300/90">🔄 Regenerate gay version</button>`;
           inner += `</div>`;
         }
         
@@ -692,7 +780,7 @@
       container.scrollTop = container.scrollHeight;
       
       // Save to state (supports images + captions for the session)
-      messages.push({ role, text, image, captions, isGayified });
+      messages.push({ role, text, image, gayifiedImage, captions, isGayified });
     }
 
     function escapeHtml(str) {
