@@ -190,6 +190,11 @@
           <i class="fa-solid fa-trash text-xs"></i>
           <span class="hidden sm:inline text-xs font-medium text-white/70">CLEAR</span>
         </div>
+        <div onclick="shareWithFriends()" 
+             class="flex items-center gap-x-1.5 px-3.5 py-1.5 rounded-2xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-xs cursor-pointer transition-colors active:bg-pink-500/40">
+          <i class="fa-solid fa-share-alt"></i>
+          <span class="hidden sm:inline text-[10px] font-semibold">SHARE</span>
+        </div>
         <div onclick="window.open('https://github.com/sauvira0/gayify', '_blank')" 
              class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15">
           <i class="fa-brands fa-github"></i>
@@ -613,6 +618,45 @@
       }, 120);
     }
 
+    function shareWithFriends() {
+      const url = "https://sauvira0.github.io/gayify/";
+      const shareText = `You HAVE to try this 😂💅 Type anything and it makes it gayer than a pride parade: ${url}`;
+      
+      navigator.clipboard.writeText(shareText).then(() => {
+        showToast("Link copied! Send it to the girls 💖");
+      }).catch(() => {
+        // Fallback for older browsers or when clipboard is blocked
+        const textarea = document.createElement("textarea");
+        textarea.value = shareText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showToast("Link copied! Send it to the girls 💖");
+      });
+    }
+
+    function showToast(message) {
+      // Remove any existing toast
+      const existing = document.getElementById("gayify-toast");
+      if (existing) existing.remove();
+
+      const toast = document.createElement("div");
+      toast.id = "gayify-toast";
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-3 rounded-3xl bg-zinc-900 border border-pink-500/30 text-pink-300 text-sm flex items-center gap-x-2 shadow-2xl z-[999] message-enter`;
+      toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" class="ml-2 text-pink-400/60 hover:text-pink-400">×</button>
+      `;
+      
+      document.body.appendChild(toast);
+
+      // Auto dismiss after 3.5s
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 3500);
+    }
+
     function addWelcomeMessage() {
       const container = document.getElementById('messages');
       
@@ -628,7 +672,7 @@
           </div>
           <div class="flex-1">
             <div class="bot-bubble message-bubble gay-text text-[15px]">
-              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag.</p>
+              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag. (Hit SHARE and send it to the group chat 😉)</p>
             </div>
             <div class="pl-1 mt-0.5">
               <span class="text-[9px] text-pink-300/60 font-medium">miss thing</span>
