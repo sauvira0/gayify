@@ -30,6 +30,8 @@
     
     body {
       font-family: 'Inter', system_ui, sans-serif;
+      background: linear-gradient(135deg, #1a0a1f 0%, #0f0515 50%, #1a0a1f 100%);
+      background-attachment: fixed;
     }
     
     .title-font {
@@ -38,30 +40,63 @@
     }
 
     .chat-container {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4), 
+                  0 0 0 1px rgba(255, 105, 180, 0.1) inset;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .chat-container:hover {
+      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.5), 
+                  0 0 0 1px rgba(255, 105, 180, 0.2) inset;
     }
 
     .message-bubble {
       max-width: 75%;
-      padding: 14px 18px;
-      line-height: 1.4;
+      padding: 16px 20px;
+      line-height: 1.45;
       position: relative;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .user-bubble {
-      background: linear-gradient(135deg, #ff69b4, #ff1493);
+      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #c026ff 100%);
       color: white;
-      border-radius: 20px 20px 4px 20px;
-      box-shadow: 0 4px 15px -2px rgb(255 105 180 / 0.3);
+      border-radius: 22px 22px 6px 22px;
+      box-shadow: 0 10px 25px -8px rgb(255 105 180 / 0.4),
+                  0 4px 6px -1px rgb(0 0 0 / 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .user-bubble::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+      );
+      transform: skewX(-25deg);
+      animation: shimmer 2.5s infinite;
     }
 
     .bot-bubble {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #f1e7ff;
-      border-radius: 20px 20px 20px 4px;
+      border-radius: 22px 22px 22px 6px;
+      box-shadow: 0 8px 20px -6px rgb(0 0 0 / 0.3),
+                  0 0 0 1px rgba(192, 38, 255, 0.1) inset;
+      backdrop-filter: blur(12px);
     }
 
     .message-bubble p {
@@ -70,19 +105,19 @@
 
     .gay-text {
       font-weight: 500;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     .chat-scroll {
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 105, 180, 0.3) transparent;
+      scrollbar-color: rgba(255, 105, 180, 0.4) transparent;
     }
 
     .chat-scroll::-webkit-scrollbar {
-      width: 6px;
+      width: 5px;
     }
     .chat-scroll::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 105, 180, 0.3);
+      background-color: rgba(255, 105, 180, 0.4);
       border-radius: 20px;
     }
 
@@ -110,35 +145,58 @@
 
     .chat-input {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255,255,255,0.08);
     }
     
     .chat-input:focus {
-      box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.15);
+      box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.2);
       transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
     }
 
     .gay-button {
       background: linear-gradient(135deg, #ff69b4, #c026ff);
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .gay-button::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%; height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.3),
+        transparent
+      );
+      transition: 0.6s;
+    }
+    
+    .gay-button:hover::before {
+      left: 250%;
     }
     
     .gay-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgb(255 105 180 / 0.3), 0 4px 6px -4px rgb(255 105 180 / 0.3);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 25px -8px rgb(255 105 180 / 0.4), 
+                  0 8px 10px -6px rgb(255 105 180 / 0.3);
     }
 
     .gay-button:active {
-      transform: scale(0.985);
+      transform: scale(0.98);
     }
 
     .message-enter {
-      animation: message-pop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: message-pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     @keyframes message-pop {
       from {
         opacity: 0;
-        transform: translateY(12px) scale(0.96);
+        transform: translateY(16px) scale(0.94);
       }
       to {
         opacity: 1;
@@ -148,7 +206,13 @@
 
     .bot-avatar {
       background: linear-gradient(135deg, #c026ff, #ff69b4);
-      box-shadow: 0 0 0 3px rgba(192, 38, 255, 0.2);
+      box-shadow: 0 0 0 4px rgba(192, 38, 255, 0.25),
+                  0 4px 12px -2px rgb(0 0 0 / 0.2);
+      transition: transform 0.2s ease;
+    }
+    
+    .bot-avatar:hover {
+      transform: scale(1.1) rotate(5deg);
     }
 
     .typing-dot {
@@ -164,6 +228,18 @@
       -webkit-text-fill-color: transparent;
       background-size: 200% auto;
       animation: pride-shift 2.5s linear infinite;
+    }
+
+    .slay-progress {
+      height: 4px;
+      background: linear-gradient(to right, #ff69b4, #c026ff);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 999px;
+    }
+
+    .premium-shadow {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
+                  0 8px 10px -6px rgb(0 0 0 / 0.1);
     }
 
     /* Mobile-friendly dynamic height (accounts for keyboard, notches, browser UI) */
@@ -188,9 +264,50 @@
       box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
       filter: saturate(1.35) hue-rotate(8deg) brightness(1.03);
     }
+
+    .premium-shadow {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
+                  0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    /* World-class premium touches */
+    .chat-container {
+      position: relative;
+    }
+    
+    .chat-container::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px; right: -1px; bottom: -1px;
+      background: linear-gradient(45deg, #ff69b4, #c026ff, #6366f1, #ff69b4);
+      background-size: 300% 300%;
+      border-radius: 24px;
+      z-index: -1;
+      opacity: 0.08;
+      animation: pride-shift 8s ease infinite;
+      pointer-events: none;
+    }
+
+    .legendary {
+      animation: legendary-glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes legendary-glow {
+      from { box-shadow: 0 0 15px #ffd700, 0 0 30px #ff69b4; }
+      to { box-shadow: 0 0 25px #ffd700, 0 0 50px #c026ff; }
+    }
+
+    .gay-moment {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .gay-moment:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
   </style>
 </head>
-<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center">
+<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%);">
   <div class="w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px]">
     <!-- Header -->
     <div class="flex items-center justify-between mb-2 sm:mb-3 px-1">
@@ -208,10 +325,17 @@
       </div>
       
       <div class="flex items-center gap-x-1 sm:gap-x-2">
-        <div id="slay-score" class="flex items-center gap-x-1 px-2 py-1 rounded-2xl bg-white/5 text-xs font-mono text-pink-300/80 border border-white/10 cursor-help" title="Your session slay points. Level up for titles!">
-          <span class="hidden xs:inline">SLAY</span>
-          <span id="slay-value">0</span>
-          <span id="slay-level" class="text-[10px] text-pink-400/60"></span>
+        <div id="slay-score" onclick="showSlayRecap()" class="flex flex-col items-end gap-y-0.5 px-3 py-1.5 rounded-2xl bg-white/5 text-xs font-mono text-pink-300/80 border border-white/10 cursor-pointer hover:bg-white/10 transition-colors" title="Click for session recap & share">
+          <div class="flex items-center gap-x-1.5">
+            <span class="text-[10px] text-pink-400/70">SLAY</span>
+            <span id="slay-value" class="font-semibold text-base text-white">0</span>
+          </div>
+          <div class="flex items-center gap-x-1 w-full">
+            <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+              <div id="slay-progress" class="slay-progress h-full w-0" style="width: 0%"></div>
+            </div>
+            <span id="slay-level" class="text-[10px] text-pink-400/80 font-medium whitespace-nowrap">Baby Gay</span>
+          </div>
         </div>
         <div onclick="toggleVoice()" 
              class="flex items-center gap-x-1 px-2 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Toggle ChakkaAI voice (sassy mode)">
@@ -277,6 +401,25 @@
 
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
+        <!-- Group fun bar for WhatsApp squad - highly addictive for groups -->
+        <div class="flex items-center justify-center gap-x-1.5 mb-2 text-[10px] flex-wrap">
+          <button onclick="startGroupChallenge()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
+            <i class="fa-solid fa-tachometer-alt text-[9px]"></i>
+            <span>Group Challenge</span>
+          </button>
+          <button onclick="randomGroupDare()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
+            <i class="fa-solid fa-bolt text-[9px]"></i>
+            <span>Random Dare</span>
+          </button>
+          <button onclick="showSlayRecap()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
+            <i class="fa-solid fa-share text-[9px]"></i>
+            <span>WhatsApp Recap</span>
+          </button>
+          <div id="group-counter" class="px-2 py-0.5 text-white/50 text-[9px] flex items-center gap-x-1">
+            👯 <span id="friend-count">14</span> friends gayifying rn
+          </div>
+        </div>
+        
         <!-- Clear, lightweight call to action for pic upload -->
         <div class="text-center text-[11px] text-pink-300/70 mb-2 tracking-wide">
           📸 <span class="font-medium">Upload pic</span> to instantly get the gay vibe + captions 💅
@@ -320,7 +463,7 @@
     <div class="text-center mt-3 px-1 flex flex-col items-center gap-y-1">
       <p class="text-[10px] text-white/30 tracking-wide">Everything you say, but gayer. Not liable for sudden dance breaks. 🌈</p>
       <p class="text-[10px] text-pink-400/70 font-medium">Private to this tab only • No login • Nothing saved • Close tab = chat gone forever</p>
-      <p class="text-[10px] text-white/25">open source • hosted on GitHub Pages</p>
+      <p class="text-[10px] text-white/25">open source • hosted on GitHub Pages • perfect for WhatsApp squads 👯‍♀️</p>
     </div>
   </div>
 
@@ -725,6 +868,63 @@
       showToast("Meme card downloaded! Post it everywhere 💖");
     }
 
+    function startGroupChallenge() {
+      showToast("Group Challenge started! First to 25 slay points wins the crown 👑");
+      // Reset or boost for fun
+      if (slayScore < 5) slayScore = 5;
+      updateSlayScore(0);
+      // Add a fun group message
+      setTimeout(() => {
+        addMessage('bot', gayify("The whole WhatsApp group is watching... let's see who slays hardest!"));
+      }, 800);
+    }
+
+    function randomGroupDare() {
+      const dares = [
+        "Gayify the last thing your boss said",
+        "Upload a pic of your outfit and rate it",
+        "Text your crush something extra and report back",
+        "Describe your day in the gayest way possible",
+        "Find the most boring object in the room and make it iconic"
+      ];
+      const dare = dares[Math.floor(Math.random() * dares.length)];
+      showToast(`Dare accepted! ${dare} 💅`);
+      setTimeout(() => {
+        addMessage('bot', gayify(`The girls dare you: ${dare}. Do it and tag the group!`));
+      }, 600);
+    }
+
+    // The Girls React - occasional group chat energy for WhatsApp squad feel
+    function theGirlsReact() {
+      if (Math.random() > 0.65) return; // 35% chance after bot messages
+      const girls = [
+        "Miss Delulu", "The Table", "Your Ex", "The Leather Daddy", "Soft Femme Energy", "The Whole Squad"
+      ];
+      const reactions = [
+        "PERIODT sis, we are living",
+        "Not her serving this level of main character",
+        "The girls are GAGGED",
+        "This is why we can't have nice things (in the best way)",
+        "Iconic behavior only",
+        "We're all taking notes rn"
+      ];
+      const girl = girls[Math.floor(Math.random() * girls.length)];
+      const reaction = reactions[Math.floor(Math.random() * reactions.length)];
+      setTimeout(() => {
+        const msg = document.createElement('div');
+        msg.className = `flex justify-start message-enter opacity-80`;
+        msg.innerHTML = `
+          <div class="flex gap-x-2 max-w-[80%] pl-2">
+            <div class="text-[10px] text-pink-400/60 mt-1">👯‍♀️ ${girl}</div>
+            <div class="bot-bubble message-bubble text-[13px] py-2 px-3">${gayify(reaction)}</div>
+          </div>
+        `;
+        const container = document.getElementById('messages');
+        container.appendChild(msg);
+        container.scrollTop = container.scrollHeight;
+      }, 1200);
+    }
+
     function triggerImageUpload() {
       const input = document.getElementById('image-input');
       if (input) input.click();
@@ -756,6 +956,7 @@
 
         // Immediately show the pic as your message (lightweight & intuitive)
         addMessage('user', currentText, { image: dataUrl });
+        playSendSound();
 
         // Directly captionize and gayify - no extra press needed
         const { reaction, captions } = await processGayImage(dataUrl);
@@ -811,7 +1012,7 @@
       if (role === 'user') {
         let inner = '';
         if (image) {
-          inner += `<img src="${image}" class="max-w-full rounded-2xl mb-1" style="max-height:200px; object-fit:cover;" alt="uploaded pic">`;
+          inner += `<img src="${image}" class="max-w-full rounded-2xl mb-1 gay-moment" style="max-height:200px; object-fit:cover;" alt="uploaded pic">`;
         }
         if (text) {
           inner += `<p>${escapeHtml(text)}</p>`;
@@ -839,11 +1040,11 @@
         if (image && gayifiedImage) {
           // Show original + gayified side by side for maximum drama
           inner += `<div class="grid grid-cols-2 gap-2 mb-2">`;
-          inner += `<div><div class="text-[9px] text-white/50 mb-0.5">Original</div><img src="${image}" class="w-full rounded-xl" style="max-height:160px; object-fit:cover;" alt="original"></div>`;
-          inner += `<div><div class="text-[9px] text-pink-300/80 mb-0.5">Gayified 💅</div><img src="${gayifiedImage}" class="w-full rounded-xl gay-image" style="max-height:160px; object-fit:cover;" alt="gayified"></div>`;
+          inner += `<div><div class="text-[9px] text-white/50 mb-0.5">Original</div><img src="${image}" class="w-full rounded-xl gay-moment" style="max-height:160px; object-fit:cover;" alt="original"></div>`;
+          inner += `<div><div class="text-[9px] text-pink-300/80 mb-0.5">Gayified 💅</div><img src="${gayifiedImage}" class="w-full rounded-xl gay-image gay-moment" style="max-height:160px; object-fit:cover;" alt="gayified"></div>`;
           inner += `</div>`;
         } else if (image) {
-          inner += `<img src="${image}" class="max-w-full rounded-2xl mb-2 gay-image" style="max-height:220px; object-fit:cover;" alt="gayified pic">`;
+          inner += `<img src="${image}" class="max-w-full rounded-2xl mb-2 gay-image gay-moment" style="max-height:220px; object-fit:cover;" alt="gayified pic">`;
         }
         if (text) {
           inner += `<p>${escapeHtml(text)}</p>`;
@@ -897,6 +1098,19 @@
         setTimeout(() => {
           if (typeof speakText === 'function') speakText(text);
         }, 250);
+      }
+
+      // The Girls react for group WhatsApp energy (addictive chaos)
+      if (role === 'bot') {
+        setTimeout(() => {
+          if (typeof theGirlsReact === 'function') theGirlsReact();
+        }, 1400);
+      }
+
+      // Legendary glow for high slay scores (rare & addictive)
+      if (role === 'bot' && slayScore > 40 && Math.random() > 0.65) {
+        const bubble = messageEl.querySelector('.bot-bubble');
+        if (bubble) bubble.classList.add('legendary');
       }
     }
 
@@ -960,6 +1174,7 @@
       // Normal text-only gayify (pics are handled instantly on upload for simplicity & speed)
       addMessage('user', value);
       input.value = '';
+      playSendSound();
       
       const typing = showTyping();
       await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
@@ -1110,18 +1325,29 @@
       slayScore += increment;
       const valueEl = document.getElementById('slay-value');
       const levelEl = document.getElementById('slay-level');
+      const progressEl = document.getElementById('slay-progress');
+      
       if (valueEl) valueEl.textContent = slayScore;
 
       // Find current level
+      let currentLevelIndex = 0;
       let level = gayLevels[0];
       for (let i = gayLevels.length - 1; i >= 0; i--) {
         if (slayScore >= gayLevels[i].min) {
           level = gayLevels[i];
+          currentLevelIndex = i;
           break;
         }
       }
 
       if (levelEl) levelEl.textContent = `${level.emoji} ${level.title}`;
+
+      // Progress bar (relative to next level or max)
+      if (progressEl) {
+        const nextLevel = gayLevels[currentLevelIndex + 1] || { min: slayScore + 50 };
+        const progress = Math.min(100, ((slayScore - level.min) / (nextLevel.min - level.min)) * 100);
+        progressEl.style.width = `${progress}%`;
+      }
 
       // Level up effect
       if (slayScore > 0 && (slayScore % 10 === 0 || slayScore === 5 || slayScore === 15 || slayScore === 30 || slayScore === 50 || slayScore === 80)) {
@@ -1129,6 +1355,14 @@
         triggerConfetti();
         playSlayChime();
       }
+    }
+
+    function showSlayRecap() {
+      const recap = `My ChakkaAI Slay Session: ${slayScore} points! Currently ${document.getElementById('slay-level').textContent}. Gayify your life too: https://sauvira0.github.io/gayify/ 💅`;
+      navigator.clipboard.writeText(recap).then(() => {
+        showToast("Session recap copied! Perfect for WhatsApp 👑");
+      });
+      triggerConfetti();
     }
 
     function toggleVoice() {
@@ -1219,6 +1453,27 @@
       } catch(e) {}
     }
 
+    function playSendSound() {
+      try {
+        const audio = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audio.createOscillator();
+        const gain = audio.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.value = 660;
+        gain.gain.value = 0.15;
+        osc.connect(gain);
+        gain.connect(audio.destination);
+        osc.start();
+        setTimeout(() => {
+          osc.frequency.value = 880;
+          setTimeout(() => {
+            gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.3);
+            osc.stop();
+          }, 80);
+        }, 60);
+      } catch(e) {}
+    }
+
     function addEasterEggHint() {
       // subtle, only once
       setTimeout(() => {
@@ -1303,6 +1558,16 @@
       if ('speechSynthesis' in window) {
         speechSynthesis.getVoices();
       }
+
+      // Fake but addictive group counter for WhatsApp squad energy
+      setInterval(() => {
+        const countEl = document.getElementById('friend-count');
+        if (countEl) {
+          let num = parseInt(countEl.textContent) || 12;
+          num = Math.max(8, Math.min(28, num + (Math.random() > 0.5 ? 1 : -1)));
+          countEl.textContent = num;
+        }
+      }, 18000);
 
       // Wire up image upload input (for the camera button)
       const imageInput = document.getElementById('image-input');
