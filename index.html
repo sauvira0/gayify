@@ -31,9 +31,10 @@
     body {
       font-family: 'Inter', system_ui, sans-serif;
       background: 
-        radial-gradient(circle at 20% 15%, rgba(192, 38, 255, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 85%, rgba(255, 105, 180, 0.06) 0%, transparent 50%),
-        linear-gradient(180deg, #0a050f 0%, #120a18 50%, #0a050f 100%);
+        radial-gradient(circle at 15% 10%, rgba(212, 175, 55, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 90%, rgba(192, 38, 255, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.03) 0%, transparent 70%),
+        linear-gradient(180deg, #050308 0%, #0f0a14 35%, #050308 100%);
       background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -45,27 +46,27 @@
     }
 
     .chat-container {
-      background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(32px);
-      -webkit-backdrop-filter: blur(32px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.065);
+      backdrop-filter: blur(36px);
+      -webkit-backdrop-filter: blur(36px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       box-shadow: 
-        0 40px 80px -20px rgb(0 0 0 / 0.6),
-        0 0 0 1px rgba(255, 105, 180, 0.2) inset,
-        inset 0 1px 0 rgba(255,255,255,0.15),
-        0 0 120px -30px rgba(192, 38, 255, 0.15);
-      transition: all 0.4s cubic-bezier(0.23, 1.0, 0.32, 1);
+        0 45px 90px -25px rgb(0 0 0 / 0.65),
+        0 0 0 1px rgba(212, 175, 55, 0.12) inset,
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        0 0 140px -35px rgba(192, 38, 255, 0.18);
+      transition: all 0.45s cubic-bezier(0.23, 1.0, 0.32, 1);
       position: relative;
       overflow: hidden;
-      border-radius: 24px;
+      border-radius: 26px;
     }
     
     @media (max-width: 640px) {
       .chat-container {
-        border-radius: 20px;
+        border-radius: 22px;
         box-shadow: 
-          0 25px 50px -12px rgb(0 0 0 / 0.5),
-          0 0 0 1px rgba(255, 105, 180, 0.15) inset;
+          0 28px 55px -15px rgb(0 0 0 / 0.55),
+          0 0 0 1px rgba(212, 175, 55, 0.1) inset;
       }
     }
     
@@ -74,18 +75,28 @@
       position: absolute;
       inset: 0;
       background: 
-        linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%),
-        linear-gradient(45deg, rgba(192,38,255,0.04) 0%, transparent 60%);
+        linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 45%),
+        linear-gradient(45deg, rgba(212, 175, 55, 0.035) 0%, transparent 55%),
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.015) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .chat-container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(212,175,55,0.015) 0%, transparent 25%, transparent 75%, rgba(255,105,180,0.015) 100%);
       pointer-events: none;
       z-index: 1;
     }
     
     .chat-container:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       box-shadow: 
-        0 50px 100px -25px rgb(0 0 0 / 0.65),
-        0 0 0 1px rgba(255, 105, 180, 0.3) inset,
-        0 0 150px -40px rgba(192, 38, 255, 0.2);
+        0 55px 110px -28px rgb(0 0 0 / 0.7),
+        0 0 0 1px rgba(212, 175, 55, 0.22) inset,
+        0 0 160px -40px rgba(192, 38, 255, 0.22);
     }
 
     .message-bubble {
@@ -98,12 +109,14 @@
     }
 
     .user-bubble {
-      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 40%, #c026ff 100%);
+      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 35%, #c026ff 100%);
       color: white;
-      border-radius: 24px 24px 8px 24px;
-      box-shadow: 0 12px 30px -10px rgb(255 105 180 / 0.5),
-                  0 6px 12px -2px rgb(0 0 0 / 0.2),
-                  inset 0 1px 0 rgba(255,255,255,0.3);
+      border-radius: 26px 26px 10px 26px;
+      box-shadow: 
+        0 14px 35px -12px rgb(255 105 180 / 0.55),
+        0 8px 16px -3px rgb(0 0 0 / 0.25),
+        inset 0 1.5px 0 rgba(255,255,255,0.4),
+        inset 0 -1px 0 rgba(0,0,0,0.15);
       position: relative;
       overflow: hidden;
     }
@@ -111,28 +124,30 @@
     .user-bubble::after {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 35%;
-      height: 200%;
+      top: -60%;
+      left: -60%;
+      width: 40%;
+      height: 220%;
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255,255,255,0.35),
+        rgba(255,255,255,0.4),
         transparent
       );
-      transform: skewX(-25deg);
-      animation: shimmer 2.8s infinite;
+      transform: skewX(-28deg);
+      animation: shimmer 2.6s infinite;
     }
 
     .bot-bubble {
-      background: rgba(30, 15, 35, 0.75);
-      border: 1px solid rgba(255, 105, 180, 0.25);
+      background: rgba(28, 14, 32, 0.82);
+      border: 1px solid rgba(212, 175, 55, 0.2);
       color: #f8e8ff;
-      border-radius: 24px 24px 24px 8px;
-      box-shadow: 0 10px 25px -8px rgb(0 0 0 / 0.4),
-                  0 0 0 1px rgba(192, 38, 255, 0.15) inset;
-      backdrop-filter: blur(16px);
+      border-radius: 26px 26px 26px 10px;
+      box-shadow: 
+        0 12px 28px -10px rgb(0 0 0 / 0.45),
+        0 0 0 1px rgba(212, 175, 55, 0.12) inset,
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      backdrop-filter: blur(18px);
     }
 
     .message-bubble p {
@@ -299,16 +314,22 @@
     }
 
     .gay-image {
-      border: 4px solid #ff69b4;
-      box-shadow: 0 0 20px rgba(255, 105, 180, 0.6),
-                  0 10px 30px -10px rgb(0 0 0 / 0.4);
-      filter: saturate(1.45) hue-rotate(12deg) brightness(1.05) contrast(1.05);
-      transition: filter 0.4s ease, transform 0.3s ease;
+      border: 5px solid #d4af37;
+      box-shadow: 
+        0 0 25px rgba(212, 175, 55, 0.5),
+        0 0 45px rgba(255, 105, 180, 0.35),
+        0 12px 35px -12px rgb(0 0 0 / 0.45);
+      filter: saturate(1.55) hue-rotate(10deg) brightness(1.06) contrast(1.08);
+      transition: all 0.45s cubic-bezier(0.23, 1.0, 0.32, 1);
     }
     
     .gay-image:hover {
-      filter: saturate(1.6) hue-rotate(20deg) brightness(1.08);
-      transform: scale(1.015);
+      filter: saturate(1.7) hue-rotate(18deg) brightness(1.09) contrast(1.1);
+      transform: scale(1.02);
+      box-shadow: 
+        0 0 30px rgba(212, 175, 55, 0.65),
+        0 0 55px rgba(255, 105, 180, 0.45),
+        0 15px 40px -15px rgb(0 0 0 / 0.5);
     }
 
     .premium-shadow {
@@ -447,14 +468,16 @@
 
       <!-- Messages -->
       <div id="messages" 
-           class="chat-scroll flex-1 p-3 sm:p-5 space-y-3.5 sm:space-y-5 overflow-y-auto bg-[#0a050f]/40" style="scroll-behavior: smooth;">
+           class="chat-scroll flex-1 p-3 sm:p-5 space-y-3.5 sm:space-y-5 overflow-y-auto bg-[#0a050f]/40 relative" style="scroll-behavior: smooth;">
+        <!-- Subtle luxury pattern overlay for rich visuals -->
+        <div class="absolute inset-0 pointer-events-none opacity-[0.035] bg-[radial-gradient(#d4af37_0.8px,transparent_1px)] bg-[length:5px_5px]"></div>
         <!-- Messages injected by JS -->
       </div>
 
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
         <!-- Personal vibe bar - for your private slay journey -->
-        <div class="flex items-center justify-center gap-x-2 mb-2 text-[10px]">
+        <div class="flex items-center justify-center gap-x-1.5 mb-2 text-[10px]">
           <button onclick="teaseMe()" class="px-3 py-1 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 hover:from-pink-500/30 hover:to-purple-500/30 text-pink-300 transition-all flex items-center gap-x-1.5 text-xs font-medium">
             <i class="fa-solid fa-heart"></i>
             <span>Tease Me</span>
@@ -463,6 +486,14 @@
             <i class="fa-solid fa-book"></i>
             <span>My Gay Diary</span>
           </button>
+          <button onclick="surpriseMe()" class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-400/15 to-pink-500/20 hover:from-amber-400/25 hover:to-pink-500/30 text-pink-200 transition-all flex items-center gap-x-1.5 text-xs font-medium">
+            <i class="fa-solid fa-magic"></i>
+            <span>Surprise Me</span>
+          </button>
+          <button onclick="vibeRoulette()" class="px-3 py-1 rounded-full bg-gradient-to-r from-violet-500/15 to-pink-500/20 hover:from-violet-500/25 hover:to-pink-500/30 text-pink-200 transition-all flex items-center gap-x-1.5 text-xs font-medium">
+            <i class="fa-solid fa-sync"></i>
+            <span>Vibe Roulette</span>
+          </button>
         </div>
         
         <div class="flex items-center gap-x-2 sm:gap-x-3">
@@ -470,31 +501,31 @@
             <input 
               id="message-input"
               type="text" 
-              class="chat-input w-full bg-zinc-900/80 border border-white/10 focus:border-pink-400/50 placeholder:text-white/25 text-white rounded-[22px] py-3 px-4 sm:py-3.5 sm:px-5 text-[15px] outline-none shadow-inner"
-              placeholder="Whisper... or seduce the frame"
+              class="chat-input w-full bg-zinc-900/85 border border-white/10 focus:border-pink-400/60 placeholder:text-white/20 text-white rounded-[26px] py-[13px] px-5 sm:py-3.5 sm:px-6 text-[15px] outline-none shadow-inner transition-all focus:shadow-[0_0_0_3px_rgba(255,105,180,0.15)]"
+              placeholder="Whisper something... or upload to be transformed"
               autocomplete="off"
               onkeypress="if (event.key === 'Enter') sendMessage()">
           </div>
           
-          <!-- Premium upload - world class tap target -->
+          <!-- World class, rich upload button -->
           <button onclick="triggerImageUpload()" 
-                  class="flex-shrink-0 h-11 sm:h-12 px-3.5 flex items-center gap-x-1.5 rounded-[20px] bg-gradient-to-br from-pink-500/25 via-purple-500/15 to-transparent border border-pink-500/20 hover:border-pink-500/40 text-pink-300 active:text-white text-xs font-medium cursor-pointer transition-all active:scale-[0.97] shadow-sm"
-                  style="min-width: 92px;">
-            <i class="fa-solid fa-camera text-base"></i>
-            <span class="font-semibold tracking-wide">UPLOAD</span>
+                  class="flex-shrink-0 h-11 sm:h-11 px-4 flex items-center gap-x-2 rounded-[24px] bg-gradient-to-br from-pink-500/35 via-rose-400/25 to-transparent border border-pink-400/40 hover:border-pink-400/60 text-pink-100 active:text-white text-[11px] font-semibold tracking-[0.6px] cursor-pointer transition-all active:scale-[0.96] shadow-lg"
+                  style="min-width: 98px; box-shadow: 0 4px 12px -2px rgba(255,105,180,0.3);">
+            <i class="fa-solid fa-camera-retro text-[15px]"></i>
+            <span>UPLOAD</span>
           </button>
           
           <button onclick="sendMessage()"
-                  class="gay-button flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[20px] text-white shadow-xl active:scale-[0.96] active:shadow-inner"
-                  style="background: linear-gradient(145deg, #ff69b4, #c026ff); box-shadow: 0 4px 15px -3px rgba(255,105,180,0.5);">
+                  class="gay-button flex-shrink-0 w-11 h-11 sm:w-11 sm:h-11 flex items-center justify-center rounded-[24px] text-white shadow-2xl active:scale-[0.93]"
+                  style="background: linear-gradient(145deg, #ff69b4, #c026ff, #ff1493); box-shadow: 0 6px 18px -4px rgba(255,105,180,0.5), inset 0 1px 0 rgba(255,255,255,0.3);">
             <i class="fa-solid fa-paper-plane text-[17px]"></i>
           </button>
         </div>
         
         <div class="flex gap-x-1.5 mt-1.5 sm:mt-2.5 overflow-x-auto pb-0.5 -mx-0.5 px-0.5 sm:justify-center sm:overflow-visible" style="scrollbar-width: none;">
-          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">a rough day</div>
-          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">boring meeting</div>
-          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">my cat</div>
+          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">a rough day</div>
+          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">boring meeting</div>
+          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">my cat</div>
         </div>
         
         <!-- Hidden image upload input -->
@@ -794,7 +825,7 @@
           canvas.height = img.height;
           const ctx = canvas.getContext('2d');
 
-          // World-class persona-driven luxurious filters
+          // World-class persona-driven luxurious filters with expensive photo treatment
           let filter = `saturate(1.9) hue-rotate(${(seed * 40) - 10}deg) contrast(1.15) brightness(1.08)`;
           if (currentPersona === 'femme') filter = `saturate(2.2) hue-rotate(-12deg) contrast(1.08) brightness(1.12)`;
           else if (currentPersona === 'camp') filter = `saturate(1.75) hue-rotate(28deg) contrast(1.22) brightness(1.06)`;
@@ -804,42 +835,62 @@
           ctx.filter = filter;
           ctx.drawImage(img, 0, 0);
 
-          // Rich, expensive glitter & light leaks
+          // Rich, expensive glitter, light leaks & bokeh for high-end photography feel
           ctx.filter = 'none';
           ctx.fillStyle = currentPersona === 'mystery' ? 'rgba(220, 200, 255, 0.65)' : 'rgba(255, 255, 255, 0.82)';
-          const sparkleCount = 32 + Math.floor(seed * 18);
+          const sparkleCount = 38 + Math.floor(seed * 22);
           for (let i = 0; i < sparkleCount; i++) {
             const x = (Math.sin(i * 11.8 + seed * 1.3) * 0.5 + 0.5) * canvas.width;
             const y = (Math.cos(i * 8.2 + seed) * 0.5 + 0.5) * canvas.height;
-            const size = 1.2 + Math.random() * 3.8;
-            ctx.globalAlpha = 0.6 + Math.random() * 0.4;
+            const size = 1.2 + Math.random() * 4.2;
+            ctx.globalAlpha = 0.55 + Math.random() * 0.45;
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalAlpha = 1;
 
             if (i % 2 === 0) {
-              ctx.fillRect(x - size*2, y-0.6, size*4, 1.2);
-              ctx.fillRect(x-0.6, y - size*2, 1.2, size*4);
+              ctx.fillRect(x - size*2.2, y-0.5, size*4.4, 1);
+              ctx.fillRect(x-0.5, y - size*2.2, 1, size*4.4);
             }
           }
 
-          // Luxe edge treatment
+          // Subtle bokeh orbs for rich depth
+          ctx.fillStyle = 'rgba(255,255,255,0.12)';
+          for (let i = 0; i < 6; i++) {
+            const bx = (seed * 17 + i * 47) % canvas.width;
+            const by = (seed * 31 + i * 29) % canvas.height;
+            ctx.beginPath();
+            ctx.arc(bx, by, 18 + (i % 3) * 8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Luxe edge treatment with gold
           let edgeColor = currentPersona === 'daddy' ? 'rgba(70,65,60,0.65)' : `hsla(${(seed*75 + 310) % 360}, 92%, 78%, 0.55)`;
           ctx.strokeStyle = edgeColor;
-          ctx.lineWidth = Math.max(5, canvas.width * 0.009);
+          ctx.lineWidth = Math.max(6, canvas.width * 0.01);
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-          // Elegant, expensive caption treatment
-          ctx.fillStyle = currentPersona === 'daddy' ? 'rgba(45,42,38,0.9)' : 'rgba(255, 105, 180, 0.88)';
+          // Elegant, expensive caption treatment with gold foil vibe + luxury vignette
+          ctx.fillStyle = currentPersona === 'daddy' ? 'rgba(45,42,38,0.92)' : 'rgba(255, 105, 180, 0.9)';
           ctx.font = `600 ${Math.max(13, canvas.height * 0.042)}px system-ui, -apple-system, sans-serif`;
           ctx.textAlign = 'center';
           const tag = currentPersona === 'daddy' ? 'YOURS' : 'SEDUCED';
-          const textW = ctx.measureText(tag).width + 28;
+          const textW = ctx.measureText(tag).width + 32;
           const tagY = canvas.height - (canvas.height * 0.045);
-          ctx.fillRect(canvas.width/2 - textW/2, tagY - 18, textW, 24);
-          ctx.fillStyle = currentPersona === 'daddy' ? '#e8d9c8' : '#ffffff';
-          ctx.fillText(tag, canvas.width / 2, tagY - 2);
+          ctx.fillRect(canvas.width/2 - textW/2, tagY - 19, textW, 25);
+          ctx.fillStyle = currentPersona === 'daddy' ? '#e8d9c8' : '#f5f0e6';
+          ctx.fillText(tag, canvas.width / 2, tagY - 1);
+
+          // Subtle expensive vignette for rich photo depth
+          const vignette = ctx.createRadialGradient(
+            canvas.width/2, canvas.height/2, Math.min(canvas.width, canvas.height) * 0.35,
+            canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height) * 0.72
+          );
+          vignette.addColorStop(0, 'rgba(0,0,0,0)');
+          vignette.addColorStop(1, 'rgba(0,0,0,0.35)');
+          ctx.fillStyle = vignette;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           resolve(canvas.toDataURL('image/jpeg', 0.9));
         };
@@ -878,24 +929,31 @@
       canvas.height = lastBot.image ? 600 : 400;
       const ctx = canvas.getContext('2d');
 
-      // Background gradient (pride vibes)
+      // Luxurious expensive background with gold foil vibes
       const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      grad.addColorStop(0, '#2a0a2a');
-      grad.addColorStop(0.5, '#1a0520');
-      grad.addColorStop(1, '#0f0015');
+      grad.addColorStop(0, '#050308');
+      grad.addColorStop(0.3, '#120a18');
+      grad.addColorStop(0.7, '#1a0f22');
+      grad.addColorStop(1, '#050308');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Border
+      // Gold foil border
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 14;
+      ctx.strokeRect(8, 8, canvas.width - 16, canvas.height - 16);
       ctx.strokeStyle = '#ff69b4';
-      ctx.lineWidth = 12;
-      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+      ctx.lineWidth = 3;
+      ctx.strokeRect(16, 16, canvas.width - 32, canvas.height - 32);
 
       // Title
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 36px system-ui, sans-serif';
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '600 32px system-ui, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('💅 GAYIFY CERTIFIED 💅', canvas.width / 2, 60);
+      ctx.fillText('✨ GAYIFY EXCLUSIVE ✨', canvas.width / 2, 55);
+      ctx.fillStyle = '#fff';
+      ctx.font = '500 18px system-ui, sans-serif';
+      ctx.fillText('CHAKKAAI • PRIVATE SEDUCTION', canvas.width / 2, 78);
 
       let y = 100;
 
@@ -920,10 +978,13 @@
       });
       y += lines.length * 28 + 40;
 
-      // Footer
-      ctx.fillStyle = '#c026ff';
-      ctx.font = '16px system-ui, sans-serif';
-      ctx.fillText('ChakkaAI • Make It Gayer™ • gayify', canvas.width / 2, canvas.height - 40);
+      // Footer - expensive branding
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '500 15px system-ui, sans-serif';
+      ctx.fillText('CHAKKAAI • PRIVATE • EPHEMERAL', canvas.width / 2, canvas.height - 35);
+      ctx.fillStyle = '#ff69b4';
+      ctx.font = '400 12px system-ui, sans-serif';
+      ctx.fillText('gayify.pro • your secret is safe', canvas.width / 2, canvas.height - 18);
 
       // Download
       const link = document.createElement('a');
@@ -944,8 +1005,44 @@
         "The way you gayify? Chef's kiss, no notes"
       ];
       const tease = teases[Math.floor(Math.random() * teases.length)];
-      addMessage('bot', gayify(tease));
+      addMessage('bot', personaGayify(tease));
       triggerConfetti(30);
+    }
+
+    function surpriseMe() {
+      const surprises = [
+        "The universe just handed you main character energy. Use it wisely, queen.",
+        "Your aura is giving 'they wrote songs about me' today.",
+        "Imagine being this effortlessly iconic. Oh wait, you don't have to.",
+        "This moment? It's giving 'the girls will be talking about this for years'.",
+        "You walked in and the room became a runway. Periodt.",
+        "If being this extra was a crime, you'd be serving life sentences in style."
+      ];
+      const surprise = surprises[Math.floor(Math.random() * surprises.length)];
+      addMessage('bot', personaGayify(surprise));
+      triggerConfetti(50);
+      playSlayChime();
+    }
+
+    function vibeRoulette() {
+      if (!lastUploadedImage) {
+        showToast("Upload a pic first for the roulette, darling!");
+        return;
+      }
+      const personas = ['femme', 'camp', 'mystery', 'daddy'];
+      const newPersona = personas[Math.floor(Math.random() * personas.length)];
+      document.getElementById('persona-select').value = newPersona;
+      currentPersona = newPersona;
+      showToast(`Vibe shifted to ${newPersona.toUpperCase()}... spinning the wheel of seduction 💫`);
+      
+      const typing = showTyping();
+      setTimeout(async () => {
+        removeTyping(typing);
+        const gayified = await gayifyImage(lastUploadedImage, Math.random());
+        const { reaction, captions } = await processGayImage(lastUploadedImage);
+        addMessage('bot', personaGayify(reaction) + " (roulette edition)", { image: lastUploadedImage, gayifiedImage: gayified, captions });
+        triggerConfetti(60);
+      }, 650);
     }
 
     function showMyGayDiary() {
@@ -1476,7 +1573,7 @@
           </div>
           <div class="flex-1">
             <div class="bot-bubble message-bubble gay-text text-[15px]">
-              <p>Heyyy... come closer. Tell me anything and I'll make it dangerously gay. Upload a pic and watch me turn it into pure seduction with the perfect captions. This is our little secret — private to this tab. Close it and it's like it never happened. I'm waiting, darling... 💋</p>
+              <p>Heyyy... come closer, beautiful. Tell me anything and watch me transform it into something dangerously, deliciously, *expensively* gay. Upload a pic and I'll wrap it in seduction, captions, and visuals that feel like high couture. This is our private little fantasy — gone the second you close the tab. I'm waiting, darling... 💋</p>
             </div>
             <div class="pl-1 mt-0.5">
               <span class="text-[9px] text-pink-300/60 font-medium">ChakkaAI</span>
