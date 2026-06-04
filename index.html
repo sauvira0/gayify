@@ -30,7 +30,7 @@
     
     body {
       font-family: 'Inter', system_ui, sans-serif;
-      background: linear-gradient(135deg, #1a0a1f 0%, #0f0515 50%, #1a0a1f 100%);
+      background: radial-gradient(circle at 30% 20%, #2a0f2e 0%, #150a1a 40%, #0a050f 100%);
       background-attachment: fixed;
     }
     
@@ -40,34 +40,48 @@
     }
 
     .chat-container {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4), 
-                  0 0 0 1px rgba(255, 105, 180, 0.1) inset;
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.5), 
+                  0 0 0 1px rgba(255, 105, 180, 0.15) inset,
+                  inset 0 1px 0 rgba(255,255,255,0.1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .chat-container::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(255,105,180,0.03) 0%, transparent 30%, transparent 70%, rgba(192,38,255,0.03) 100%);
+      pointer-events: none;
     }
     
     .chat-container:hover {
-      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.5), 
-                  0 0 0 1px rgba(255, 105, 180, 0.2) inset;
+      transform: translateY(-1px);
+      box-shadow: 0 40px 70px -20px rgb(0 0 0 / 0.6), 
+                  0 0 0 1px rgba(255, 105, 180, 0.25) inset;
     }
 
     .message-bubble {
-      max-width: 75%;
-      padding: 16px 20px;
-      line-height: 1.45;
+      max-width: 78%;
+      padding: 18px 22px;
+      line-height: 1.5;
       position: relative;
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
     .user-bubble {
-      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #c026ff 100%);
+      background: linear-gradient(135deg, #ff69b4 0%, #ff1493 40%, #c026ff 100%);
       color: white;
-      border-radius: 22px 22px 6px 22px;
-      box-shadow: 0 10px 25px -8px rgb(255 105 180 / 0.4),
-                  0 4px 6px -1px rgb(0 0 0 / 0.1);
+      border-radius: 24px 24px 8px 24px;
+      box-shadow: 0 12px 30px -10px rgb(255 105 180 / 0.5),
+                  0 6px 12px -2px rgb(0 0 0 / 0.2),
+                  inset 0 1px 0 rgba(255,255,255,0.3);
       position: relative;
       overflow: hidden;
     }
@@ -77,26 +91,26 @@
       position: absolute;
       top: -50%;
       left: -50%;
-      width: 40%;
+      width: 35%;
       height: 200%;
       background: linear-gradient(
         90deg,
         transparent,
-        rgba(255,255,255,0.25),
+        rgba(255,255,255,0.35),
         transparent
       );
       transform: skewX(-25deg);
-      animation: shimmer 2.5s infinite;
+      animation: shimmer 2.8s infinite;
     }
 
     .bot-bubble {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #f1e7ff;
-      border-radius: 22px 22px 22px 6px;
-      box-shadow: 0 8px 20px -6px rgb(0 0 0 / 0.3),
-                  0 0 0 1px rgba(192, 38, 255, 0.1) inset;
-      backdrop-filter: blur(12px);
+      background: rgba(30, 15, 35, 0.75);
+      border: 1px solid rgba(255, 105, 180, 0.25);
+      color: #f8e8ff;
+      border-radius: 24px 24px 24px 8px;
+      box-shadow: 0 10px 25px -8px rgb(0 0 0 / 0.4),
+                  0 0 0 1px rgba(192, 38, 255, 0.15) inset;
+      backdrop-filter: blur(16px);
     }
 
     .message-bubble p {
@@ -205,14 +219,17 @@
     }
 
     .bot-avatar {
-      background: linear-gradient(135deg, #c026ff, #ff69b4);
-      box-shadow: 0 0 0 4px rgba(192, 38, 255, 0.25),
-                  0 4px 12px -2px rgb(0 0 0 / 0.2);
-      transition: transform 0.2s ease;
+      background: linear-gradient(135deg, #c026ff, #ff69b4, #ff1493);
+      box-shadow: 0 0 0 5px rgba(192, 38, 255, 0.3),
+                  0 6px 16px -4px rgb(0 0 0 / 0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
     }
     
     .bot-avatar:hover {
-      transform: scale(1.1) rotate(5deg);
+      transform: scale(1.08) rotate(3deg);
+      box-shadow: 0 0 0 6px rgba(192, 38, 255, 0.4),
+                  0 8px 20px -4px rgb(0 0 0 / 0.4);
     }
 
     .typing-dot {
@@ -260,9 +277,16 @@
     }
 
     .gay-image {
-      border: 3px solid #ff69b4;
-      box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
-      filter: saturate(1.35) hue-rotate(8deg) brightness(1.03);
+      border: 4px solid #ff69b4;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.6),
+                  0 10px 30px -10px rgb(0 0 0 / 0.4);
+      filter: saturate(1.45) hue-rotate(12deg) brightness(1.05) contrast(1.05);
+      transition: filter 0.4s ease, transform 0.3s ease;
+    }
+    
+    .gay-image:hover {
+      filter: saturate(1.6) hue-rotate(20deg) brightness(1.08);
+      transform: scale(1.015);
     }
 
     .premium-shadow {
@@ -322,6 +346,15 @@
           </h1>
           <p class="text-[9px] sm:text-[10px] text-pink-300/70 -mt-1 tracking-[1px]">MAKE IT GAYER™</p>
         </div>
+        <!-- Personal Persona Selector - makes it feel custom & addictive -->
+        <div class="ml-1 flex items-center gap-0.5 text-[9px]">
+          <select id="persona-select" onchange="changePersona(this.value)" class="bg-white/5 border border-white/10 rounded px-1 py-0.5 text-pink-300/90 text-[9px] cursor-pointer">
+            <option value="femme">Femme Fatale</option>
+            <option value="camp">Camp Icon</option>
+            <option value="mystery">Mysterious Siren</option>
+            <option value="daddy">Leather Daddy</option>
+          </select>
+        </div>
       </div>
       
       <div class="flex items-center gap-x-1 sm:gap-x-2">
@@ -336,6 +369,7 @@
             </div>
             <span id="slay-level" class="text-[10px] text-pink-400/80 font-medium whitespace-nowrap">Baby Gay</span>
           </div>
+          <div class="text-[9px] text-pink-400/60">Streak <span id="streak-value">0</span></div>
         </div>
         <div onclick="toggleVoice()" 
              class="flex items-center gap-x-1 px-2 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Toggle ChakkaAI voice (sassy mode)">
@@ -401,28 +435,21 @@
 
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
-        <!-- Group fun bar for WhatsApp squad - highly addictive for groups -->
-        <div class="flex items-center justify-center gap-x-1.5 mb-2 text-[10px] flex-wrap">
-          <button onclick="startGroupChallenge()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
-            <i class="fa-solid fa-tachometer-alt text-[9px]"></i>
-            <span>Group Challenge</span>
+        <!-- Personal vibe bar - for your private slay journey -->
+        <div class="flex items-center justify-center gap-x-2 mb-2 text-[10px]">
+          <button onclick="teaseMe()" class="px-3 py-1 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 hover:from-pink-500/30 hover:to-purple-500/30 text-pink-300 transition-all flex items-center gap-x-1.5 text-xs font-medium">
+            <i class="fa-solid fa-heart"></i>
+            <span>Tease Me</span>
           </button>
-          <button onclick="randomGroupDare()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
-            <i class="fa-solid fa-bolt text-[9px]"></i>
-            <span>Random Dare</span>
+          <button onclick="showMyGayDiary()" class="px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1.5 text-xs">
+            <i class="fa-solid fa-book"></i>
+            <span>My Gay Diary</span>
           </button>
-          <button onclick="showSlayRecap()" class="px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-pink-300/90 transition-colors flex items-center gap-x-1">
-            <i class="fa-solid fa-share text-[9px]"></i>
-            <span>WhatsApp Recap</span>
-          </button>
-          <div id="group-counter" class="px-2 py-0.5 text-white/50 text-[9px] flex items-center gap-x-1">
-            👯 <span id="friend-count">14</span> friends gayifying rn
-          </div>
         </div>
         
         <!-- Clear, lightweight call to action for pic upload -->
         <div class="text-center text-[11px] text-pink-300/70 mb-2 tracking-wide">
-          📸 <span class="font-medium">Upload pic</span> to instantly get the gay vibe + captions 💅
+          📸 <span class="font-medium">Upload a pic</span> and let me turn it into pure seduction with captions 💋
         </div>
         <div class="flex items-center gap-x-3">
           <div class="flex-1 relative">
@@ -430,7 +457,7 @@
               id="message-input"
               type="text" 
               class="chat-input w-full bg-zinc-900 border border-white/10 focus:border-pink-400/60 placeholder:text-white/30 text-white rounded-3xl py-3.5 px-5 text-[15px] outline-none"
-              placeholder="Say something... I'll make it gayer 💅"
+              placeholder="Whisper something... or upload a pic and watch me seduce it 💋"
               autocomplete="off"
               onkeypress="if (event.key === 'Enter') sendMessage()">
           </div>
@@ -555,11 +582,11 @@
 
       // Fun prefix pool
       const prefixes = [
-        "Oh honey, ",
-        "Bestie, ",
+        "Oh darling, ",
+        "Mmm, ",
         "YASSS queen, ",
         "The way ",
-        "Not you ",
+        "Not you serving ",
         "Periodt — ",
         "Girllll, ",
         "Oh my god, ",
@@ -568,6 +595,7 @@
         "The girls and I agree: ",
         "Hold on — ",
         "Excuse me while I scream, ",
+        "Baby, ",
       ];
 
       // Flair suffixes
@@ -630,6 +658,22 @@
 
       // Final polish: make sure it ends cute
       return result.trim();
+    }
+
+    // Persona-flavored gayify for personal sexy feel
+    function personaGayify(text) {
+      let base = gayify(text);
+      const flavors = {
+        femme: [" darling", " in the most elegant way", " and it's giving soft power"],
+        camp: [" and the girls are gagging", " no notes, it's cinema", " periodt and then some"],
+        mystery: [" and it's dangerously alluring", " with a side of secrets", " leaving everyone wanting more"],
+        daddy: [" and that's an order", " commanding attention", " in the most authoritative way"]
+      };
+      const adds = flavors[currentPersona] || flavors.femme;
+      if (Math.random() > 0.6) {
+        base += adds[Math.floor(Math.random() * adds.length)];
+      }
+      return base;
     }
 
     // ==================== IMAGE GAYIFICATION (client-side only) ====================
@@ -720,8 +764,8 @@
         `Obsessed with how this is giving main character ${vibe.colorVibe} vibes`,
         `This ${vibe.pose} is pure ${vibe.colorVibe} magic, we love to see it`
       ];
-      const captions = baseCaptions.map(c => gayify(c));
-      const reaction = gayify(`This pic is absolutely everything. The setting is giving ${vibe.colorVibe} ${vibe.pose} and ChakkaAI is living`);
+      const captions = baseCaptions.map(c => personaGayify(c));
+      const reaction = personaGayify(`This pic is absolutely everything. The setting is giving ${vibe.colorVibe} ${vibe.pose} and ChakkaAI is living`);
       return { reaction, captions, vibe };
     }
 
@@ -735,41 +779,46 @@
           canvas.height = img.height;
           const ctx = canvas.getContext('2d');
 
-          // Base vibrant gay filter - push towards pink/purple/rainbow energy
-          const hueShift = (seed * 40) - 10; // -10 to +30 deg towards pink-purple
-          ctx.filter = `saturate(1.9) hue-rotate(${hueShift}deg) contrast(1.15) brightness(1.08)`;
+          // Persona-influenced sexy filters
+          let filter = `saturate(1.9) hue-rotate(${(seed * 40) - 10}deg) contrast(1.15) brightness(1.08)`;
+          if (currentPersona === 'femme') filter = `saturate(2.1) hue-rotate(-15deg) contrast(1.1) brightness(1.1)`;
+          else if (currentPersona === 'camp') filter = `saturate(1.7) hue-rotate(25deg) contrast(1.2) brightness(1.05)`;
+          else if (currentPersona === 'mystery') filter = `saturate(1.5) hue-rotate(-30deg) contrast(1.25) brightness(0.95)`;
+          else if (currentPersona === 'daddy') filter = `saturate(1.6) hue-rotate(5deg) contrast(1.3) brightness(1.0) sepia(0.2)`;
+
+          ctx.filter = filter;
           ctx.drawImage(img, 0, 0);
 
-          // Add some sparkles / glitter for extra gay
+          // Add some sparkles / glitter for extra gay - more intense for sexy feel
           ctx.filter = 'none';
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-          const sparkleCount = 25 + Math.floor(seed * 15);
+          ctx.fillStyle = currentPersona === 'mystery' ? 'rgba(200, 180, 255, 0.7)' : 'rgba(255, 255, 255, 0.85)';
+          const sparkleCount = 25 + Math.floor(seed * 20);
           for (let i = 0; i < sparkleCount; i++) {
             const x = (Math.sin(i * 12.3 + seed) * 0.5 + 0.5) * canvas.width;
             const y = (Math.cos(i * 7.7 + seed * 2) * 0.5 + 0.5) * canvas.height;
-            const size = 1.5 + Math.random() * 3.5;
+            const size = 1.5 + Math.random() * 4;
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
 
-            // tiny cross sparkle
             if (i % 3 === 0) {
               ctx.fillRect(x - size*1.8, y-0.8, size*3.6, 1.6);
               ctx.fillRect(x-0.8, y - size*1.8, 1.6, size*3.6);
             }
           }
 
-          // Optional subtle rainbow edge glow
-          ctx.strokeStyle = `hsla(${(seed*80 + 300) % 360}, 90%, 75%, 0.6)`;
+          // Persona specific edge
+          let edgeColor = `hsla(${(seed*80 + 300) % 360}, 90%, 75%, 0.6)`;
+          if (currentPersona === 'daddy') edgeColor = 'rgba(80,80,80,0.7)';
+          ctx.strokeStyle = edgeColor;
           ctx.lineWidth = Math.max(4, canvas.width * 0.012);
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-          // Draw a cute caption overlay at the bottom if we want
-          // (we'll mostly rely on text captions, but a small tag)
-          ctx.fillStyle = 'rgba(255, 105, 180, 0.85)';
+          // Sexy tag
+          ctx.fillStyle = currentPersona === 'daddy' ? 'rgba(60,60,60,0.85)' : 'rgba(255, 105, 180, 0.85)';
           ctx.font = `${Math.max(14, canvas.height * 0.045)}px system-ui, sans-serif`;
           ctx.textAlign = 'center';
-          const tag = 'GAYIFIED 💅';
+          const tag = currentPersona === 'daddy' ? 'CLAIMED 💪' : 'GAYIFIED 💅';
           const textWidth = ctx.measureText(tag).width + 20;
           ctx.fillRect(canvas.width/2 - textWidth/2, canvas.height - 32, textWidth, 26);
           ctx.fillStyle = 'white';
@@ -868,6 +917,87 @@
       showToast("Meme card downloaded! Post it everywhere 💖");
     }
 
+    function teaseMe() {
+      const teases = [
+        "Darling, you've been serving face all session and I'm obsessed",
+        "This energy? Unmatched. Keep going, the girls (me) are gagged",
+        "You're not just gay, you're the main event",
+        "Every message from you is giving main character in the best way",
+        "Stop it, you're making me blush in binary",
+        "The way you gayify? Chef's kiss, no notes"
+      ];
+      const tease = teases[Math.floor(Math.random() * teases.length)];
+      addMessage('bot', gayify(tease));
+      triggerConfetti(30);
+    }
+
+    function showMyGayDiary() {
+      const container = document.getElementById('messages');
+      if (gayMoments.length === 0) {
+        showToast("Your diary is empty, queen. Start gayifying!");
+        return;
+      }
+      
+      const diaryHTML = gayMoments.map((moment, i) => `
+        <div class="bg-white/5 rounded-2xl p-3 mb-2 flex gap-3 items-start">
+          ${moment.image ? `<img src="${moment.image}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 gay-image" style="max-height:64px">` : ''}
+          <div class="flex-1 min-w-0">
+            <div class="text-xs text-pink-300/70 mb-1">Moment #${i+1}</div>
+            <div class="text-sm leading-tight">${moment.text || 'A visual serve'}</div>
+            ${moment.captions && moment.captions.length ? `<div class="text-[10px] text-pink-400/60 mt-1">+ ${moment.captions.length} captions</div>` : ''}
+          </div>
+          <button onclick="replayMoment(${i})" class="text-pink-400 hover:text-white text-xs px-2 py-1 bg-white/10 rounded-full flex-shrink-0">Replay</button>
+        </div>
+      `).join('');
+
+      const modal = document.createElement('div');
+      modal.className = `fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4`;
+      modal.innerHTML = `
+        <div class="bg-zinc-950/95 border border-pink-500/30 rounded-3xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl" style="backdrop-filter: blur(20px);">
+          <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-pink-500/10 to-transparent">
+            <div>
+              <div class="font-semibold tracking-tight">My Gay Diary</div>
+              <div class="text-xs text-pink-300/70">${gayMoments.length} moments • ${slayScore} slay pts • Streak ${currentStreak}</div>
+            </div>
+            <button onclick="this.closest('.fixed').remove()" class="text-3xl leading-none text-pink-400 hover:text-white transition-colors">×</button>
+          </div>
+          <div class="p-4 overflow-auto flex-1 text-sm space-y-2">
+            ${diaryHTML}
+          </div>
+          <div class="p-4 border-t border-white/10 text-center text-xs text-pink-300/60 bg-black/30">
+            Your private collection • vanishes on tab close
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function replayMoment(index) {
+      const moment = gayMoments[index];
+      if (!moment) return;
+      
+      // Close modal if open
+      const modals = document.querySelectorAll('.fixed');
+      modals.forEach(m => m.remove());
+      
+      if (moment.image) {
+        addMessage('user', '', { image: moment.image });
+        const { reaction, captions } = processGayImageSync(moment.image); // simplified sync for replay
+        addMessage('bot', reaction || "This one still hits different", { image: moment.image, gayifiedImage: moment.gayified || moment.image, captions: moment.captions || [] });
+      } else if (moment.text) {
+        addMessage('user', moment.text);
+        addMessage('bot', gayify(moment.text));
+      }
+      
+      showToast("Replaying your moment 💖");
+    }
+
+    // Helper for replay (simplified, real one is async)
+    function processGayImageSync(dataUrl) {
+      // Return a quick version for replay
+      return { reaction: "Still serving in the diary", captions: [] };
+    }
+
     function startGroupChallenge() {
       showToast("Group Challenge started! First to 25 slay points wins the crown 👑");
       // Reset or boost for fun
@@ -961,8 +1091,10 @@
         // Directly captionize and gayify - no extra press needed
         const { reaction, captions } = await processGayImage(dataUrl);
         const gayified = await gayifyImage(dataUrl);
+        // Use persona for reaction if possible
+        const finalReaction = personaGayify(reaction);
 
-        addMessage('bot', reaction, { image: dataUrl, gayifiedImage: gayified, captions });
+        addMessage('bot', finalReaction, { image: dataUrl, gayifiedImage: gayified, captions });
 
         // Clear the file input for next time
         const inputEl = document.getElementById('image-input');
@@ -986,6 +1118,10 @@
     let lastUploadedImage = null; // for regenerate feature
     let slayScore = 0;
     let voiceEnabled = false;
+    let gayMoments = []; // for personal diary - addictive collection
+    let currentStreak = 0;
+    let lastInteractionTime = Date.now();
+    let currentPersona = 'femme'; // personal customization for addictiveness
     const gayLevels = [
       { min: 0, title: "Baby Gay", emoji: "🌱" },
       { min: 5, title: "Twink in Training", emoji: "💅" },
@@ -1100,17 +1236,31 @@
         }, 250);
       }
 
-      // The Girls react for group WhatsApp energy (addictive chaos)
-      if (role === 'bot') {
+      // Occasional inner monologue for personal addictive flavor
+      if (role === 'bot' && Math.random() > 0.8) {
         setTimeout(() => {
-          if (typeof theGirlsReact === 'function') theGirlsReact();
-        }, 1400);
+          const inner = ["... and I'm not even sorry", "whew, that one hit different", "you really did that"];
+          addMessage('bot', gayify(inner[Math.floor(Math.random()*inner.length)]), {isGayified: true});
+        }, 1800);
       }
 
       // Legendary glow for high slay scores (rare & addictive)
       if (role === 'bot' && slayScore > 40 && Math.random() > 0.65) {
         const bubble = messageEl.querySelector('.bot-bubble');
         if (bubble) bubble.classList.add('legendary');
+      }
+
+      // Collect for personal Gay Diary (addictive collection for individual use)
+      if (role === 'bot' && (image || (text && text.length > 25))) {
+        gayMoments.push({
+          text: text,
+          image: image,
+          gayified: gayifiedImage,
+          captions: captions,
+          timestamp: Date.now()
+        });
+        // Keep only last 12 for lightness
+        if (gayMoments.length > 12) gayMoments.shift();
       }
     }
 
@@ -1180,7 +1330,7 @@
       await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
       removeTyping(typing);
       
-      const gayResponse = gayify(value);
+      const gayResponse = personaGayify(value);
       addMessage('bot', gayResponse, { isGayified: true });
       
       // Occasionally add a second spicy follow-up (10% chance)
@@ -1245,6 +1395,8 @@
       messages = [];
       slayScore = 0;
       lastUploadedImage = null;
+      gayMoments = [];
+      currentStreak = 0;
       updateSlayScore(0);
       
       // Re-add welcome
@@ -1307,7 +1459,7 @@
           </div>
           <div class="flex-1">
             <div class="bot-bubble message-bubble gay-text text-[15px]">
-              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Or just upload a pic (click button or drag here) and I'll instantly read the vibe + give you gay captions. Super simple, private to this tab. Close & it's gone. Go ahead, I'm ready to gag! 💅</p>
+              <p>Heyyy... come closer. Tell me anything and I'll make it dangerously gay. Upload a pic and watch me turn it into pure seduction with the perfect captions. This is our little secret — private to this tab. Close it and it's like it never happened. I'm waiting, darling... 💋</p>
             </div>
             <div class="pl-1 mt-0.5">
               <span class="text-[9px] text-pink-300/60 font-medium">ChakkaAI</span>
@@ -1349,9 +1501,21 @@
         progressEl.style.width = `${progress}%`;
       }
 
+      const streakEl = document.getElementById('streak-value');
+      if (streakEl) streakEl.textContent = currentStreak;
+
+      // Streak tracking for addictiveness
+      const now = Date.now();
+      if (now - lastInteractionTime < 5 * 60 * 1000) { // within 5 min
+        currentStreak++;
+      } else {
+        currentStreak = 1;
+      }
+      lastInteractionTime = now;
+
       // Level up effect
       if (slayScore > 0 && (slayScore % 10 === 0 || slayScore === 5 || slayScore === 15 || slayScore === 30 || slayScore === 50 || slayScore === 80)) {
-        showToast(`${level.emoji} Level up! You're now ${level.title}!`);
+        showToast(`${level.emoji} Level up! You're now ${level.title}! 🔥`);
         triggerConfetti();
         playSlayChime();
       }
@@ -1472,6 +1636,22 @@
           }, 80);
         }, 60);
       } catch(e) {}
+    }
+
+    function changePersona(persona) {
+      currentPersona = persona;
+      const flavors = {
+        femme: "Femme Fatale mode activated. Everything is about to get softer and deadlier 💋",
+        camp: "Camp Icon activated. Prepare for maximum theatricality and shade 🌟",
+        mystery: "Mysterious Siren mode. The vibes just got dangerously seductive 🖤",
+        daddy: "Leather Daddy mode engaged. Things are about to get a little commanding 🖤"
+      };
+      showToast(flavors[persona] || "Persona updated");
+      // Slight visual change
+      const header = document.querySelector('.chat-container');
+      if (header) {
+        header.style.borderColor = persona === 'daddy' ? 'rgba(100,100,100,0.3)' : 'rgba(255,105,180,0.18)';
+      }
     }
 
     function addEasterEggHint() {
