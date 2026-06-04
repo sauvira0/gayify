@@ -8,7 +8,7 @@ A simple, hilarious web chat that makes **anything** you say more gay.
 
 ## What it does
 
-Type anything in the chat. The bot (Chakka Thing 👑) will instantly translate your message into the most flamboyant, over-the-top, extra version possible — complete with "yasss", "periodt", "slay", random emojis, and pure chaotic bestie energy.
+Type anything in the chat. The bot (ChakkaAI 👑) will instantly translate your message into the most flamboyant, over-the-top, extra version possible — complete with "yasss", "periodt", "slay", random emojis, and pure chaotic bestie energy.
 
 It's the ultimate "make it gayer" filter in chatbot form.
 
@@ -46,7 +46,7 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 
 ## Examples
 
-| You say                     | Chakka Thing says                                      |
+| You say                     | ChakkaAI says                                      |
 |-----------------------------|------------------------------------------------------|
 | I had a good day            | Oh honey, I had a fabulous day and that's on periodt. 💅✨ |
 | hello                       | Hiiiiii bestie!!! Oh my god you're here, the girls are so back 💖✨ |
