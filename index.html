@@ -165,28 +165,45 @@
       background-size: 200% auto;
       animation: pride-shift 2.5s linear infinite;
     }
+
+    /* Mobile-friendly dynamic height (accounts for keyboard, notches, browser UI) */
+    .min-h-dvh {
+      min-height: 100dvh; /* modern */
+      min-height: 100vh;  /* fallback */
+    }
+
+    @media (max-width: 640px) {
+      .message-bubble {
+        padding: 11px 14px;
+        font-size: 15px;
+      }
+      .chat-input {
+        padding-top: 0.625rem;
+        padding-bottom: 0.625rem;
+      }
+    }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-[720px]">
+<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center">
+  <div class="w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px]">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-3 px-1">
-      <div class="flex items-center gap-x-3">
-        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-3xl shadow-inner"
+    <div class="flex items-center justify-between mb-2 sm:mb-3 px-1">
+      <div class="flex items-center gap-x-2 sm:gap-x-3">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner"
              style="background: linear-gradient(135deg, #ff69b4, #c026ff);">
           💅
         </div>
         <div>
-          <h1 class="text-4xl font-semibold title-font tracking-tighter">
+          <h1 class="text-3xl sm:text-4xl font-semibold title-font tracking-tighter">
             <span class="rainbow-text">gayify</span>
           </h1>
-          <p class="text-[10px] text-pink-300/70 -mt-1 tracking-[1px]">MAKE IT GAYER™</p>
+          <p class="text-[9px] sm:text-[10px] text-pink-300/70 -mt-1 tracking-[1px]">MAKE IT GAYER™</p>
         </div>
       </div>
       
-      <div class="flex items-center gap-x-2">
+      <div class="flex items-center gap-x-1 sm:gap-x-2">
         <div onclick="clearChat()" 
-             class="flex items-center gap-x-2 px-4 py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-sm cursor-pointer transition-colors active:bg-white/15">
+             class="flex items-center gap-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-sm cursor-pointer transition-colors active:bg-white/15">
           <i class="fa-solid fa-trash text-xs"></i>
           <span class="hidden sm:inline text-xs font-medium text-white/70">CLEAR</span>
         </div>
@@ -200,17 +217,17 @@
           <i class="fa-brands fa-github"></i>
           <span class="hidden sm:inline text-[10px] font-medium text-white/70">SOURCE</span>
         </div>
-        <div class="px-3 py-1.5 rounded-2xl bg-white/5 text-[10px] font-mono tracking-widest text-pink-300/60 border border-white/10">
+        <div class="hidden sm:block px-3 py-1.5 rounded-2xl bg-white/5 text-[10px] font-mono tracking-widest text-pink-300/60 border border-white/10">
           100% CERTIFIED
         </div>
       </div>
     </div>
 
     <!-- Chat Card -->
-    <div class="chat-container rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col" style="height: 620px;">
+    <div class="chat-container rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col flex-1 min-h-[480px] sm:min-h-[520px] sm:max-h-[620px]">
       
       <!-- Chat Header -->
-      <div class="px-6 py-4 border-b border-white/10 bg-black/20 flex items-center gap-x-3">
+      <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10 bg-black/20 flex items-center gap-x-3">
         <div class="bot-avatar w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-lg shadow-inner">
           👑
         </div>
@@ -233,12 +250,12 @@
 
       <!-- Messages -->
       <div id="messages" 
-           class="chat-scroll flex-1 p-6 space-y-5 overflow-y-auto bg-zinc-950/60">
+           class="chat-scroll flex-1 p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto bg-zinc-950/60">
         <!-- Messages injected by JS -->
       </div>
 
       <!-- Input Area -->
-      <div class="p-4 border-t border-white/10 bg-black/30">
+      <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
         <div class="flex items-center gap-x-3">
           <div class="flex-1 relative">
             <input 
@@ -256,10 +273,10 @@
           </button>
         </div>
         
-        <div class="flex justify-center gap-x-1.5 mt-3">
-          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">I had a rough day</div>
-          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">This meeting is so boring</div>
-          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[10px] px-3 py-1 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white/90 transition-colors">I love my cat</div>
+        <div class="flex gap-x-1.5 mt-2 sm:mt-3 overflow-x-auto pb-1 -mx-1 px-1 sm:justify-center sm:overflow-visible">
+          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">I had a rough day</div>
+          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">This meeting is so boring</div>
+          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">I love my cat</div>
         </div>
       </div>
     </div>
@@ -456,7 +473,7 @@
       
       if (role === 'user') {
         messageEl.innerHTML = `
-          <div class="max-w-[75%]">
+          <div class="max-w-[85%] sm:max-w-[75%]">
             <div class="user-bubble message-bubble text-[15px]">
               <p>${escapeHtml(text)}</p>
             </div>
@@ -475,7 +492,7 @@
         `;
         
         messageEl.innerHTML = `
-          <div class="flex gap-x-3 max-w-[82%]">
+          <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%]">
             <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
               👑
             </div>
@@ -514,7 +531,7 @@
       typingEl.id = 'typing-indicator';
       typingEl.className = `flex justify-start`;
       typingEl.innerHTML = `
-        <div class="flex gap-x-3 max-w-[82%]">
+        <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%]">
           <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
             👑
           </div>
@@ -675,7 +692,7 @@
       const welcome = document.createElement('div');
       welcome.className = `flex justify-start message-enter`;
       welcome.innerHTML = `
-        <div class="flex gap-x-3 max-w-[82%]">
+        <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%]">
           <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
             👑
           </div>
@@ -737,7 +754,7 @@
           const tip = document.createElement('div');
           tip.className = `flex justify-start opacity-60`;
           tip.innerHTML = `
-            <div class="flex gap-x-3 max-w-[82%] pl-11">
+            <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%] pl-11">
               <div class="text-[10px] text-white/40">try: "i made pasta" or "my boss is annoying"</div>
             </div>
           `;
