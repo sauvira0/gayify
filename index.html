@@ -30,8 +30,13 @@
     
     body {
       font-family: 'Inter', system_ui, sans-serif;
-      background: radial-gradient(circle at 30% 20%, #2a0f2e 0%, #150a1a 40%, #0a050f 100%);
+      background: 
+        radial-gradient(circle at 20% 15%, rgba(192, 38, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 85%, rgba(255, 105, 180, 0.06) 0%, transparent 50%),
+        linear-gradient(180deg, #0a050f 0%, #120a18 50%, #0a050f 100%);
       background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     .title-font {
@@ -40,30 +45,47 @@
     }
 
     .chat-container {
-      background: rgba(255, 255, 255, 0.09);
-      backdrop-filter: blur(28px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.5), 
-                  0 0 0 1px rgba(255, 105, 180, 0.15) inset,
-                  inset 0 1px 0 rgba(255,255,255,0.1);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 40px 80px -20px rgb(0 0 0 / 0.6),
+        0 0 0 1px rgba(255, 105, 180, 0.2) inset,
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        0 0 120px -30px rgba(192, 38, 255, 0.15);
+      transition: all 0.4s cubic-bezier(0.23, 1.0, 0.32, 1);
       position: relative;
       overflow: hidden;
+      border-radius: 24px;
     }
     
-    .chat-container::after {
+    @media (max-width: 640px) {
+      .chat-container {
+        border-radius: 20px;
+        box-shadow: 
+          0 25px 50px -12px rgb(0 0 0 / 0.5),
+          0 0 0 1px rgba(255, 105, 180, 0.15) inset;
+      }
+    }
+    
+    .chat-container::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(180deg, rgba(255,105,180,0.03) 0%, transparent 30%, transparent 70%, rgba(192,38,255,0.03) 100%);
+      inset: 0;
+      background: 
+        linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%),
+        linear-gradient(45deg, rgba(192,38,255,0.04) 0%, transparent 60%);
       pointer-events: none;
+      z-index: 1;
     }
     
     .chat-container:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 40px 70px -20px rgb(0 0 0 / 0.6), 
-                  0 0 0 1px rgba(255, 105, 180, 0.25) inset;
+      transform: translateY(-2px);
+      box-shadow: 
+        0 50px 100px -25px rgb(0 0 0 / 0.65),
+        0 0 0 1px rgba(255, 105, 180, 0.3) inset,
+        0 0 150px -40px rgba(192, 38, 255, 0.2);
     }
 
     .message-bubble {
@@ -331,73 +353,69 @@
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%);">
-  <div class="w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px]">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-2 sm:mb-3 px-1">
+<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center overscroll-none" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%); padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); -webkit-tap-highlight-color: transparent;">
+  <div class="w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px] relative">
+    <!-- Luxury frame overlay for expensive feel -->
+    <div class="absolute inset-0 pointer-events-none border border-white/10 rounded-[28px] sm:rounded-3xl z-10" style="box-shadow: inset 0 0 60px rgba(0,0,0,0.3);"></div>
+    <!-- Header - World class luxurious mobile-first -->
+    <div class="flex items-center justify-between mb-2 sm:mb-3 px-1 relative z-20">
       <div class="flex items-center gap-x-2 sm:gap-x-3">
-        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner"
-             style="background: linear-gradient(135deg, #ff69b4, #c026ff);">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-inner ring-1 ring-white/20"
+             style="background: linear-gradient(135deg, #ff69b4, #c026ff, #ff1493); box-shadow: 0 4px 15px -2px rgba(255,105,180,0.5), inset 0 1px 0 rgba(255,255,255,0.4);">
           💅
         </div>
-        <div>
-          <h1 class="text-3xl sm:text-4xl font-semibold title-font tracking-tighter">
+        <div class="flex-1 min-w-0">
+          <h1 class="text-3xl sm:text-4xl font-semibold title-font tracking-tighter flex items-baseline gap-x-1.5">
             <span class="rainbow-text">gayify</span>
+            <span class="text-[10px] sm:text-xs font-mono text-pink-400/40 tracking-[2px] hidden sm:inline">PRO</span>
           </h1>
-          <p class="text-[9px] sm:text-[10px] text-pink-300/70 -mt-1 tracking-[1px]">MAKE IT GAYER™</p>
+          <p class="text-[9px] sm:text-[10px] text-pink-300/70 -mt-1 tracking-[1.5px] font-light">MAKE IT GAYER™</p>
         </div>
-        <!-- Personal Persona Selector - makes it feel custom & addictive -->
-        <div class="ml-1 flex items-center gap-0.5 text-[9px]">
-          <select id="persona-select" onchange="changePersona(this.value)" class="bg-white/5 border border-white/10 rounded px-1 py-0.5 text-pink-300/90 text-[9px] cursor-pointer">
-            <option value="femme">Femme Fatale</option>
-            <option value="camp">Camp Icon</option>
-            <option value="mystery">Mysterious Siren</option>
-            <option value="daddy">Leather Daddy</option>
+        <!-- Personal Persona Selector - world class touch, compact on mobile -->
+        <div class="ml-1 flex items-center text-[8px] sm:text-[9px]">
+          <select id="persona-select" onchange="changePersona(this.value)" class="bg-white/5 border border-white/10 rounded-lg px-1.5 py-0.5 sm:px-2 sm:py-1 text-pink-300/90 text-[8px] sm:text-[9px] cursor-pointer focus:outline-none focus:border-pink-400/50 transition-colors appearance-none">
+            <option value="femme">Femme</option>
+            <option value="camp">Camp</option>
+            <option value="mystery">Siren</option>
+            <option value="daddy">Daddy</option>
           </select>
         </div>
       </div>
       
-      <div class="flex items-center gap-x-1 sm:gap-x-2">
-        <div id="slay-score" onclick="showSlayRecap()" class="flex flex-col items-end gap-y-0.5 px-3 py-1.5 rounded-2xl bg-white/5 text-xs font-mono text-pink-300/80 border border-white/10 cursor-pointer hover:bg-white/10 transition-colors" title="Click for session recap & share">
-          <div class="flex items-center gap-x-1.5">
-            <span class="text-[10px] text-pink-400/70">SLAY</span>
-            <span id="slay-value" class="font-semibold text-base text-white">0</span>
+      <!-- Right side controls - mobile first, world class touch targets -->
+      <div class="flex items-center gap-x-1 sm:gap-x-1.5">
+        <!-- Slay Score - rich, expensive progress indicator -->
+        <div id="slay-score" onclick="showSlayRecap()" class="flex flex-col items-end gap-y-px px-2 py-1 rounded-2xl bg-white/5 text-[9px] font-mono text-pink-300/80 border border-white/10 cursor-pointer active:scale-[0.985] transition-all" style="min-width: 58px;">
+          <div class="flex items-baseline gap-x-1">
+            <span class="text-[8px] text-pink-400/70">SLAY</span>
+            <span id="slay-value" class="font-semibold text-[13px] text-white tabular-nums">0</span>
           </div>
-          <div class="flex items-center gap-x-1 w-full">
-            <div class="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
-              <div id="slay-progress" class="slay-progress h-full w-0" style="width: 0%"></div>
+          <div class="w-full flex items-center gap-x-1">
+            <div class="flex-1 h-[2px] bg-white/10 rounded-full overflow-hidden">
+              <div id="slay-progress" class="slay-progress h-full" style="width: 0%"></div>
             </div>
-            <span id="slay-level" class="text-[10px] text-pink-400/80 font-medium whitespace-nowrap">Baby Gay</span>
           </div>
-          <div class="text-[9px] text-pink-400/60">Streak <span id="streak-value">0</span></div>
+          <div class="flex justify-between w-full text-[7px] text-pink-400/60">
+            <span id="slay-level" class="font-medium tracking-tighter">Baby</span>
+            <span class="tabular-nums">S<span id="streak-value">0</span></span>
+          </div>
         </div>
-        <div onclick="toggleVoice()" 
-             class="flex items-center gap-x-1 px-2 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Toggle ChakkaAI voice (sassy mode)">
-          <i class="fa-solid fa-microphone" id="voice-icon"></i>
-          <span class="hidden sm:inline text-[10px] font-medium text-white/70">VOICE</span>
+
+        <!-- Icon controls - generous 44px+ touch targets on mobile -->
+        <div onclick="toggleVoice()" class="flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Voice • Sassy mode">
+          <i class="fa-solid fa-microphone text-base" id="voice-icon"></i>
         </div>
-        <div onclick="clearChat()" 
-             class="flex items-center gap-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-sm cursor-pointer transition-colors active:bg-white/15">
-          <i class="fa-solid fa-trash text-xs"></i>
-          <span class="hidden sm:inline text-xs font-medium text-white/70">CLEAR</span>
+
+        <div onclick="clearChat()" class="flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-2xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New session">
+          <i class="fa-solid fa-redo text-sm"></i>
         </div>
-        <div onclick="shareWithFriends()" 
-             class="flex items-center gap-x-1.5 px-3.5 py-1.5 rounded-2xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-xs cursor-pointer transition-colors active:bg-pink-500/40">
-          <i class="fa-solid fa-share-alt"></i>
-          <span class="hidden sm:inline text-[10px] font-semibold">SHARE</span>
+
+        <div onclick="shareWithFriends()" class="flex items-center justify-center w-9 h-9 sm:w-8 sm:h-8 rounded-2xl bg-gradient-to-br from-pink-500/25 to-purple-500/15 hover:from-pink-500/35 active:scale-95 text-xs cursor-pointer transition-all" title="Share this slay">
+          <i class="fa-solid fa-paper-plane text-sm"></i>
         </div>
-        <div onclick="createMemeCard()" 
-             class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15" title="Export this gay moment as a meme card">
-          <i class="fa-solid fa-download"></i>
-          <span class="hidden sm:inline text-[10px] font-medium text-white/70">MEME</span>
-        </div>
-        <div onclick="window.open('https://github.com/sauvira0/gayify', '_blank')" 
-             class="flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-colors active:bg-white/15">
-          <i class="fa-brands fa-github"></i>
-          <span class="hidden sm:inline text-[10px] font-medium text-white/70">SOURCE</span>
-        </div>
-        <div class="hidden sm:block px-3 py-1.5 rounded-2xl bg-white/5 text-[10px] font-mono tracking-widest text-pink-300/60 border border-white/10">
-          100% CERTIFIED
+
+        <div onclick="createMemeCard()" class="hidden sm:flex items-center justify-center w-8 h-8 rounded-2xl bg-white/5 hover:bg-white/10 text-xs cursor-pointer transition-all" title="Export meme">
+          <i class="fa-solid fa-image text-sm"></i>
         </div>
       </div>
     </div>
@@ -405,31 +423,31 @@
     <!-- Chat Card -->
     <div class="chat-container rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col flex-1 min-h-[480px] sm:min-h-[520px] sm:max-h-[620px]">
       
-      <!-- Chat Header -->
-      <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10 bg-black/20 flex items-center gap-x-3">
-        <div class="bot-avatar w-9 h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-lg shadow-inner">
+      <!-- Chat Header - rich, expensive, mobile perfect -->
+      <div class="px-4 py-2.5 sm:px-5 sm:py-3 border-b border-white/10 bg-white/[0.03] flex items-center gap-x-3 relative">
+        <div class="bot-avatar w-8 h-8 sm:w-9 sm:h-9 rounded-2xl flex-shrink-0 flex items-center justify-center text-base sm:text-lg shadow-inner ring-1 ring-white/10">
           👑
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-x-2">
-            <span class="font-semibold text-lg tracking-tight">ChakkaAI</span>
-            <div class="px-2 py-px rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold tracking-wider">ONLINE</div>
+            <span class="font-semibold text-[15px] sm:text-lg tracking-[-0.3px]">ChakkaAI</span>
+            <div class="px-1.5 py-px rounded-full bg-emerald-500/15 text-emerald-400 text-[8px] sm:text-[9px] font-medium tracking-[1px] border border-emerald-500/20">LIVE</div>
           </div>
-          <div class="text-xs text-white/50 -mt-0.5">Your personal gay translator • private to this tab</div>
+          <div class="text-[10px] text-white/40 -mt-0.5 font-light tracking-wide">Your private seductress • this tab only</div>
         </div>
-        <div class="text-right">
-          <div class="text-[10px] text-pink-400/70 font-medium">SLAY MODE</div>
+        <div class="text-right text-[9px] sm:text-[10px]">
+          <div class="text-pink-400/60 font-medium tracking-[1.5px]">EXCLUSIVE</div>
           <div class="flex gap-px justify-end mt-0.5">
-            <div class="w-2 h-2 rounded-full bg-pink-400"></div>
-            <div class="w-2 h-2 rounded-full bg-violet-400"></div>
-            <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-pink-400 to-purple-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-purple-400 to-indigo-400"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-indigo-400 to-pink-400"></div>
           </div>
         </div>
       </div>
 
       <!-- Messages -->
       <div id="messages" 
-           class="chat-scroll flex-1 p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto bg-zinc-950/60">
+           class="chat-scroll flex-1 p-3 sm:p-5 space-y-3.5 sm:space-y-5 overflow-y-auto bg-[#0a050f]/40" style="scroll-behavior: smooth;">
         <!-- Messages injected by JS -->
       </div>
 
@@ -447,38 +465,36 @@
           </button>
         </div>
         
-        <!-- Clear, lightweight call to action for pic upload -->
-        <div class="text-center text-[11px] text-pink-300/70 mb-2 tracking-wide">
-          📸 <span class="font-medium">Upload a pic</span> and let me turn it into pure seduction with captions 💋
-        </div>
-        <div class="flex items-center gap-x-3">
+        <div class="flex items-center gap-x-2 sm:gap-x-3">
           <div class="flex-1 relative">
             <input 
               id="message-input"
               type="text" 
-              class="chat-input w-full bg-zinc-900 border border-white/10 focus:border-pink-400/60 placeholder:text-white/30 text-white rounded-3xl py-3.5 px-5 text-[15px] outline-none"
-              placeholder="Whisper something... or upload a pic and watch me seduce it 💋"
+              class="chat-input w-full bg-zinc-900/80 border border-white/10 focus:border-pink-400/50 placeholder:text-white/25 text-white rounded-[22px] py-3 px-4 sm:py-3.5 sm:px-5 text-[15px] outline-none shadow-inner"
+              placeholder="Whisper... or seduce the frame"
               autocomplete="off"
               onkeypress="if (event.key === 'Enter') sendMessage()">
           </div>
           
+          <!-- Premium upload - world class tap target -->
           <button onclick="triggerImageUpload()" 
-                  class="flex-shrink-0 px-3 py-1.5 flex items-center gap-x-1.5 rounded-2xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-xs font-medium cursor-pointer transition-colors active:bg-pink-500/40"
-                  title="Upload pic to instantly get the gay vibe & captions 💅 (HEIC ok)">
-            <i class="fa-solid fa-image"></i>
-            <span>Upload Pic</span>
+                  class="flex-shrink-0 h-11 sm:h-12 px-3.5 flex items-center gap-x-1.5 rounded-[20px] bg-gradient-to-br from-pink-500/25 via-purple-500/15 to-transparent border border-pink-500/20 hover:border-pink-500/40 text-pink-300 active:text-white text-xs font-medium cursor-pointer transition-all active:scale-[0.97] shadow-sm"
+                  style="min-width: 92px;">
+            <i class="fa-solid fa-camera text-base"></i>
+            <span class="font-semibold tracking-wide">UPLOAD</span>
           </button>
           
           <button onclick="sendMessage()"
-                  class="gay-button flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-3xl text-white shadow-lg active:scale-[0.96]">
-            <i class="fa-solid fa-paper-plane text-lg"></i>
+                  class="gay-button flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[20px] text-white shadow-xl active:scale-[0.96] active:shadow-inner"
+                  style="background: linear-gradient(145deg, #ff69b4, #c026ff); box-shadow: 0 4px 15px -3px rgba(255,105,180,0.5);">
+            <i class="fa-solid fa-paper-plane text-[17px]"></i>
           </button>
         </div>
         
-        <div class="flex gap-x-1.5 mt-2 sm:mt-3 overflow-x-auto pb-1 -mx-1 px-1 sm:justify-center sm:overflow-visible">
-          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">I had a rough day</div>
-          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">This meeting is so boring</div>
-          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-xs sm:text-[10px] px-3 py-1.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors whitespace-nowrap flex-shrink-0">I love my cat</div>
+        <div class="flex gap-x-1.5 mt-1.5 sm:mt-2.5 overflow-x-auto pb-0.5 -mx-0.5 px-0.5 sm:justify-center sm:overflow-visible" style="scrollbar-width: none;">
+          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">a rough day</div>
+          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">boring meeting</div>
+          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[10px] sm:text-[10px] px-3.5 py-1 rounded-[14px] bg-white/[0.035] hover:bg-white/8 active:bg-pink-500/10 text-white/65 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/5">my cat</div>
         </div>
         
         <!-- Hidden image upload input -->
@@ -486,11 +502,10 @@
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="text-center mt-3 px-1 flex flex-col items-center gap-y-1">
-      <p class="text-[10px] text-white/30 tracking-wide">Everything you say, but gayer. Not liable for sudden dance breaks. 🌈</p>
-      <p class="text-[10px] text-pink-400/70 font-medium">Private to this tab only • No login • Nothing saved • Close tab = chat gone forever</p>
-      <p class="text-[10px] text-white/25">open source • hosted on GitHub Pages • perfect for WhatsApp squads 👯‍♀️</p>
+    <!-- Footer - discreet luxury -->
+    <div class="text-center mt-2.5 px-1 flex flex-col items-center gap-y-px text-[9px] text-white/25 tracking-[0.5px]">
+      <div>PRIVATE SESSION • EPHEMERAL BY DESIGN</div>
+      <div class="text-pink-400/40">A CHAKKAAI EXPERIENCE</div>
     </div>
   </div>
 
@@ -779,50 +794,52 @@
           canvas.height = img.height;
           const ctx = canvas.getContext('2d');
 
-          // Persona-influenced sexy filters
+          // World-class persona-driven luxurious filters
           let filter = `saturate(1.9) hue-rotate(${(seed * 40) - 10}deg) contrast(1.15) brightness(1.08)`;
-          if (currentPersona === 'femme') filter = `saturate(2.1) hue-rotate(-15deg) contrast(1.1) brightness(1.1)`;
-          else if (currentPersona === 'camp') filter = `saturate(1.7) hue-rotate(25deg) contrast(1.2) brightness(1.05)`;
-          else if (currentPersona === 'mystery') filter = `saturate(1.5) hue-rotate(-30deg) contrast(1.25) brightness(0.95)`;
-          else if (currentPersona === 'daddy') filter = `saturate(1.6) hue-rotate(5deg) contrast(1.3) brightness(1.0) sepia(0.2)`;
+          if (currentPersona === 'femme') filter = `saturate(2.2) hue-rotate(-12deg) contrast(1.08) brightness(1.12)`;
+          else if (currentPersona === 'camp') filter = `saturate(1.75) hue-rotate(28deg) contrast(1.22) brightness(1.06)`;
+          else if (currentPersona === 'mystery') filter = `saturate(1.55) hue-rotate(-35deg) contrast(1.28) brightness(0.92)`;
+          else if (currentPersona === 'daddy') filter = `saturate(1.65) hue-rotate(3deg) contrast(1.32) brightness(1.02) sepia(0.15)`;
 
           ctx.filter = filter;
           ctx.drawImage(img, 0, 0);
 
-          // Add some sparkles / glitter for extra gay - more intense for sexy feel
+          // Rich, expensive glitter & light leaks
           ctx.filter = 'none';
-          ctx.fillStyle = currentPersona === 'mystery' ? 'rgba(200, 180, 255, 0.7)' : 'rgba(255, 255, 255, 0.85)';
-          const sparkleCount = 25 + Math.floor(seed * 20);
+          ctx.fillStyle = currentPersona === 'mystery' ? 'rgba(220, 200, 255, 0.65)' : 'rgba(255, 255, 255, 0.82)';
+          const sparkleCount = 32 + Math.floor(seed * 18);
           for (let i = 0; i < sparkleCount; i++) {
-            const x = (Math.sin(i * 12.3 + seed) * 0.5 + 0.5) * canvas.width;
-            const y = (Math.cos(i * 7.7 + seed * 2) * 0.5 + 0.5) * canvas.height;
-            const size = 1.5 + Math.random() * 4;
+            const x = (Math.sin(i * 11.8 + seed * 1.3) * 0.5 + 0.5) * canvas.width;
+            const y = (Math.cos(i * 8.2 + seed) * 0.5 + 0.5) * canvas.height;
+            const size = 1.2 + Math.random() * 3.8;
+            ctx.globalAlpha = 0.6 + Math.random() * 0.4;
             ctx.beginPath();
             ctx.arc(x, y, size, 0, Math.PI * 2);
             ctx.fill();
+            ctx.globalAlpha = 1;
 
-            if (i % 3 === 0) {
-              ctx.fillRect(x - size*1.8, y-0.8, size*3.6, 1.6);
-              ctx.fillRect(x-0.8, y - size*1.8, 1.6, size*3.6);
+            if (i % 2 === 0) {
+              ctx.fillRect(x - size*2, y-0.6, size*4, 1.2);
+              ctx.fillRect(x-0.6, y - size*2, 1.2, size*4);
             }
           }
 
-          // Persona specific edge
-          let edgeColor = `hsla(${(seed*80 + 300) % 360}, 90%, 75%, 0.6)`;
-          if (currentPersona === 'daddy') edgeColor = 'rgba(80,80,80,0.7)';
+          // Luxe edge treatment
+          let edgeColor = currentPersona === 'daddy' ? 'rgba(70,65,60,0.65)' : `hsla(${(seed*75 + 310) % 360}, 92%, 78%, 0.55)`;
           ctx.strokeStyle = edgeColor;
-          ctx.lineWidth = Math.max(4, canvas.width * 0.012);
+          ctx.lineWidth = Math.max(5, canvas.width * 0.009);
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-          // Sexy tag
-          ctx.fillStyle = currentPersona === 'daddy' ? 'rgba(60,60,60,0.85)' : 'rgba(255, 105, 180, 0.85)';
-          ctx.font = `${Math.max(14, canvas.height * 0.045)}px system-ui, sans-serif`;
+          // Elegant, expensive caption treatment
+          ctx.fillStyle = currentPersona === 'daddy' ? 'rgba(45,42,38,0.9)' : 'rgba(255, 105, 180, 0.88)';
+          ctx.font = `600 ${Math.max(13, canvas.height * 0.042)}px system-ui, -apple-system, sans-serif`;
           ctx.textAlign = 'center';
-          const tag = currentPersona === 'daddy' ? 'CLAIMED 💪' : 'GAYIFIED 💅';
-          const textWidth = ctx.measureText(tag).width + 20;
-          ctx.fillRect(canvas.width/2 - textWidth/2, canvas.height - 32, textWidth, 26);
-          ctx.fillStyle = 'white';
-          ctx.fillText(tag, canvas.width / 2, canvas.height - 14);
+          const tag = currentPersona === 'daddy' ? 'YOURS' : 'SEDUCED';
+          const textW = ctx.measureText(tag).width + 28;
+          const tagY = canvas.height - (canvas.height * 0.045);
+          ctx.fillRect(canvas.width/2 - textW/2, tagY - 18, textW, 24);
+          ctx.fillStyle = currentPersona === 'daddy' ? '#e8d9c8' : '#ffffff';
+          ctx.fillText(tag, canvas.width / 2, tagY - 2);
 
           resolve(canvas.toDataURL('image/jpeg', 0.9));
         };
