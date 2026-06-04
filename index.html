@@ -277,14 +277,11 @@
 
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
+        <!-- Clear, lightweight call to action for pic upload -->
+        <div class="text-center text-[11px] text-pink-300/70 mb-2 tracking-wide">
+          📸 <span class="font-medium">Upload pic</span> to instantly get the gay vibe + captions 💅
+        </div>
         <div class="flex items-center gap-x-3">
-          <!-- Image attachment preview (shows when pic is attached to text) -->
-          <div id="image-preview" class="hidden items-center gap-x-2 bg-white/5 rounded-2xl p-1 pr-2 text-xs">
-            <img id="preview-thumb" class="w-8 h-8 rounded-xl object-cover" alt="preview">
-            <span class="text-pink-300/80">pic attached</span>
-            <button onclick="clearAttachedImage()" class="text-pink-400 hover:text-white px-1">×</button>
-          </div>
-
           <div class="flex-1 relative">
             <input 
               id="message-input"
@@ -296,9 +293,10 @@
           </div>
           
           <button onclick="triggerImageUpload()" 
-                  class="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-2xl text-pink-400 hover:text-pink-300 hover:bg-white/5 active:bg-white/10 transition-colors"
-                  title="Upload any pic (iPhone HEIC supported) for ChakkaAI to gayify with captions 💅">
-            <i class="fa-solid fa-image text-xl"></i>
+                  class="flex-shrink-0 px-3 py-1.5 flex items-center gap-x-1.5 rounded-2xl bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 text-xs font-medium cursor-pointer transition-colors active:bg-pink-500/40"
+                  title="Upload pic to instantly get the gay vibe & captions 💅 (HEIC ok)">
+            <i class="fa-solid fa-image"></i>
+            <span>Upload Pic</span>
           </button>
           
           <button onclick="sendMessage()"
@@ -732,26 +730,6 @@
       if (input) input.click();
     }
 
-    function setAttachedImage(dataUrl) {
-      attachedImage = dataUrl;
-      const preview = document.getElementById('image-preview');
-      const thumb = document.getElementById('preview-thumb');
-      if (preview && thumb) {
-        thumb.src = dataUrl;
-        preview.classList.remove('hidden');
-        preview.classList.add('flex');
-      }
-    }
-
-    function clearAttachedImage() {
-      attachedImage = null;
-      const preview = document.getElementById('image-preview');
-      if (preview) {
-        preview.classList.remove('flex');
-        preview.classList.add('hidden');
-      }
-    }
-
     async function handleImageUpload(file) {
       if (!file) {
         showToast("No file selected, bestie!");
@@ -772,12 +750,27 @@
         dataUrl = await resizeImage(dataUrl, 650);
         lastUploadedImage = dataUrl;
 
-        // Set as attached (shows preview) so user can type a message with the pic
-        setAttachedImage(dataUrl);
+        // Capture any text typed before upload for context (e.g. "this is my new fit")
+        const currentText = document.getElementById('message-input').value.trim();
+        document.getElementById('message-input').value = '';
 
-        // Clear the file input
-        const input = document.getElementById('image-input');
-        if (input) input.value = '';
+        // Immediately show the pic as your message (lightweight & intuitive)
+        addMessage('user', currentText, { image: dataUrl });
+
+        // Right away: analyze and generate the gay vibe + captions + visuals
+        const typing = showTyping();
+        // Small delay feels like "thinking" but quick
+        await new Promise(r => setTimeout(r, 400));
+
+        const { reaction, captions } = await processGayImage(dataUrl);
+        const gayified = await gayifyImage(dataUrl);
+        removeTyping(typing);
+
+        addMessage('bot', reaction, { image: dataUrl, gayifiedImage: gayified, captions });
+
+        // Clear the file input for next time
+        const inputEl = document.getElementById('image-input');
+        if (inputEl) inputEl.value = '';
       };
       reader.readAsDataURL(file);
     }
@@ -795,7 +788,6 @@
     // This guarantees privacy and ephemerality when you share https://sauvira0.github.io/gayify/ with friends.
     let messages = [];
     let lastUploadedImage = null; // for regenerate feature
-    let attachedImage = null; // for sending text + pic together
     let slayScore = 0;
     let voiceEnabled = false;
     const gayLevels = [
@@ -968,33 +960,12 @@
       const input = document.getElementById('message-input');
       const value = input.value.trim();
       
-      const hasImage = !!attachedImage;
-      if (!value && !hasImage) return;
+      if (!value) return;
       
-      // Add user message (text + optional attached pic)
-      addMessage('user', value, hasImage ? { image: attachedImage } : {});
-      
-      // If there was an attached pic, trigger the full gayification flow
-      if (hasImage) {
-        const picData = attachedImage;
-        clearAttachedImage();
-        input.value = '';
-        
-        const typing = showTyping();
-        await new Promise(r => setTimeout(r, 650));
-        
-        const { reaction, captions } = await processGayImage(picData);
-        const gayified = await gayifyImage(picData);
-        removeTyping(typing);
-        
-        addMessage('bot', reaction, { image: picData, gayifiedImage: gayified, captions });
-        if (Math.random() > 0.5) triggerConfetti();
-        return;
-      }
-      
+      // Normal text-only gayify (pics are handled instantly on upload for simplicity & speed)
+      addMessage('user', value);
       input.value = '';
       
-      // Normal text gayify
       const typing = showTyping();
       await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
       removeTyping(typing);
@@ -1064,9 +1035,7 @@
       messages = [];
       slayScore = 0;
       lastUploadedImage = null;
-      attachedImage = null;
       updateSlayScore(0);
-      clearAttachedImage();
       
       // Re-add welcome
       setTimeout(() => {
@@ -1128,7 +1097,7 @@
           </div>
           <div class="flex-1">
             <div class="bot-bubble message-bubble gay-text text-[15px]">
-              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Upload a pic (or drag it here) and I'll read the vibe + give you gay captions. This chat is 100% yours and private to this tab only. Close the window and poof — it's gone. Go ahead, I'm ready to gag. (Hit SHARE and send it to the group chat 😉)</p>
+              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Or just upload a pic (click button or drag here) and I'll instantly read the vibe + give you gay captions. Super simple, private to this tab. Close & it's gone. Go ahead, I'm ready to gag! 💅</p>
             </div>
             <div class="pl-1 mt-0.5">
               <span class="text-[9px] text-pink-300/60 font-medium">ChakkaAI</span>
@@ -1351,19 +1320,19 @@
         });
       }
 
-      // Drag & drop support on the messages area (fun & easy)
+      // Drag & drop support on the messages area – super straightforward
       const dropZone = document.getElementById('messages');
       if (dropZone) {
         dropZone.addEventListener('dragover', (e) => {
           e.preventDefault();
-          dropZone.classList.add('!bg-pink-950/40');
+          dropZone.classList.add('!bg-pink-950/40', 'border', 'border-dashed', 'border-pink-400/60');
         });
         dropZone.addEventListener('dragleave', () => {
-          dropZone.classList.remove('!bg-pink-950/40');
+          dropZone.classList.remove('!bg-pink-950/40', 'border', 'border-dashed', 'border-pink-400/60');
         });
         dropZone.addEventListener('drop', (e) => {
           e.preventDefault();
-          dropZone.classList.remove('!bg-pink-950/40');
+          dropZone.classList.remove('!bg-pink-950/40', 'border', 'border-dashed', 'border-pink-400/60');
           const file = e.dataTransfer.files[0];
           const isImage = file && (file.type.startsWith('image/') || 
                           file.name.toLowerCase().endsWith('.heic') || 
