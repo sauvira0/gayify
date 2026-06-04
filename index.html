@@ -390,6 +390,11 @@
             <span class="rainbow-text">gayify</span>
           </h1>
           <p class="text-[8px] sm:text-[9px] text-pink-300/60 -mt-0.5 tracking-widest font-light">MAKE IT GAYER™</p>
+          <!-- Viral FOMO: Live scene counter (increments on actions, resets on close) -->
+          <div class="text-[7px] text-emerald-400/70 flex items-center gap-x-1 mt-0.5">
+            <span class="w-1 h-1 bg-emerald-400 rounded-full animate-pulse inline-block"></span>
+            <span id="scene-count">1,248</span> queens serving rn
+          </div>
         </div>
       </div>
       
@@ -408,6 +413,9 @@
 
         <div onclick="clearChat()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New chat">
           <i class="fa-solid fa-redo text-xs"></i>
+        </div>
+        <div onclick="burnSession()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-xs cursor-pointer transition-all active:scale-95" title="Burn this session (all evidence destroyed)">
+          <i class="fa-solid fa-fire text-xs text-red-400"></i>
         </div>
 
         <div onclick="shareWithFriends()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500/25 to-purple-500/15 hover:from-pink-500/35 active:scale-95 text-xs cursor-pointer transition-all" title="Share">
@@ -459,6 +467,12 @@
           </button>
           <button onclick="vibeRoulette()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Vibe Roulette">
             <i class="fa-solid fa-sync text-lg"></i>
+          </button>
+          <button onclick="showTrophyCase()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Trophy Case">
+            <i class="fa-solid fa-trophy text-lg"></i>
+          </button>
+          <button onclick="spillTea()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Spill the Tea (Confessional)">
+            <i class="fa-solid fa-comment-dots text-lg"></i>
           </button>
         </div>
 
@@ -946,13 +960,13 @@
       });
       y += lines.length * 28 + 40;
 
-      // Footer - expensive branding
+      // Footer - expensive branding + viral CTA
       ctx.fillStyle = '#d4af37';
-      ctx.font = '500 15px system-ui, sans-serif';
-      ctx.fillText('CHAKKAAI • PRIVATE • EPHEMERAL', canvas.width / 2, canvas.height - 35);
+      ctx.font = '500 14px system-ui, sans-serif';
+      ctx.fillText('CHAKKAAI • PRIVATE • EPHEMERAL', canvas.width / 2, canvas.height - 38);
       ctx.fillStyle = '#ff69b4';
-      ctx.font = '400 12px system-ui, sans-serif';
-      ctx.fillText('gayify.pro • your secret is safe', canvas.width / 2, canvas.height - 18);
+      ctx.font = '400 11px system-ui, sans-serif';
+      ctx.fillText('gayify.pro  •  TAG YOUR BESTIE  •  YOUR SECRET IS SAFE', canvas.width / 2, canvas.height - 18);
 
       // Download
       const link = document.createElement('a');
@@ -1011,6 +1025,73 @@
         addMessage('bot', personaGayify(reaction) + " (roulette edition)", { image: lastUploadedImage, gayifiedImage: gayified, captions });
         triggerConfetti(60);
       }, 650);
+    }
+
+    function showTrophyCase() {
+      if (badges.size === 0) {
+        showToast("No trophies yet — keep serving, queen!");
+        return;
+      }
+      const list = Array.from(badges).map(b => {
+        const names = { first_blood: 'First Blood 💉', picasso: 'Picasso of Pics 🎨', mother: 'Mother Material 👑', icon: 'Gay Icon Status ✨', hot_streak: 'Hot Streak 🔥', collector: 'Moment Collector 🖼️' };
+        return `<div class="bg-white/5 rounded-xl p-2 text-center text-sm">${names[b] || b}</div>`;
+      }).join('');
+      const modal = document.createElement('div');
+      modal.className = `fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4`;
+      modal.innerHTML = `
+        <div class="bg-zinc-950/95 border border-pink-500/30 rounded-3xl max-w-sm w-full overflow-hidden" style="backdrop-filter: blur(20px);">
+          <div class="px-4 py-3 border-b border-white/10 flex justify-between items-center">
+            <div class="font-semibold">Trophy Case</div>
+            <button onclick="this.closest('.fixed').remove()" class="text-xl">×</button>
+          </div>
+          <div class="p-4 grid grid-cols-2 gap-2">${list}</div>
+          <div class="p-3 text-center text-xs text-pink-300/50 border-t border-white/10">Unlocked this session only • share your haul</div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function burnSession() {
+      const container = document.getElementById('messages');
+      container.innerHTML = '';
+      messages = [];
+      gayMoments = [];
+      badges = new Set();
+      slayScore = 0;
+      currentStreak = 0;
+      lastUploadedImage = null;
+      updateSlayScore(0);
+      // Dramatic burn animation
+      const burn = document.createElement('div');
+      burn.className = 'fixed inset-0 flex items-center justify-center z-[9999] pointer-events-none';
+      burn.innerHTML = `<div class="text-6xl animate-pulse">🔥 ALL EVIDENCE BURNED 💨</div>`;
+      document.body.appendChild(burn);
+      setTimeout(() => {
+        burn.remove();
+        addWelcomeMessage();
+        showToast("Session torched. Fresh start, queen. Your secrets are safe.");
+      }, 1200);
+    }
+
+    function rateMoment(ate) {
+      if (ate) {
+        updateSlayScore(5);
+        showToast("Yasss! This one ate. +5 slay points ✨");
+        triggerConfetti(20);
+      } else {
+        showToast("Noted. We'll do better next time, sis.");
+      }
+    }
+
+    function spillTea() {
+      const tea = prompt("Spill the tea, sis (your secret is safe in this tab only):");
+      if (!tea || !tea.trim()) return;
+      addMessage('user', tea.trim());
+      const dramatic = personaGayify(`The tea is piping hot. ${tea.trim()} and that's on what? On everything. The girls need to hear this.`);
+      addMessage('bot', dramatic);
+      updateSlayScore(3);
+      triggerConfetti(25);
+      showToast("Tea spilled. Your secrets die with this tab.");
     }
 
     function showMyGayDiary() {
@@ -1204,6 +1285,8 @@
     let currentStreak = 0;
     let lastInteractionTime = Date.now();
     let currentPersona = 'femme'; // personal customization for addictiveness
+    let badges = new Set(); // in-memory only - unlocked achievements
+    let sceneCount = 1247; // fake "live from the scene" counter - increments on actions for viral FOMO
     const gayLevels = [
       { min: 0, title: "Baby Gay", emoji: "🌱" },
       { min: 5, title: "Twink in Training", emoji: "💅" },
@@ -1279,6 +1362,7 @@
             </div>`;
           });
           inner += `<button onclick="regenerateLastGayPic()" class="mt-1 text-[10px] px-2 py-0.5 bg-pink-500/20 hover:bg-pink-500/30 rounded-full text-pink-300/90">🔄 Regenerate gay version</button>`;
+          inner += `<div class="mt-1 flex gap-1 text-[9px]"><button onclick="rateMoment(true)" class="px-2 py-0.5 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-full">This ate 🔥 (+5)</button><button onclick="rateMoment(false)" class="px-2 py-0.5 bg-white/10 hover:bg-white/20 rounded-full">Mid</button></div>`;
           inner += `</div>`;
         }
         
@@ -1489,19 +1573,19 @@
 
     function shareWithFriends() {
       const url = "https://sauvira0.github.io/gayify/";
-      const shareText = `You HAVE to try this 😂💅 Each person gets their OWN private chat (no login, nothing saved). Close the tab = chat disappears forever: ${url}`;
+      const shareText = `🚨 URGENT: The girls are serving main character energy rn. I just got read to FILTH by ChakkaAI and I'm obsessed. Private, instant, no trace. Go get your life: ${url} 💅🔥 Tag who needs this immediately.`;
       
       navigator.clipboard.writeText(shareText).then(() => {
-        showToast("Link + privacy note copied! Send it to the girls 💖");
+        showToast("Viral copy-paste ready for the group chat! Drop it in WhatsApp 💖");
+        triggerConfetti(30);
       }).catch(() => {
-        // Fallback for older browsers or when clipboard is blocked
         const textarea = document.createElement("textarea");
         textarea.value = shareText;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand("copy");
         document.body.removeChild(textarea);
-        showToast("Link + privacy note copied! Send it to the girls 💖");
+        showToast("Viral copy-paste ready for the group chat! Drop it in WhatsApp 💖");
       });
     }
 
@@ -1596,6 +1680,28 @@
         showToast(`${level.emoji} Level up! You're now ${level.title}! 🔥`);
         triggerConfetti();
         playSlayChime();
+      }
+
+      // Award badges for addictiveness (in-memory only)
+      awardBadgeIfNew();
+
+      // Bump the "live scene" counter for viral FOMO
+      sceneCount += Math.floor(Math.random() * 3) + 1;
+      const sceneEl = document.getElementById('scene-count');
+      if (sceneEl) sceneEl.textContent = sceneCount.toLocaleString();
+    }
+
+    function awardBadgeIfNew() {
+      const newBadges = [];
+      if (slayScore >= 5 && !badges.has('first_blood')) { badges.add('first_blood'); newBadges.push('First Blood 💉'); }
+      if (slayScore >= 15 && !badges.has('picasso')) { badges.add('picasso'); newBadges.push('Picasso of Pics 🎨'); }
+      if (slayScore >= 30 && !badges.has('mother')) { badges.add('mother'); newBadges.push('Mother Material 👑'); }
+      if (slayScore >= 50 && !badges.has('icon')) { badges.add('icon'); newBadges.push('Gay Icon Status ✨'); }
+      if (currentStreak >= 5 && !badges.has('hot_streak')) { badges.add('hot_streak'); newBadges.push('Hot Streak 🔥'); }
+      if (gayMoments.length >= 5 && !badges.has('collector')) { badges.add('collector'); newBadges.push('Moment Collector 🖼️'); }
+      if (newBadges.length) {
+        showToast(`Badge unlocked: ${newBadges.join(', ')}`);
+        triggerConfetti(40);
       }
     }
 
@@ -1816,6 +1922,9 @@
       if ('speechSynthesis' in window) {
         speechSynthesis.getVoices();
       }
+      // Init live scene counter (in-memory, for viral FOMO)
+      const sceneElInit = document.getElementById('scene-count');
+      if (sceneElInit) sceneElInit.textContent = sceneCount.toLocaleString();
 
       // Fake but addictive group counter for WhatsApp squad energy
       setInterval(() => {
