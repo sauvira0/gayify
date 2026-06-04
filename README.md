@@ -4,6 +4,8 @@ A simple, hilarious web chat that makes **anything** you say more gay.
 
 **🌐 Live demo:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 
+[![Deploy to GitHub Pages](https://github.com/sauvira0/gayify/actions/workflows/deploy.yml/badge.svg)](https://github.com/sauvira0/gayify/actions/workflows/deploy.yml)
+
 ## What it does
 
 Type anything in the chat. The bot (Miss Thing 👑) will instantly translate your message into the most flamboyant, over-the-top, extra version possible — complete with "yasss", "periodt", "slay", random emojis, and pure chaotic bestie energy.
