@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>💅 gayify • make it gayer</title>
-  <meta name="description" content="A hilarious chatbot that turns anything you say into the most extra, gay, yassified version possible. Periodt.">
+  <meta name="description" content="A hilarious chatbot that turns anything you say gayer. Each person gets their own private chat — no login, nothing saved. Close the tab and it's gone forever. YASSS.">
   <meta name="theme-color" content="#c026ff">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
 
   <!-- Open Graph / Social -->
   <meta property="og:title" content="gayify • make anything gayer 💅">
-  <meta property="og:description" content="Type anything. Watch it become fabulously extra. A silly fun gay translator chatbot.">
+  <meta property="og:description" content="Type anything. It gets gayer. Each friend gets their own private tab-only chat (no login, closes when they leave). Pure silly fun.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sauvira0.github.io/gayify/">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="gayify • make it gayer 💅">
-  <meta name="twitter:description" content="The chatbot that makes everything you say 1000% gayer. YASSS.">
+  <meta name="twitter:description" content="Makes anything you say gayer. Private per-tab chats only — no accounts, nothing saved, disappears on close. Hilarious & safe to share.">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -219,7 +219,7 @@
             <span class="font-semibold text-lg tracking-tight">Chakka Thing</span>
             <div class="px-2 py-px rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold tracking-wider">ONLINE</div>
           </div>
-          <div class="text-xs text-white/50 -mt-0.5">Your personal gay translator</div>
+          <div class="text-xs text-white/50 -mt-0.5">Your personal gay translator • private to this tab</div>
         </div>
         <div class="text-right">
           <div class="text-[10px] text-pink-400/70 font-medium">SLAY MODE</div>
@@ -267,6 +267,7 @@
     <!-- Footer -->
     <div class="text-center mt-3 px-1 flex flex-col items-center gap-y-1">
       <p class="text-[10px] text-white/30 tracking-wide">Everything you say, but gayer. Not liable for sudden dance breaks. 🌈</p>
+      <p class="text-[10px] text-pink-400/70 font-medium">Private to this tab only • No login • Nothing saved • Close tab = chat gone forever</p>
       <p class="text-[10px] text-white/25">open source • hosted on GitHub Pages</p>
     </div>
   </div>
@@ -437,6 +438,14 @@
     }
 
     // Chat state
+    // IMPORTANT: This is intentionally 100% in-memory only (no localStorage, cookies, or server).
+    // Why this design (perfect for sharing the link):
+    // - Every person who opens the link gets their OWN completely isolated chat.
+    // - Different tabs, different devices, different friends = zero conflicts or shared history.
+    // - No login, no accounts, no tracking ever.
+    // - When the tab or browser window is closed, the JS context dies and all chat data disappears permanently.
+    // - Refreshing the page also starts fresh.
+    // This guarantees privacy and ephemerality when you share https://sauvira0.github.io/gayify/ with friends.
     let messages = [];
 
     function addMessage(role, text, isGayified = false) {
@@ -620,10 +629,10 @@
 
     function shareWithFriends() {
       const url = "https://sauvira0.github.io/gayify/";
-      const shareText = `You HAVE to try this 😂💅 Type anything and it makes it gayer than a pride parade: ${url}`;
+      const shareText = `You HAVE to try this 😂💅 Each person gets their OWN private chat (no login, nothing saved). Close the tab = chat disappears forever: ${url}`;
       
       navigator.clipboard.writeText(shareText).then(() => {
-        showToast("Link copied! Send it to the girls 💖");
+        showToast("Link + privacy note copied! Send it to the girls 💖");
       }).catch(() => {
         // Fallback for older browsers or when clipboard is blocked
         const textarea = document.createElement("textarea");
@@ -632,7 +641,7 @@
         textarea.select();
         document.execCommand("copy");
         document.body.removeChild(textarea);
-        showToast("Link copied! Send it to the girls 💖");
+        showToast("Link + privacy note copied! Send it to the girls 💖");
       });
     }
 
@@ -672,7 +681,7 @@
           </div>
           <div class="flex-1">
             <div class="bot-bubble message-bubble gay-text text-[15px]">
-              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. Go ahead, I'm ready to gag. (Hit SHARE and send it to the group chat 😉)</p>
+              <p>Heyyy bestie!! 💖 Tell me literally anything and I will make it gayer than a pride parade in June. This chat is 100% yours and private to this tab only. Close the window and poof — it's gone. Go ahead, I'm ready to gag. (Hit SHARE and send it to the group chat 😉)</p>
             </div>
             <div class="pl-1 mt-0.5">
               <span class="text-[9px] text-pink-300/60 font-medium">chakka thing</span>

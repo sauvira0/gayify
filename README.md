@@ -53,6 +53,20 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 | This meeting is so boring   | Bored? Honey we are about to change that narrative... |
 | I love my cat               | Bestie, I'm obsessed with my cat, queen! ✨            |
 
+## Privacy & Sharing with Friends (Important!)
+
+This app is deliberately designed so you can safely share the link with anyone:
+
+- **Everyone gets their own chat**: Each person who opens the link (even on the same computer, different tabs or windows) gets a completely separate, isolated conversation. There is no shared state, no server, and no way for one person's chat to affect or be seen by anyone else.
+- **No login or accounts required**: Open the link and start chatting immediately.
+- **Truly ephemeral**: All chat history lives only in the browser's memory for that specific tab. 
+  - Close the tab or window → everything is permanently deleted.
+  - Refresh the page → fresh chat.
+  - Nothing is ever written to localStorage, cookies, or sent to any server.
+- **Zero conflicts**: Perfect for group shares, parties, Discord, family group chats, etc. No one steps on anyone else's conversation.
+
+When you use the in-app **SHARE** button, it copies a ready-to-paste message that explains this privacy model.
+
 ## Notes
 
 - 100% client-side. Your messages never leave your computer.
