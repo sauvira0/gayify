@@ -1,16 +1,16 @@
-# 😂 juggatify
+# 💅 gayify
 
-A simple, hilarious web chat that turns **anything** into proper Lahore / Punjabi juggat (جگت) — quick wit, playful roasts, puns & street banter.
+A simple, hilarious web chat that makes **anything** you say more gay.
 
-**🌐 Live demo:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/) (now serving full Lahori juggat)
+**🌐 Live demo:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 
 [![Deploy to GitHub Pages](https://github.com/sauvira0/gayify/actions/workflows/deploy.yml/badge.svg)](https://github.com/sauvira0/gayify/actions/workflows/deploy.yml)
 
 ## What it does
 
-Type anything or upload a pic. The bot (JUGGA 🗣️) instantly turns it into authentic Lahore juggat — quick puns, cultural references (traffic, biryani, family, Anarkali, bosses), playful roasts, "oye hoye", "balle balle", hyperbole, and street-theater energy.
+Type anything in the chat. The bot (ChakkaAI 👑) will instantly translate your message into the most flamboyant, over-the-top, extra version possible — complete with "yasss", "periodt", "slay", random emojis, and pure chaotic bestie energy.
 
-It's the ultimate "make it juggat" machine for your WhatsApp group. Rooted in real Lahori street & stage comedy.
+It's the ultimate "make it gayer" filter in chatbot form.
 
 ## Run it
 
@@ -37,7 +37,7 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 
 - Instant over-the-top gayification of any text with special sass cases, replacements, prefixes/suffixes, emojis
 - **4 Personas** (💖 Femme / 🌟 Camp / 🖤 Mystery / 🖤 Daddy) — switch live in header; changes BOTH the language style AND the visual gayification filters/overlays on pics
-- Upload any pic (or drag & drop anywhere, HEIC iPhone OK, no size limit) → instantly analyzes vibe/colors/pose/brightness client-side → serves 5+ Lahori juggat roast captions you can copy + a dramatically "juggatified" version (warm desi filters, gold stamps like "JUGGAT BAJI", "LAHORE ROASTED", playful doodles)
+- Upload any pic (or drag & drop anywhere, HEIC iPhone OK, no size limit) → instantly analyzes vibe/colors/pose/brightness client-side → serves 5+ gay captions you can copy + a dramatically "gayified" filtered + sparkled + gold-tagged version of your photo
 - **Direct upload flow**: as soon as you pick or drop, it appears + gets fully processed and replied (no extra "run" button)
 - Slay score + levels (Baby Gay → Gay Icon) + live streak + trophy case (in-memory badges)
 - My Gay Diary: collect & replay your best moments this tab only
@@ -53,12 +53,12 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 
 ## Examples
 
-| You say                     | JUGGA says                                      |
+| You say                     | ChakkaAI says                                      |
 |-----------------------------|------------------------------------------------------|
-| I had a good day            | Arre oye yaar, main toh zabardast din guzara, balle balle! 😂 |
-| hello                       | Oye hoye! Aaya bada hero. Kya haal chaal yaar, Lahore da scene kaisa? |
-| aaj traffic                 | Traffic? Oye yeh toh roz ka juggat hai. Lahore ke signals pe zindagi guzar jati hai yaar. |
-| new haircut                 | Naya haircut? Beta, mirror se pehle adda hans raha hoga. Kya scene banaya! |
+| I had a good day            | Oh honey, I had a fabulous day and that's on periodt. 💅✨ |
+| hello                       | Hiiiiii bestie!!! Oh my god you're here, the girls are so back 💖✨ |
+| This meeting is so boring   | Bored? Honey we are about to change that narrative... |
+| I love my cat               | Bestie, I'm obsessed with my cat, queen! ✨            |
 
 ## Privacy & Sharing with Friends (Important! — this is the core)
 
