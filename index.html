@@ -67,6 +67,7 @@
         box-shadow: 
           0 28px 55px -15px rgb(0 0 0 / 0.55),
           0 0 0 1px rgba(212, 175, 55, 0.1) inset;
+        margin: 0 -4px; /* edge to edge on very small for immersive */
       }
     }
     
@@ -97,6 +98,57 @@
         0 55px 110px -28px rgb(0 0 0 / 0.7),
         0 0 0 1px rgba(212, 175, 55, 0.22) inset,
         0 0 160px -40px rgba(192, 38, 255, 0.22);
+    }
+
+    /* Mobile specific rich tweaks */
+    @media (max-width: 640px) {
+      .message-bubble {
+        padding: 12px 16px;
+        font-size: 14.5px;
+        border-radius: 18px;
+      }
+      .user-bubble {
+        border-radius: 18px 18px 6px 18px;
+      }
+      .bot-bubble {
+        border-radius: 18px 18px 18px 6px;
+      }
+      .chat-input {
+        font-size: 15px;
+        padding: 12px 16px;
+      }
+      #slay-score {
+        font-size: 9px;
+        padding: 4px 6px;
+      }
+      .bot-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+      /* Extra declutter & tap comfort on small phones */
+      .chat-container {
+        border-radius: 20px;
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+      #messages {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+      }
+      .persona-btn {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 10px !important;
+      }
+      /* Upload box breathes on mobile */
+      .max-w-\[280px\] {
+        max-width: 92% !important;
+      }
+    }
+    @media (max-width: 380px) {
+      .message-bubble { font-size: 14px; padding: 10px 13px; }
+      #persona-picker { gap: 1px; }
     }
 
     .message-bubble {
@@ -372,6 +424,15 @@
       transform: translateY(-2px);
       filter: brightness(1.05);
     }
+
+    /* Persona micro buttons - always touchable, gold ring on active */
+    .persona-btn {
+      border-color: rgba(255,255,255,0.25);
+      transition: box-shadow .15s ease, transform .1s ease;
+    }
+    .persona-btn:active {
+      transform: scale(0.92);
+    }
   </style>
 </head>
 <body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center overscroll-none" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%); padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); -webkit-tap-highlight-color: transparent;">
@@ -386,40 +447,44 @@
           💅
         </div>
         <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-semibold title-font tracking-tighter flex items-center gap-x-1">
+          <h1 class="text-[21px] sm:text-3xl font-semibold title-font tracking-tighter flex items-center gap-x-1">
             <span class="rainbow-text">gayify</span>
           </h1>
-          <p class="text-[8px] sm:text-[9px] text-pink-300/60 -mt-0.5 tracking-widest font-light">MAKE IT GAYER™</p>
+          <p class="text-[7px] sm:text-[9px] text-pink-300/60 -mt-0.5 tracking-widest font-light hidden xs:block">MAKE IT GAYER™</p>
           <!-- Viral FOMO: Live scene counter (increments on actions, resets on close) -->
-          <div class="text-[7px] text-emerald-400/70 flex items-center gap-x-1 mt-0.5">
+          <div class="text-[6.5px] sm:text-[7px] text-emerald-400/70 flex items-center gap-x-1 mt-px">
             <span class="w-1 h-1 bg-emerald-400 rounded-full animate-pulse inline-block"></span>
-            <span id="scene-count">1,248</span> queens serving rn
+            <span id="scene-count">1,248</span> <span class="hidden sm:inline">queens serving rn</span><span class="sm:hidden">queens live</span>
           </div>
         </div>
       </div>
       
       <!-- Compact right controls for mobile -->
-      <div class="flex items-center gap-x-1 sm:gap-x-1.5 flex-shrink-0">
+      <div class="flex items-center gap-x-0.5 sm:gap-x-1 flex-shrink-0">
         <!-- Compact Slay Score -->
-        <div id="slay-score" onclick="showSlayRecap()" class="flex items-center gap-x-1 px-2 py-1 rounded-xl bg-white/5 text-[10px] font-mono text-pink-300/80 border border-white/10 cursor-pointer active:scale-[0.985] transition-all" title="Your slay journey">
-          <span class="text-[9px] text-pink-400/70">SLAY</span>
+        <div id="slay-score" onclick="showSlayRecap()" class="flex items-center gap-x-0.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-xl bg-white/5 text-[9px] sm:text-[10px] font-mono text-pink-300/80 border border-white/10 cursor-pointer active:scale-[0.985] transition-all" title="Your slay journey (tap for recap)">
+          <span class="text-[8px] text-pink-400/70">SLAY</span>
           <span id="slay-value" class="font-semibold text-white tabular-nums">0</span>
-          <span id="slay-level" class="text-[8px] text-pink-400/70 hidden xs:inline">Baby</span>
+          <span id="slay-level" class="text-[8px] text-pink-400/70">🌱</span>
+          <span class="text-[7px] text-emerald-400/60 hidden xs:inline">·<span id="streak-mini">1</span>🔥</span>
         </div>
 
-        <div onclick="toggleVoice()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Voice">
-          <i class="fa-solid fa-microphone text-sm" id="voice-icon"></i>
+        <div onclick="toggleVoice()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Voice mode">
+          <i class="fa-solid fa-microphone text-xs sm:text-sm" id="voice-icon"></i>
         </div>
 
-        <div onclick="clearChat()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New chat">
-          <i class="fa-solid fa-redo text-xs"></i>
+        <div onclick="clearChat()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New chat (keeps same tab privacy)">
+          <i class="fa-solid fa-redo text-[10px]"></i>
         </div>
-        <div onclick="burnSession()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-xs cursor-pointer transition-all active:scale-95" title="Burn this session (all evidence destroyed)">
-          <i class="fa-solid fa-fire text-xs text-red-400"></i>
+        <div onclick="burnSession()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-xs cursor-pointer transition-all active:scale-95" title="Burn this session (all evidence destroyed)">
+          <i class="fa-solid fa-fire text-[10px] text-red-400"></i>
         </div>
 
-        <div onclick="shareWithFriends()" class="flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500/25 to-purple-500/15 hover:from-pink-500/35 active:scale-95 text-xs cursor-pointer transition-all" title="Share">
-          <i class="fa-solid fa-paper-plane text-xs"></i>
+        <div onclick="shareWithFriends()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-pink-500/25 to-purple-500/15 hover:from-pink-500/35 active:scale-95 text-xs cursor-pointer transition-all" title="Copy viral share text for WhatsApp">
+          <i class="fa-solid fa-paper-plane text-[10px]"></i>
+        </div>
+        <div onclick="exportStoryRecap()" class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Export tall story image for WhatsApp/IG Stories">
+          <i class="fa-solid fa-file-image text-[10px]"></i>
         </div>
       </div>
     </div>
@@ -437,10 +502,14 @@
             <span class="font-semibold text-sm sm:text-base tracking-tight">ChakkaAI</span>
             <div class="px-1 py-px rounded bg-emerald-500/20 text-emerald-400 text-[7px] sm:text-[8px] font-medium tracking-wider">LIVE</div>
           </div>
-          <div class="text-[9px] text-white/40 -mt-0.5">private • this tab only</div>
+          <div class="text-[8px] sm:text-[9px] text-white/40 -mt-0.5">private to this tab • tap 💖🌟 to switch vibe</div>
         </div>
-        <div class="text-right">
-          <div class="text-[8px] sm:text-[9px] text-pink-400/50 tracking-widest">EXCLUSIVE</div>
+        <!-- Mobile-friendly persona picker: 4 luxe micro buttons, changes language + image filters instantly -->
+        <div class="flex items-center gap-x-0.5 flex-shrink-0" id="persona-picker">
+          <button onclick="changePersona('femme')" data-p="femme" class="persona-btn w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-lg flex items-center justify-center text-[11px] sm:text-xs border transition-all active:scale-90" title="Femme Fatale 💖 soft & deadly" style="background:rgba(255,105,180,0.15); border-color:#ff69b4;">💖</button>
+          <button onclick="changePersona('camp')" data-p="camp" class="persona-btn w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-lg flex items-center justify-center text-[11px] sm:text-xs border transition-all active:scale-90" title="Camp Icon 🌟 theatrical shade" style="background:rgba(255,215,0,0.12); border-color:#ffd700;">🌟</button>
+          <button onclick="changePersona('mystery')" data-p="mystery" class="persona-btn w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-lg flex items-center justify-center text-[11px] sm:text-xs border transition-all active:scale-90" title="Mysterious Siren 🖤 seductive" style="background:rgba(192,38,255,0.15); border-color:#c026ff;">🖤</button>
+          <button onclick="changePersona('daddy')" data-p="daddy" class="persona-btn w-6 h-6 sm:w-6.5 sm:h-6.5 rounded-lg flex items-center justify-center text-[11px] sm:text-xs border transition-all active:scale-90" title="Leather Daddy 🖤 commanding" style="background:rgba(120,120,120,0.2); border-color:#666;">🖤</button>
         </div>
       </div>
 
@@ -455,35 +524,35 @@
       <!-- Input Area -->
       <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
         <!-- Compact icon row (decluttered for mobile) -->
-        <div class="flex justify-center gap-x-4 mb-2 text-pink-300/80">
-          <button onclick="teaseMe()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Tease Me">
-            <i class="fa-solid fa-heart text-lg"></i>
+        <div class="flex justify-center gap-x-2.5 sm:gap-x-3.5 mb-2 text-pink-300/80 px-1">
+          <button onclick="teaseMe()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Tease Me" aria-label="Tease Me">
+            <i class="fa-solid fa-heart text-xl sm:text-lg"></i>
           </button>
-          <button onclick="showMyGayDiary()" class="flex flex-col items-center text-[9px] active:opacity-70" title="My Gay Diary">
-            <i class="fa-solid fa-book text-lg"></i>
+          <button onclick="showMyGayDiary()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="My Gay Diary" aria-label="My Gay Diary">
+            <i class="fa-solid fa-book text-xl sm:text-lg"></i>
           </button>
-          <button onclick="surpriseMe()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Surprise Me">
-            <i class="fa-solid fa-magic text-lg"></i>
+          <button onclick="surpriseMe()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Surprise Me" aria-label="Surprise Me">
+            <i class="fa-solid fa-magic text-xl sm:text-lg"></i>
           </button>
-          <button onclick="vibeRoulette()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Vibe Roulette">
-            <i class="fa-solid fa-sync text-lg"></i>
+          <button onclick="vibeRoulette()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Vibe Roulette" aria-label="Vibe Roulette">
+            <i class="fa-solid fa-sync text-xl sm:text-lg"></i>
           </button>
-          <button onclick="showTrophyCase()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Trophy Case">
-            <i class="fa-solid fa-trophy text-lg"></i>
+          <button onclick="showTrophyCase()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Trophy Case" aria-label="Trophy Case">
+            <i class="fa-solid fa-trophy text-xl sm:text-lg"></i>
           </button>
-          <button onclick="spillTea()" class="flex flex-col items-center text-[9px] active:opacity-70" title="Spill the Tea (Confessional)">
-            <i class="fa-solid fa-comment-dots text-lg"></i>
+          <button onclick="spillTea()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Spill the Tea (Confessional)" aria-label="Spill the Tea">
+            <i class="fa-solid fa-comment-dots text-xl sm:text-lg"></i>
           </button>
         </div>
 
         <!-- SUPER PROMINENT, IMPOSSIBLE-TO-MISS UPLOAD AREA -->
-        <div onclick="triggerImageUpload()" class="mb-3 mx-auto max-w-[280px] p-4 border-4 border-dashed border-pink-400/60 rounded-3xl bg-pink-500/10 hover:bg-pink-500/20 active:bg-pink-500/30 cursor-pointer transition-all text-center shadow-md">
-          <div class="text-pink-400 text-4xl mb-2">
+        <div onclick="triggerImageUpload()" class="mb-3 mx-auto max-w-[280px] p-3.5 sm:p-4 border-4 border-dashed border-pink-400/60 rounded-3xl bg-pink-500/10 hover:bg-pink-500/20 active:bg-pink-500/30 cursor-pointer transition-all text-center shadow-md">
+          <div class="text-pink-400 text-3xl sm:text-4xl mb-1 sm:mb-2">
             <i class="fa-solid fa-camera-retro"></i>
           </div>
-          <div class="text-pink-200 font-bold text-lg tracking-widest">UPLOAD A PIC</div>
-          <div class="text-pink-300 text-sm mt-1">to instantly get the gay vibe, captions &amp; visuals</div>
-          <div class="text-pink-400/70 text-[10px] mt-2">TAP HERE or DRAG &amp; DROP • iPhone HEIC OK • NO SIZE LIMIT</div>
+          <div class="text-pink-200 font-bold text-base sm:text-lg tracking-[1.5px]">UPLOAD A PIC</div>
+          <div class="text-pink-300 text-xs sm:text-sm mt-0.5">instant gay vibe + captions + visuals (uses your vibe 💖🌟)</div>
+          <div class="text-pink-400/70 text-[9px] sm:text-[10px] mt-1.5">TAP or DRAG • HEIC / iPhone OK • NO LIMIT</div>
         </div>
 
         <div class="flex items-center gap-x-2 sm:gap-x-3">
@@ -688,19 +757,23 @@
       return result.trim();
     }
 
-    // Persona-flavored gayify for personal sexy feel
+    // Persona-flavored gayify for personal sexy feel (stronger branching for addictiveness)
     function personaGayify(text) {
       let base = gayify(text);
+      const p = currentPersona || 'femme';
       const flavors = {
-        femme: [" darling", " in the most elegant way", " and it's giving soft power"],
-        camp: [" and the girls are gagging", " no notes, it's cinema", " periodt and then some"],
-        mystery: [" and it's dangerously alluring", " with a side of secrets", " leaving everyone wanting more"],
-        daddy: [" and that's an order", " commanding attention", " in the most authoritative way"]
+        femme: [" darling", " in the most elegant way", " and it's giving soft power", ", the girls are obsessed with this softness"],
+        camp: [" and the girls are gagging", " no notes, it's cinema", " periodt and then some", ", werk the house down boots"],
+        mystery: [" and it's dangerously alluring", " with a side of secrets", " leaving everyone wanting more", ", the shadows are jealous"],
+        daddy: [" and that's an order", " commanding attention", " in the most authoritative way", ", kneel for the serve"]
       };
-      const adds = flavors[currentPersona] || flavors.femme;
-      if (Math.random() > 0.6) {
+      const adds = flavors[p] || flavors.femme;
+      if (Math.random() > 0.55) {
         base += adds[Math.floor(Math.random() * adds.length)];
       }
+      // Extra persona flavor words injected sometimes
+      if (p === 'daddy' && Math.random() > 0.7) base = base.replace(/queen|bestie|girl/gi, 'boy');
+      if (p === 'camp' && Math.random() > 0.65) base = base.replace(/\.$/, ' — and I said what I said.');
       return base;
     }
 
@@ -977,6 +1050,96 @@
       showToast("Meme card downloaded! Post it everywhere 💖");
     }
 
+    // NEW: Tall vertical story export (9:16 perfect for IG/WhatsApp stories & group shares)
+    // Pure client canvas, includes last 3 moments + current slay + strong ephemeral reminder
+    async function exportStoryRecap() {
+      if (messages.length < 2) {
+        showToast("Serve a little more first, then export your story 💅");
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = 540;   // story width
+      canvas.height = 960;  // tall 9:16
+      const ctx = canvas.getContext('2d');
+
+      // Rich dark luxe bg
+      const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      g.addColorStop(0, '#0a050f');
+      g.addColorStop(0.4, '#120a18');
+      g.addColorStop(0.85, '#050308');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Gold double border frame
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 18;
+      ctx.strokeRect(11, 11, canvas.width - 22, canvas.height - 22);
+      ctx.strokeStyle = '#ff69b4';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+
+      // Header
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '700 22px system-ui, -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('💅 CHAKKAAI PRIVATE STORY', canvas.width / 2, 72);
+      ctx.fillStyle = '#fff';
+      ctx.font = '500 13px system-ui, sans-serif';
+      ctx.fillText(`SLAY SCORE: ${slayScore}  •  ${document.getElementById('slay-level')?.textContent || ''}`, canvas.width / 2, 96);
+
+      let y = 130;
+
+      // Grab last few bot moments (text + optional gayified pic)
+      const recentBots = messages.filter(m => m.role === 'bot' && (m.text || m.image)).slice(-3).reverse();
+      for (const m of recentBots) {
+        if (m.gayifiedImage || m.image) {
+          const img = new Image();
+          await new Promise(r => { img.onload = r; img.src = m.gayifiedImage || m.image; });
+          const maxW = 420;
+          const sc = Math.min(1, maxW / img.width);
+          const dw = img.width * sc * 0.82;
+          const dh = img.height * sc * 0.82;
+          const dx = (canvas.width - dw) / 2;
+          ctx.drawImage(img, dx, y, dw, dh);
+          y += dh + 18;
+        }
+        if (m.text) {
+          ctx.fillStyle = '#ff69b4';
+          ctx.font = '600 15px system-ui, sans-serif';
+          const wrapped = (m.text).match(/.{1,32}/g) || [m.text];
+          wrapped.slice(0, 3).forEach((ln, i) => {
+            ctx.fillText(ln, canvas.width / 2, y + i * 20);
+          });
+          y += Math.min(3, wrapped.length) * 20 + 22;
+        }
+        if (y > 680) break;
+      }
+
+      // Big viral footer block
+      ctx.fillStyle = 'rgba(255,105,180,0.9)';
+      ctx.fillRect(40, 780, canvas.width - 80, 3);
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '600 14px system-ui, sans-serif';
+      ctx.fillText('PRIVATE TO THIS TAB ONLY', canvas.width / 2, 810);
+      ctx.fillStyle = '#fff';
+      ctx.font = '500 12px system-ui, sans-serif';
+      ctx.fillText('Close the window = everything gone forever', canvas.width / 2, 832);
+      ctx.fillStyle = '#ff69b4';
+      ctx.font = '700 16px system-ui, sans-serif';
+      ctx.fillText('gayify.pro', canvas.width / 2, 870);
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '400 11px system-ui, sans-serif';
+      ctx.fillText('Tag your bestie • No trace • Ephemeral by design', canvas.width / 2, 895);
+
+      // Download as story-ready
+      const link = document.createElement('a');
+      link.download = 'chakkaai-story.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      triggerConfetti(55);
+      showToast("Tall story recap saved! Drop it in the group chat 🔥");
+    }
+
     function teaseMe() {
       const teases = [
         "Darling, you've been serving face all session and I'm obsessed",
@@ -1013,8 +1176,16 @@
       }
       const personas = ['femme', 'camp', 'mystery', 'daddy'];
       const newPersona = personas[Math.floor(Math.random() * personas.length)];
-      document.getElementById('persona-select').value = newPersona;
       currentPersona = newPersona;
+      // Update picker highlight if present (mobile safe)
+      const picker = document.getElementById('persona-picker');
+      if (picker) {
+        picker.querySelectorAll('.persona-btn').forEach(btn => {
+          const active = btn.getAttribute('data-p') === newPersona;
+          btn.style.boxShadow = active ? '0 0 0 2px #d4af37, 0 0 0 4px rgba(212,175,55,0.2)' : 'none';
+          btn.style.transform = active ? 'scale(1.05)' : 'scale(1)';
+        });
+      }
       showToast(`Vibe shifted to ${newPersona.toUpperCase()}... spinning the wheel of seduction 💫`);
       
       const typing = showTyping();
@@ -1052,6 +1223,9 @@
     }
 
     function burnSession() {
+      // Easy confirm for mobile (hard to mis-tap)
+      const ok = confirm("🔥 BURN EVERYTHING in this tab?\n\nThis is permanent for this session only. Close tab = already gone. No coming back.");
+      if (!ok) return;
       const container = document.getElementById('messages');
       container.innerHTML = '';
       messages = [];
@@ -1145,20 +1319,20 @@
       
       if (moment.image) {
         addMessage('user', '', { image: moment.image });
-        const { reaction, captions } = processGayImageSync(moment.image); // simplified sync for replay
-        addMessage('bot', reaction || "This one still hits different", { image: moment.image, gayifiedImage: moment.gayified || moment.image, captions: moment.captions || [] });
+        // Re-process with current persona for fresh gayified version (addictive replay)
+        const typing = showTyping();
+        setTimeout(async () => {
+          removeTyping(typing);
+          const { reaction, captions } = await processGayImage(moment.image);
+          const freshGay = await gayifyImage(moment.image, Math.random());
+          addMessage('bot', personaGayify(reaction) + " (replayed)", { image: moment.image, gayifiedImage: freshGay, captions });
+        }, 420);
       } else if (moment.text) {
         addMessage('user', moment.text);
-        addMessage('bot', gayify(moment.text));
+        addMessage('bot', personaGayify(moment.text));
       }
       
       showToast("Replaying your moment 💖");
-    }
-
-    // Helper for replay (simplified, real one is async)
-    function processGayImageSync(dataUrl) {
-      // Return a quick version for replay
-      return { reaction: "Still serving in the diary", captions: [] };
     }
 
     function startGroupChallenge() {
@@ -1619,14 +1793,14 @@
       const welcome = document.createElement('div');
       welcome.className = `flex justify-center message-enter px-4`;
       welcome.innerHTML = `
-        <div class="max-w-[260px] text-center">
+        <div class="max-w-[270px] text-center">
           <div class="text-pink-300/70 text-sm mb-2">Heyyy... ready to get dangerously gay?</div>
-          <div onclick="triggerImageUpload()" class="mb-3 p-3 border-2 border-dashed border-pink-400/50 rounded-2xl bg-pink-500/5 hover:bg-pink-500/10 active:bg-pink-500/15 cursor-pointer transition-all">
-            <div class="text-pink-300 text-xl mb-1"><i class="fa-solid fa-camera-retro"></i></div>
-            <div class="text-pink-200 font-semibold text-sm">Upload a pic for the gay vibe</div>
-            <div class="text-pink-400/60 text-[10px]">instant captions &amp; visuals</div>
+          <div onclick="triggerImageUpload()" class="mb-2.5 p-3.5 border-2 border-dashed border-pink-400/60 rounded-3xl bg-pink-500/5 hover:bg-pink-500/10 active:bg-pink-500/15 cursor-pointer transition-all">
+            <div class="text-pink-300 text-2xl mb-0.5"><i class="fa-solid fa-camera-retro"></i></div>
+            <div class="text-pink-200 font-semibold text-[13px]">UPLOAD PIC → INSTANT GAY VIBE</div>
+            <div class="text-pink-400/60 text-[9.5px] mt-0.5">captions + visuals + your chosen persona</div>
           </div>
-          <div class="text-white/40 text-xs">or type below • drag photos anywhere</div>
+          <div class="text-white/35 text-[10px]">tap the 💖🌟🖤 icons to switch vibe • drag pics anywhere • type below</div>
         </div>
       `;
       container.appendChild(welcome);
@@ -1654,9 +1828,12 @@
         }
       }
 
-      if (levelEl) levelEl.textContent = `${level.emoji} ${level.title}`;
+      if (levelEl) {
+        levelEl.textContent = level.emoji; // ultra compact for mobile header pill
+        levelEl.title = level.title;
+      }
 
-      // Progress bar (relative to next level or max)
+      // Progress bar (optional - only if element exists in DOM for richer headers)
       if (progressEl) {
         const nextLevel = gayLevels[currentLevelIndex + 1] || { min: slayScore + 50 };
         const progress = Math.min(100, ((slayScore - level.min) / (nextLevel.min - level.min)) * 100);
@@ -1665,8 +1842,10 @@
 
       const streakEl = document.getElementById('streak-value');
       if (streakEl) streakEl.textContent = currentStreak;
+      const streakMini = document.getElementById('streak-mini');
+      if (streakMini) streakMini.textContent = currentStreak;
 
-      // Streak tracking for addictiveness
+      // Streak tracking for addictiveness (always run)
       const now = Date.now();
       if (now - lastInteractionTime < 5 * 60 * 1000) { // within 5 min
         currentStreak++;
@@ -1706,11 +1885,26 @@
     }
 
     function showSlayRecap() {
-      const recap = `My ChakkaAI Slay Session: ${slayScore} points! Currently ${document.getElementById('slay-level').textContent}. Gayify your life too: https://sauvira0.github.io/gayify/ 💅`;
+      const levelText = document.getElementById('slay-level')?.textContent || '';
+      const recap = `My ChakkaAI Slay Session: ${slayScore} points! Currently ${levelText}. Gayify your life too: https://sauvira0.github.io/gayify/ 💅`;
       navigator.clipboard.writeText(recap).then(() => {
         showToast("Session recap copied! Perfect for WhatsApp 👑");
       });
       triggerConfetti();
+      // Offer the tall story export immediately after for max virality
+      setTimeout(() => {
+        if (messages.length > 3) {
+          const offer = document.createElement('div');
+          offer.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 z-[999] px-4 py-2 rounded-2xl bg-zinc-900/95 border border-pink-500/30 text-xs flex gap-2 items-center shadow-xl';
+          offer.innerHTML = `
+            <span class="text-pink-300">Want a tall story image too?</span>
+            <button onclick="this.parentElement.remove(); exportStoryRecap();" class="px-3 py-1 bg-pink-500/80 hover:bg-pink-500 rounded-full text-white text-[10px]">YES 💖</button>
+            <button onclick="this.parentElement.remove()" class="px-2 text-white/50">no</button>
+          `;
+          document.body.appendChild(offer);
+          setTimeout(() => { if (offer.parentNode) offer.parentNode.removeChild(offer); }, 5200);
+        }
+      }, 900);
     }
 
     function toggleVoice() {
@@ -1824,6 +2018,17 @@
 
     function changePersona(persona) {
       currentPersona = persona;
+      // Highlight active in the micro picker (mobile friendly, no extra space)
+      document.querySelectorAll('#persona-picker .persona-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-p') === persona;
+        if (isActive) {
+          btn.style.boxShadow = '0 0 0 2px #d4af37, 0 0 0 4px rgba(212,175,55,0.2)';
+          btn.style.transform = 'scale(1.05)';
+        } else {
+          btn.style.boxShadow = 'none';
+          btn.style.transform = 'scale(1)';
+        }
+      });
       const flavors = {
         femme: "Femme Fatale mode activated. Everything is about to get softer and deadlier 💋",
         camp: "Camp Icon activated. Prepare for maximum theatricality and shade 🌟",
@@ -1831,11 +2036,35 @@
         daddy: "Leather Daddy mode engaged. Things are about to get a little commanding 🖤"
       };
       showToast(flavors[persona] || "Persona updated");
-      // Slight visual change
+      // Slight visual change to container for expensive feel
       const header = document.querySelector('.chat-container');
       if (header) {
         header.style.borderColor = persona === 'daddy' ? 'rgba(100,100,100,0.3)' : 'rgba(255,105,180,0.18)';
       }
+      // Addictive: if you have a pic this session, offer instant re-gayify in the NEW persona vibe (one-tap visual update)
+      if (lastUploadedImage) {
+        setTimeout(() => {
+          const offer = document.createElement('div');
+          offer.className = `fixed bottom-[88px] left-1/2 -translate-x-1/2 z-[999] text-[11px] px-3 py-1.5 rounded-2xl bg-black/90 border border-white/10 flex items-center gap-x-2 shadow-2xl message-enter`;
+          offer.innerHTML = `
+            <span class="text-pink-300/90">Re-gay last pic in this vibe?</span>
+            <button onclick="this.closest('.fixed').remove(); quickReGayify();" class="px-2.5 py-0.5 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full text-white text-[10px] font-medium active:scale-95">DO IT 💅</button>
+            <button onclick="this.closest('.fixed').remove()" class="text-white/40 px-1">×</button>
+          `;
+          document.body.appendChild(offer);
+          setTimeout(() => { if (offer && offer.parentNode) offer.parentNode.removeChild(offer); }, 6200);
+        }, 650);
+      }
+    }
+
+    async function quickReGayify() {
+      if (!lastUploadedImage) return;
+      const typing = showTyping();
+      const { reaction, captions } = await processGayImage(lastUploadedImage);
+      const gayified = await gayifyImage(lastUploadedImage, Math.random());
+      removeTyping(typing);
+      addMessage('bot', personaGayify(reaction) + " (new vibe)", { image: lastUploadedImage, gayifiedImage: gayified, captions });
+      triggerConfetti(35);
     }
 
     function addEasterEggHint() {
@@ -1926,15 +2155,22 @@
       const sceneElInit = document.getElementById('scene-count');
       if (sceneElInit) sceneElInit.textContent = sceneCount.toLocaleString();
 
-      // Fake but addictive group counter for WhatsApp squad energy
-      setInterval(() => {
-        const countEl = document.getElementById('friend-count');
-        if (countEl) {
-          let num = parseInt(countEl.textContent) || 12;
-          num = Math.max(8, Math.min(28, num + (Math.random() > 0.5 ? 1 : -1)));
-          countEl.textContent = num;
+      // Seed initial persona highlight (mobile picker)
+      const initPicker = document.getElementById('persona-picker');
+      if (initPicker) {
+        const initBtn = initPicker.querySelector(`[data-p="${currentPersona}"]`);
+        if (initBtn) {
+          initBtn.style.boxShadow = '0 0 0 2px #d4af37, 0 0 0 4px rgba(212,175,55,0.2)';
+          initBtn.style.transform = 'scale(1.05)';
         }
-      }, 18000);
+      }
+
+      // Fake but addictive "live queens" bump (scene-count already prominent & mobile friendly)
+      setInterval(() => {
+        sceneCount += (Math.random() > 0.6 ? 1 : 0);
+        const sceneEl = document.getElementById('scene-count');
+        if (sceneEl) sceneEl.textContent = sceneCount.toLocaleString();
+      }, 22000);
 
       // Wire up image upload input (for the camera button)
       const imageInput = document.getElementById('image-input');

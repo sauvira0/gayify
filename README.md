@@ -33,17 +33,23 @@ To host your own copy:
 
 A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for automatic deploys on push to main.
 
-## Features
+## Features (addictive & viral-ready, still 100% private)
 
-- Instant gayification of your text (special cases + smart word replacements + flair)
-- Beautiful pride-inspired UI with glassmorphism + pink/purple vibes
-- Click-to-copy any bot reply
-- Quick suggestion chips
-- Clear chat button
-- Typing indicator + slight delay for comedic timing
-- Fully responsive (works great on phone too)
-- Keyboard friendly (press Enter to send, focus is automatic)
-- **NEW: Upload a picture** (click the image icon or drag & drop) — ChakkaAI reads the colors, pose & vibe client-side and serves you flamboyant gay captions + a styled "gayified" version of your pic. Pure fun, zero data leaves your device.
+- Instant over-the-top gayification of any text with special sass cases, replacements, prefixes/suffixes, emojis
+- **4 Personas** (💖 Femme / 🌟 Camp / 🖤 Mystery / 🖤 Daddy) — switch live in header; changes BOTH the language style AND the visual gayification filters/overlays on pics
+- Upload any pic (or drag & drop anywhere, HEIC iPhone OK, no size limit) → instantly analyzes vibe/colors/pose/brightness client-side → serves 5+ gay captions you can copy + a dramatically "gayified" filtered + sparkled + gold-tagged version of your photo
+- **Direct upload flow**: as soon as you pick or drop, it appears + gets fully processed and replied (no extra "run" button)
+- Slay score + levels (Baby Gay → Gay Icon) + live streak + trophy case (in-memory badges)
+- My Gay Diary: collect & replay your best moments this tab only
+- Voice mode (taps speechSynthesis with campy high pitch)
+- Spill the Tea confessional (dramatic private mode)
+- Tease Me / Surprise Me / Vibe Roulette (random persona switch + re-gay)
+- Luxury meme card + tall 9:16 Story export (perfect for WhatsApp groups, IG stories)
+- Live "queens serving rn" FOMO counter + rate moments for more points
+- Burn button: instant dramatic total wipe of this tab's evidence
+- Fully responsive, luxurious glass/gold/bokeh mobile-first UI (decluttered for phones)
+- Keyboard friendly, quick prompts, copy everything, confetti on wins
+- Typing indicators + delicious timing for the comedy
 
 ## Examples
 
@@ -54,19 +60,22 @@ A GitHub Actions workflow (`.github/workflows/deploy.yml`) is included for autom
 | This meeting is so boring   | Bored? Honey we are about to change that narrative... |
 | I love my cat               | Bestie, I'm obsessed with my cat, queen! ✨            |
 
-## Privacy & Sharing with Friends (Important!)
+## Privacy & Sharing with Friends (Important! — this is the core)
 
-This app is deliberately designed so you can safely share the link with anyone:
+This app is deliberately designed so you can safely share the link with anyone (especially WhatsApp gay friend groups):
 
 - **Everyone gets their own chat**: Each person who opens the link (even on the same computer, different tabs or windows) gets a completely separate, isolated conversation. There is no shared state, no server, and no way for one person's chat to affect or be seen by anyone else.
 - **No login or accounts required**: Open the link and start chatting immediately.
-- **Truly ephemeral**: All chat history lives only in the browser's memory for that specific tab. 
-  - Close the tab or window → everything is permanently deleted.
+- **Truly ephemeral by design**: All chat history, images, slay scores, diary, trophies, everything lives ONLY in the browser's memory for that specific tab. 
+  - Close the tab or window → everything is permanently deleted forever.
   - Refresh the page → fresh chat.
-  - Nothing is ever written to localStorage, cookies, or sent to any server.
+  - Nothing is ever written to localStorage, cookies, or sent to any server. (You can literally watch the Network tab — zero requests.)
 - **Zero conflicts**: Perfect for group shares, parties, Discord, family group chats, etc. No one steps on anyone else's conversation.
+- "When they close it, all info is lost" — this is not a bug, it's the feature that makes it safe to share.
 
-When you use the in-app **SHARE** button, it copies a ready-to-paste message that explains this privacy model.
+When you use the in-app **SHARE** button, it copies a ready-to-paste message that explains this privacy model. The tall story export and meme cards also scream "PRIVATE • EPHEMERAL • YOUR SECRET IS SAFE".
+
+**Mobile note**: The entire experience (personas, uploads, exports, everything) has been obsessively revised for phones — big tappable targets, condensed header, prominent upload, no clutter. Open on iPhone/Android and see.
 
 ## Notes
 
