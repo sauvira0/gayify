@@ -1,6 +1,6 @@
 # gayify / ChakkaAI - Current App State (Compact Context)
 
-**Date of this snapshot:** Reverted state as of latest commit (post "nevermind revert" on 2026 session).
+**Date of this snapshot:** Desi Urdu/Hindi subculture overhaul + Punjabi/Lahori juggat amp (kiddan, puttar, patakha, balle balle, shava shava, more hijra khusra language, stronger Pathan yaar/munda energy, filmi lines, mehndi/henna canvas patterns). 6 desi queer personas. JUGGAT (theater masks), The Adda, desi color vibes (haldi, mehndi, saffron, kajal). Still fully ephemeral single-file.
 
 **Live URL:** https://sauvira0.github.io/gayify/ (GitHub Pages, auto-deploys on push to main)
 
@@ -74,7 +74,23 @@
 - Check state: `git status`, `git log --oneline -5`.
 - Revert if needed: git checkout <commit> -- index.html README.md.
 
-**App is ready for resumption.** All previous requirements (privacy, single-file, mobile, visuals, addictiveness) are intact. The "old" gayify version the user asked to revert to is current.
+**App is ready for resumption.** All previous requirements (privacy, single-file, mobile, visuals, addictiveness) are intact.
+
+**Latest evolution:** OpenRouter LLM integration (key pre-baked).
+- The app now uses a real LLM (default model: "openrouter/free") for text responses and image reactions when enabled.
+- Robustness layer: llmEnabled toggle (🤖 icon), per-message 🤖 LLM badges, online/offline listeners (auto-disable), callWithRetry + 10s Abort timeout, rate-limit/401 detection + toasts + fallback.
+- LLM status pill in header for quick visibility.
+- All paths (text, images, replays) respect the toggle and fallback gracefully.
+- Key still pre-baked per user request (with security warnings in code).
+- This makes answers highly non-deterministic, creative, and varied (high temperature).
+- Robot icon (🤖) in header: click to override or clear the pre-set key (falls back to classic rule-based juggat).
+- All previous desi subculture work (Punjabi juggat, kothi/hijra/Pathan energy, mehndi canvas patterns, etc.) is preserved and used to condition the LLM via a strong system prompt.
+- ⚠️ The provided OpenRouter key is now hardcoded and public in the source / deployed page. Rotate it on OpenRouter if you don't want it exposed/used by others.
+- Core ephemeral rule still holds for chat state (per-tab only), but LLM calls go to OpenRouter.
+
+When the user says "go wild" or "more queer" again, lean harder into specific cultural references, longer chaotic rants, and even more interactive "the groupchat is watching" energy.
+
+**Desi direction notes:** User explicitly asked for "Urdu/Hindi desi subculture". Previous juggat attempt was reverted, but this time fully embraced. Keep Roman Urdu accessible + mix with previous flamboyance. ChakkaAI name is perfect for this. Focus on adda/mehfil/gupshup/juggat/rishta/mummy/log kya kahenge energy + strong Punjabi/Lahori (kiddan, puttar, balle, patakha) and hijra/Pathan flavor. Added mehndi dots + henna curves on gayified images. Image tags and filters should feel like a desi mehfil with gold. Privacy message can lean "log nahi jaanenge".
 
 ---
 Generated for session resumption. Do not modify core privacy model.
