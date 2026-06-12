@@ -1,8 +1,10 @@
 # 💅 gayify
 
-A simple, hilarious, unhinged web chat that makes **anything** you say more gay — now with heavy Urdu/Hindi desi subculture tadka + optional OpenRouter LLM layer for fresh non-deterministic responses (default "openrouter/free").
+A simple, hilarious, unhinged web chat that makes **anything** you say more gay — now with heavy Urdu/Hindi desi subculture tadka + OpenRouter LLM layer.
 
-Roman Urdu juggat, kothi realness, hijra power, Pathan yaar energy, nautanki, mehfil, adda gupshup. 6 desi queer personas. LLM toggle, per-message badges, offline/retry resilience. The adda is always watching. "Log kya kahenge? Hum toh karte hain."
+The site owner's OpenRouter key is provided publicly so every visitor gets fresh non-deterministic desi responses automatically (model locked to free tier "openrouter/free").
+
+Roman Urdu juggat, kothi realness, hijra power, Pathan yaar energy, nautanki, mehfil, adda gupshup. 6 desi queer personas. Toggle LLM, per-message "FREE" badges, full offline/retry/error resilience. The adda is always watching. "Log kya kahenge? Hum toh karte hain."
 
 **🌐 Live demo:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 

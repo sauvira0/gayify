@@ -473,12 +473,12 @@
           <i class="fa-solid fa-microphone text-xs sm:text-sm" id="voice-icon"></i>
         </div>
 
-        <!-- LLM / OpenRouter (key pre-baked). Click to toggle LLM on/off. -->
-        <div onclick="toggleLLM()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="LLM mode pre-configured with OpenRouter. Click to toggle on/off.">
+        <!-- LLM / OpenRouter (owner's key pre-baked for public use). Click to toggle or override with your own key. -->
+        <div onclick="toggleLLM()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Using owner's OpenRouter key (free model only: openrouter/free). Click to toggle LLM or enter your own key.">
           <i class="fa-solid fa-robot text-xs sm:text-sm" id="llm-icon"></i>
         </div>
         <!-- Small status pill for quick visibility of LLM health (robustness) -->
-        <div id="llm-status" onclick="toggleLLM()" class="hidden xs:flex items-center text-[8px] px-1.5 py-px rounded-full bg-white/5 border border-white/10 cursor-pointer active:scale-95 transition-all" title="Click to toggle LLM"></div>
+        <div id="llm-status" onclick="toggleLLM()" class="flex items-center text-[8px] px-1.5 py-px rounded-full bg-white/5 border border-white/10 cursor-pointer active:scale-95 transition-all" title="Click to toggle LLM or override key. Always free model."></div>
 
         <div onclick="clearChat()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New chat (keeps same tab privacy)">
           <i class="fa-solid fa-redo text-[10px]"></i>
@@ -1697,14 +1697,12 @@
     // rate-limit/auth detection with graceful fallback to local rule-based juggat.
     // SECURITY: Do not commit real keys to the repo. Use the on-load prompt or replace the placeholder below.
     // All LLM calls are direct browser → OpenRouter. No persistence in the app.
-    let openrouterApiKey = "REPLACE_WITH_YOUR_OPENROUTER_KEY"; // set your key here or via the 🤖 icon prompt on load
-    let llmModel = "openrouter/free"; // user's preferred default
-    let llmEnabled = false; // will be set after key validation in init
-
-    // Robustness: if placeholder key, force prompt on first use / init
-    if (openrouterApiKey === "REPLACE_WITH_YOUR_OPENROUTER_KEY") {
-      openrouterApiKey = null;
-    }
+    // User's OpenRouter key provided for public use on the deployed site.
+    // IMPORTANT: This key is now visible in the page source. Anyone can inspect it.
+    // Model is FORCED to free tier only ("openrouter/free") to avoid any paid usage or costs.
+    let openrouterApiKey = "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";
+    let llmModel = "openrouter/free"; // locked to free model
+    let llmEnabled = true; // enabled by default since key is provided for users
 
     // Robustness helpers
     function isOnline() {
@@ -1805,7 +1803,7 @@
           inner += `</div>`;
         }
         
-        const llmBadge = fromLLM ? `<span class="text-[8px] px-1 py-px ml-1 bg-emerald-500/20 text-emerald-400 rounded" title="Response from ${llmModel}">🤖 LLM</span>` : '';
+        const llmBadge = fromLLM ? `<span class="text-[8px] px-1 py-px ml-1 bg-emerald-500/20 text-emerald-400 rounded" title="Response from openrouter/free (free tier)">🤖 LLM</span>` : '';
         messageEl.innerHTML = `
           <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%]">
             <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
@@ -1929,17 +1927,17 @@
 
     // Set or update OpenRouter API key (stored only in memory for this tab)
     function setOpenrouterKey() {
-      const current = openrouterApiKey ? " (a key is currently set)" : "";
-      const key = prompt(`OpenRouter API key${current}.\n\nPaste your key (or leave empty to clear).\nKey lives only in this tab's memory. Used for non-deterministic desi LLM responses.\nFree models have rate limits.`, openrouterApiKey || "");
+      const current = openrouterApiKey ? " (owner's shared free key is active)" : "";
+      const key = prompt(`OpenRouter API key${current}.\n\nThe site owner has provided their key for public free use (model locked to openrouter/free).\n\nPaste YOUR key here to use it instead (more private or higher limits), or clear to disable LLM.\nYour key lives only in this tab.`, openrouterApiKey || "");
       
       if (key !== null) {
         openrouterApiKey = key.trim() || null;
         llmEnabled = !!openrouterApiKey;
         updateLlmIcon();
         if (openrouterApiKey) {
-          showToast("LLM key set — fresh non-deterministic desi chaos is ON 💖");
+          showToast("Using your OpenRouter key — non-deterministic desi responses ON 💖");
         } else {
-          showToast("LLM key cleared. Falling back to classic rule-based juggat.");
+          showToast("LLM disabled. Using classic rule-based juggat only.");
         }
       }
     }
@@ -1956,13 +1954,13 @@
       if (openrouterApiKey && llmEnabled) {
         icon.classList.add('text-emerald-400');
         icon.classList.remove('text-white/70', 'text-orange-400');
-        parent.title = "LLM mode ON (openrouter/free) — click to toggle OFF";
-        statusText = 'LLM';
+        parent.title = "LLM mode ON (owner's free key: openrouter/free) — click to toggle OFF or use your key";
+        statusText = 'FREE';
         statusClass = 'text-emerald-400 border-emerald-400/30';
       } else if (openrouterApiKey && !llmEnabled) {
         icon.classList.add('text-orange-400');
         icon.classList.remove('text-emerald-400', 'text-white/70');
-        parent.title = "LLM mode OFF (key present) — click to toggle ON";
+        parent.title = "LLM mode OFF (free key available) — click to toggle ON";
         statusText = 'OFF';
         statusClass = 'text-orange-400 border-orange-400/30';
       } else {
@@ -2025,7 +2023,8 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
               "X-Title": "gayify desi adda"
             },
             body: JSON.stringify({
-              model: llmModel,
+              // Model is forced to free tier only, even if llmModel variable is changed
+              model: "openrouter/free",
               messages: [
                 { role: "system", content: systemPrompt },
                 { role: "user", content: userMessage }
@@ -2593,10 +2592,10 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
         speechSynthesis.getVoices();
       }
 
-      // Inform user that LLM is pre-configured (only once per tab load)
+      // Inform users they are using the owner's provided free key
       if (openrouterApiKey) {
         setTimeout(() => {
-          showToast("LLM pre-configured — ChakkaAI answers are now fresh & non-deterministic via OpenRouter 🤖");
+          showToast("Using owner's OpenRouter free key (openrouter/free model) — fresh desi responses for everyone 🤖");
         }, 1800);
       }
       // Init live scene counter (in-memory, for viral FOMO)
@@ -2671,23 +2670,12 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
         }
       });
 
-      // First-run key prompt for robustness (if no valid key after deploy)
-      if (!openrouterApiKey) {
-        setTimeout(() => {
-          const key = prompt("Enter your OpenRouter API key for LLM mode (or cancel for classic juggat only).\nKey is stored only in this tab's memory.");
-          if (key && key.trim()) {
-            openrouterApiKey = key.trim();
-            llmEnabled = true;
-            updateLlmIcon();
-            showToast("LLM key set — non-deterministic desi responses enabled 🤖");
-          } else {
-            llmEnabled = false;
-            updateLlmIcon();
-          }
-        }, 2500);
-      } else {
+      // Since a public key is provided, LLM is on by default for all users.
+      // For extra privacy or higher limits, users can click the robot icon to override with their own key.
+      // The model is always locked to the free tier.
+      updateLlmIcon();
+      if (openrouterApiKey) {
         llmEnabled = true;
-        updateLlmIcon();
       }
     }
 

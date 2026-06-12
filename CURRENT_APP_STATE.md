@@ -77,11 +77,11 @@
 **App is ready for resumption.** All previous requirements (privacy, single-file, mobile, visuals, addictiveness) are intact.
 
 **Latest evolution:** OpenRouter LLM integration (key pre-baked).
-- The app now uses a real LLM (default model: "openrouter/free") for text responses and image reactions when enabled.
-- Robustness layer: llmEnabled toggle (🤖 icon), per-message 🤖 LLM badges, online/offline listeners (auto-disable), callWithRetry + 10s Abort timeout, rate-limit/401 detection + toasts + fallback.
-- LLM status pill in header for quick visibility.
-- All paths (text, images, replays) respect the toggle and fallback gracefully.
-- Key still pre-baked per user request (with security warnings in code).
+- User's OpenRouter key is now baked into the public site so all visitors get LLM responses for free (no need for their own key).
+- Model is forced/hardcoded to "openrouter/free" in the API call to ensure it's always the free tier (no risk of paid usage).
+- In setOpenrouterKey prompt, users can still override with their own key if they prefer.
+- All previous robustness (toggle, badges showing "FREE", retries, offline, errors) remains.
+- SECURITY: Key is public in source. Owner accepts this for convenience of users.
 - This makes answers highly non-deterministic, creative, and varied (high temperature).
 - Robot icon (🤖) in header: click to override or clear the pre-set key (falls back to classic rule-based juggat).
 - All previous desi subculture work (Punjabi juggat, kothi/hijra/Pathan energy, mehndi canvas patterns, etc.) is preserved and used to condition the LLM via a strong system prompt.
