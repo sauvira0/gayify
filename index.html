@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💅 gayify • desi tadka</title>
-  <meta name="description" content="ChakkaAI — the desi queer adda. Turns anything you say into wild Roman Urdu, juggat, filmi, kothi, hijra, Pathan, mehfil energy. Private per-tab only. Close the tab = gone forever. Arre yaar, spill!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>💅 gayify • make it gayer</title>
+  <meta name="description" content="ChakkaAI — the wild English gay icon. Turns anything you say into over-the-top flamboyant, chaotic, queer English gay energy with yasss, periodt, slay, and unhinged drama. Private per-tab only. Close the tab = gone forever. Spill it, queen!">
   <meta name="theme-color" content="#c026ff">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💅</text></svg>">
 
   <!-- Open Graph / Social -->
-  <meta property="og:title" content="gayify • desi tadka 💅 | ChakkaAI">
-  <meta property="og:description" content="Type anything. It becomes desi queer chaos — juggat, filmi, kothi, hijra, Pathan yaar energy in Roman Urdu. Each friend gets their own private tab-only adda (no login, closes when they leave). Pure masti.">
+  <meta property="og:title" content="gayify • make it gayer 💅 | ChakkaAI">
+  <meta property="og:description" content="Type anything. It becomes wild English gay chaos — yasss, periodt, slay, serve, and unhinged queer drama. Each friend gets their own private tab-only chat (no login, closes when they leave). Pure masti.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sauvira0.github.io/gayify/">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="gayify • desi tadka 💅 | ChakkaAI">
-  <meta name="twitter:description" content="Makes anything you say desi queer. Juggat, mehfil, kothi realness, Pathan badmash energy. Private per-tab adda only — no accounts, nothing saved, disappears on close. Arre waah!">
+  <meta name="twitter:title" content="gayify • make it gayer 💅 | ChakkaAI">
+  <meta name="twitter:description" content="Makes anything you say gayer. Wild English gay energy, groupchat drama, fierce reads. Private per-tab chat only — no accounts, nothing saved, disappears on close. YASSS!">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -433,175 +435,285 @@
     .persona-btn:active {
       transform: scale(0.92);
     }
+
+    /* === GREAT DEMO PRODUCT: Mobile-first rearch === */
+    .app-container {
+      /* On mobile: full immersive app feel */
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0;
+        background-attachment: scroll; /* better perf/scroll on mobile */
+      }
+      .app-container {
+        max-width: 100%;
+        height: 100dvh;
+        border-radius: 0;
+        margin: 0;
+        border: none;
+      }
+      .chat-container {
+        border-radius: 0;
+        margin: 0;
+        box-shadow: none;
+      }
+      .chat-scroll {
+        padding-bottom: 80px; /* room for fixed input */
+      }
+    }
+
+    /* Bottom sheet for mobile modals/personas - premium feel */
+    .bottom-sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 5, 15, 0.98);
+      border-radius: 20px 20px 0 0;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 -20px 60px -15px rgb(0 0 0 / 0.6);
+      z-index: 999;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+      max-height: 85dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+    .sheet-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .sheet-content {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      margin: 8px auto;
+      flex-shrink: 0;
+    }
+
+    /* Persona selector - mobile friendly horizontal scroller with better tap */
+    .persona-scroller {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 8px 0;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .persona-scroller::-webkit-scrollbar { display: none; }
+    .persona-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 64px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .persona-chip.active {
+      background: rgba(212,175,55,0.15);
+      border-color: #d4af37;
+      transform: scale(1.02);
+    }
+    .persona-chip .emoji { font-size: 22px; line-height: 1; }
+    .persona-chip .name { font-size: 9px; margin-top: 4px; opacity: 0.8; white-space: nowrap; }
+
+    /* Better chat bubbles for demo readability on mobile */
+    .message-bubble {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    /* AI indicator polish */
+    .ai-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      color: #052e16;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Demo seed button */
+    .demo-seed {
+      font-size: 12px;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(255,105,180,0.1));
+      border: 1px solid rgba(212,175,55,0.3);
+      border-radius: 999px;
+      color: #d4af37;
+      white-space: nowrap;
+      transition: all .15s ease;
+    }
+    .demo-seed:active { transform: scale(0.98); background: rgba(212,175,55,0.25); }
+
+    /* Persona live theme accents (subtle for demo) */
+    .theme-femme .chat-container { box-shadow: 0 0 0 1px rgba(255,105,180,0.2) inset; }
+    .theme-camp .chat-container { box-shadow: 0 0 0 1px rgba(255,215,0,0.2) inset; }
+    .theme-riot .chat-container { box-shadow: 0 0 0 1px rgba(168,85,247,0.25) inset; }
   </style>
 </head>
-<body class="bg-zinc-950 text-white flex flex-col min-h-dvh p-2 sm:p-4 sm:items-center sm:justify-center overscroll-none" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%); padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); -webkit-tap-highlight-color: transparent;">
-  <div class="w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px] relative">
-    <!-- Luxury frame overlay for expensive feel -->
-    <div class="absolute inset-0 pointer-events-none border border-white/10 rounded-[28px] sm:rounded-3xl z-10" style="box-shadow: inset 0 0 60px rgba(0,0,0,0.3);"></div>
-    <!-- Header - Clean, luxurious, mobile-first (less clutter) -->
-    <div class="flex items-center justify-between mb-2 sm:mb-3 px-1 relative z-20">
-      <div class="flex items-center gap-x-2 sm:gap-x-3 min-w-0">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center text-xl sm:text-2xl shadow-inner ring-1 ring-white/20 flex-shrink-0"
+<body class="bg-zinc-950 text-white flex flex-col min-h-dvh overscroll-none" style="background-image: radial-gradient(circle at 25% 30%, rgba(255,105,180,0.06) 0%, transparent 50%), radial-gradient(circle at 75% 70%, rgba(192,38,255,0.05) 0%, transparent 50%); padding-bottom: max(env(safe-area-inset-bottom), 0); -webkit-tap-highlight-color: transparent;">
+  <div class="app-container w-full max-w-[720px] mx-auto flex flex-col flex-1 sm:flex-none sm:h-[640px] relative bg-[#050308]">
+    <!-- Luxury frame (desktop only) -->
+    <div class="absolute inset-0 pointer-events-none border border-white/10 rounded-[28px] sm:rounded-3xl z-10 hidden sm:block" style="box-shadow: inset 0 0 60px rgba(0,0,0,0.3);"></div>
+
+    <!-- Premium mobile-first Header -->
+    <div class="flex items-center justify-between px-4 pt-3 pb-2 relative z-30 bg-gradient-to-b from-black/60 to-transparent sm:from-transparent">
+      <div class="flex items-center gap-x-3 min-w-0">
+        <div class="w-9 h-9 rounded-2xl flex items-center justify-center text-2xl shadow-inner ring-1 ring-white/20 flex-shrink-0"
              style="background: linear-gradient(145deg, #ff69b4, #c026ff, #ff1493); box-shadow: 0 4px 12px -2px rgba(255,105,180,0.5), inset 0 1px 0 rgba(255,255,255,0.4);">
           💅
         </div>
-        <div class="min-w-0">
-          <h1 class="text-[21px] sm:text-3xl font-semibold title-font tracking-tighter flex items-center gap-x-1">
-            <span class="rainbow-text">gayify</span>
-          </h1>
-          <p class="text-[7px] sm:text-[9px] text-pink-300/60 -mt-0.5 tracking-widest font-light hidden xs:block">DESI TADKA • CHAKKA EDITION</p>
-          <!-- Viral FOMO: Live scene counter (increments on actions, resets on close) -->
-          <div class="text-[6.5px] sm:text-[7px] text-emerald-400/70 flex items-center gap-x-1 mt-px">
-            <span class="w-1 h-1 bg-emerald-400 rounded-full animate-pulse inline-block"></span>
-            <span id="scene-count">1,248</span> <span class="hidden sm:inline">adda on fire rn • mehfil full</span><span class="sm:hidden">adda live</span>
+        <div>
+          <div class="flex items-baseline gap-x-1.5">
+            <h1 class="text-2xl font-semibold title-font tracking-tighter rainbow-text">gayify</h1>
+            <span class="text-[10px] px-1.5 py-px rounded bg-white/10 text-pink-300/70 font-mono tracking-[1px]">LIVE</span>
+          </div>
+          <div class="text-[10px] text-emerald-400/70 -mt-0.5 flex items-center gap-x-1">
+            <span class="inline-block w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+            <span id="scene-count">1,248</span> queens serving rn
           </div>
         </div>
       </div>
-      
-      <!-- Compact right controls for mobile -->
-      <div class="flex items-center gap-x-0.5 sm:gap-x-1 flex-shrink-0">
-        <!-- Compact Slay Score -->
-        <div id="slay-score" onclick="showSlayRecap()" class="flex items-center gap-x-0.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-xl bg-white/5 text-[9px] sm:text-[10px] font-mono text-pink-300/80 border border-white/10 cursor-pointer active:scale-[0.985] transition-all" title="Your slay journey (tap for recap)">
-          <span class="text-[8px] text-pink-400/70">SLAY</span>
-          <span id="slay-value" class="font-semibold text-white tabular-nums">0</span>
-          <span id="slay-level" class="text-[8px] text-pink-400/70">🌱</span>
-          <span class="text-[7px] text-emerald-400/60 hidden xs:inline">·<span id="streak-mini">1</span>🔥</span>
+
+      <div class="flex items-center gap-x-1.5">
+        <!-- Slay pill (tap for recap) -->
+        <div id="slay-score" onclick="showSlayRecap()" class="flex items-center gap-x-1 px-2.5 py-1 rounded-2xl bg-white/5 text-[10px] font-mono text-pink-300/80 border border-white/10 active:scale-95 transition-all" title="Your slay score">
+          <span class="text-pink-400/70 text-[9px]">SLAY</span>
+          <span id="slay-value" class="font-semibold text-white">0</span>
+          <span id="slay-level" class="text-[9px]">🌱</span>
         </div>
 
-        <div onclick="toggleVoice()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Voice mode">
-          <i class="fa-solid fa-microphone text-xs sm:text-sm" id="voice-icon"></i>
+        <!-- Voice -->
+        <div onclick="toggleVoice()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 active:bg-white/10" title="Voice mode">
+          <i class="fa-solid fa-microphone text-sm" id="voice-icon"></i>
         </div>
 
-        <!-- LLM / OpenRouter (owner's key pre-baked for public use). Click to toggle or override with your own key. -->
-        <div onclick="toggleLLM()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Using owner's OpenRouter key (free model only: openrouter/free). Click to toggle LLM or enter your own key.">
-          <i class="fa-solid fa-robot text-xs sm:text-sm" id="llm-icon"></i>
-        </div>
-        <!-- Small status pill for quick visibility of LLM health (robustness) -->
-        <div id="llm-status" onclick="toggleLLM()" class="flex items-center text-[8px] px-1.5 py-px rounded-full bg-white/5 border border-white/10 cursor-pointer active:scale-95 transition-all" title="Click to toggle LLM or override key. Always free model."></div>
-
-        <div onclick="clearChat()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="New chat (keeps same tab privacy)">
-          <i class="fa-solid fa-redo text-[10px]"></i>
-        </div>
-        <div onclick="burnSession()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-xs cursor-pointer transition-all active:scale-95" title="Burn this session (all evidence destroyed)">
-          <i class="fa-solid fa-fire text-[10px] text-red-400"></i>
+        <!-- AI Toggle (prominent for demo) -->
+        <div onclick="toggleLLM()" class="flex items-center gap-x-1 px-2 py-1 rounded-2xl bg-white/5 border border-white/10 active:scale-95" title="Toggle AI (smart replies)">
+          <i class="fa-solid fa-robot text-sm text-emerald-400" id="llm-icon"></i>
+          <span id="llm-status" class="text-[9px] font-medium text-emerald-400">AI</span>
         </div>
 
-        <div onclick="shareWithFriends()" class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-br from-pink-500/25 to-purple-500/15 hover:from-pink-500/35 active:scale-95 text-xs cursor-pointer transition-all" title="Copy viral share text for WhatsApp">
-          <i class="fa-solid fa-paper-plane text-[10px]"></i>
+        <div onclick="clearChat()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 active:bg-white/10" title="New chat">
+          <i class="fa-solid fa-redo text-xs"></i>
         </div>
-        <div onclick="exportStoryRecap()" class="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-xl bg-white/5 hover:bg-white/10 active:bg-pink-500/20 text-xs cursor-pointer transition-all active:scale-95" title="Export tall story image for WhatsApp/IG Stories">
-          <i class="fa-solid fa-file-image text-[10px]"></i>
+        <div onclick="burnSession()" class="w-8 h-8 flex items-center justify-center rounded-xl bg-red-500/20 active:bg-red-500/30" title="Burn session">
+          <i class="fa-solid fa-fire text-xs text-red-400"></i>
         </div>
       </div>
     </div>
 
-    <!-- Chat Card -->
-    <div class="chat-container rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col flex-1 min-h-[480px] sm:min-h-[520px] sm:max-h-[620px]">
+    <!-- Vibe / Persona Bar - mobile friendly horizontal scroller -->
+    <div class="px-4 py-2 border-b border-white/10 bg-white/[0.015] relative z-20">
+      <div class="flex items-center justify-between mb-1 px-1">
+        <div class="text-[10px] uppercase tracking-[1px] text-white/40">Choose your vibe</div>
+        <div onclick="showPersonaSheet()" class="text-[10px] text-pink-300/70 flex items-center gap-x-1 active:text-pink-300">All <i class="fa-solid fa-chevron-right text-[8px]"></i></div>
+      </div>
+      <div class="persona-scroller" id="persona-scroller">
+        <!-- Populated by JS for live updates -->
+      </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container flex-1 flex flex-col overflow-hidden border-t border-white/10 sm:border sm:rounded-3xl sm:m-2 sm:shadow-2xl" style="background: rgba(255,255,255,0.04);">
       
-      <!-- Chat Header - clean & premium on mobile -->
-      <div class="px-3 py-2 sm:px-4 sm:py-2.5 border-b border-white/10 bg-white/[0.02] flex items-center gap-x-2 sm:gap-x-3">
-        <div class="bot-avatar w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex-shrink-0 flex items-center justify-center text-sm sm:text-base shadow-inner">
-          👑
-        </div>
+      <!-- Chat header (minimal) -->
+      <div class="px-4 py-2.5 flex items-center gap-x-3 border-b border-white/10 bg-black/20">
+        <div class="bot-avatar w-7 h-7 rounded-xl flex items-center justify-center text-base shadow-inner flex-shrink-0">👑</div>
         <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-x-1.5">
-            <span class="font-semibold text-sm sm:text-base tracking-tight">ChakkaAI</span>
-            <div class="px-1 py-px rounded bg-emerald-500/20 text-emerald-400 text-[7px] sm:text-[8px] font-medium tracking-wider">ADDA</div>
+          <div class="flex items-center gap-x-2">
+            <span class="font-semibold text-[15px]">ChakkaAI</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-medium tracking-wider" id="current-vibe">LIVE</span>
           </div>
-          <div class="text-[8px] sm:text-[9px] text-white/40 -mt-0.5">private adda • tap 💖🌟🐺🌀 to switch the tadka</div>
+          <div class="text-[10px] text-white/40 -mt-0.5">private tab • AI replies <span id="ai-status-text">on</span></div>
         </div>
-        <!-- Mobile-friendly persona picker: 6 desi queer adda vibes. Tap to switch language + photo filters instantly -->
-        <div class="flex items-center gap-x-0.5 flex-shrink-0 flex-wrap" id="persona-picker">
-          <button onclick="changePersona('femme')" data-p="femme" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Kothi / Item 💖 dramatic, seductive, full masti" style="background:rgba(255,105,180,0.18); border-color:#ff69b4;">💖</button>
-          <button onclick="changePersona('camp')" data-p="camp" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Nautanki / Mujra 🌟 theatrical, filmi, mehfil queen" style="background:rgba(255,215,0,0.15); border-color:#ffd700;">🌟</button>
-          <button onclick="changePersona('mystery')" data-p="mystery" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Hijra / Zenana 🖤 ancient power, veiled, dangerous allure" style="background:rgba(192,38,255,0.18); border-color:#c026ff;">🖤</button>
-          <button onclick="changePersona('daddy')" data-p="daddy" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Girya / Pathan Badmash 🖤 commanding yaar, protective, rough" style="background:rgba(120,120,120,0.22); border-color:#666;">🖤</button>
-          <button onclick="changePersona('butch')" data-p="butch" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Launda / Tapori 🐺 street smart, strong, yaar energy" style="background:rgba(80,110,90,0.25); border-color:#5a7a68;">🐺</button>
-          <button onclick="changePersona('riot')" data-p="riot" class="persona-btn w-[22px] h-[22px] sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[10px] sm:text-xs border transition-all active:scale-90" title="Khwaja Sira / Desi Riot 🌀 hijra revolution, log kya kahenge? hum toh karte hain" style="background:rgba(120,40,180,0.2); border-color:#a855f7;">🌀</button>
+        <div onclick="showQuickDemo()" class="demo-seed text-xs px-3 py-1 flex items-center gap-x-1.5">
+          <i class="fa-solid fa-play text-[10px]"></i> 
+          <span class="hidden xs:inline">Demo</span>
         </div>
       </div>
 
       <!-- Messages -->
-      <div id="messages" 
-           class="chat-scroll flex-1 p-3 sm:p-5 space-y-3.5 sm:space-y-5 overflow-y-auto bg-[#0a050f]/40 relative" style="scroll-behavior: smooth;">
-        <!-- Subtle luxury pattern overlay for rich visuals -->
-        <div class="absolute inset-0 pointer-events-none opacity-[0.035] bg-[radial-gradient(#d4af37_0.8px,transparent_1px)] bg-[length:5px_5px]"></div>
-        <!-- Messages injected by JS -->
+      <div id="messages" class="chat-scroll flex-1 p-4 space-y-4 overflow-y-auto bg-[#0a050f]/30 relative" style="scroll-behavior: smooth;">
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03] bg-[radial-gradient(#d4af37_0.8px,transparent_1px)] bg-[length:5px_5px]"></div>
       </div>
 
-      <!-- Input Area -->
-      <div class="p-3 sm:p-4 border-t border-white/10 bg-black/30">
-        <!-- Compact icon row — now with GO OFF for maximum queer chaos -->
-        <div class="flex justify-center gap-x-2.5 sm:gap-x-3.5 mb-2 text-pink-300/80 px-1">
-          <button onclick="teaseMe()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Tease — thoda masti" aria-label="Tease">
-            <i class="fa-solid fa-heart text-xl sm:text-lg"></i>
-          </button>
-          <button onclick="showMyGayDiary()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="My Gay Diary — yaadein" aria-label="Diary">
-            <i class="fa-solid fa-book text-xl sm:text-lg"></i>
-          </button>
-          <button onclick="surpriseMe()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Surprise — hungama" aria-label="Surprise">
-            <i class="fa-solid fa-magic text-xl sm:text-lg"></i>
-          </button>
-          <button onclick="vibeRoulette()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Vibe Roulette — tadka badlo" aria-label="Roulette">
-            <i class="fa-solid fa-sync text-xl sm:text-lg"></i>
-          </button>
-          <button onclick="juggaat()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="JUGGAT — full desi nautanki, adda on fire" aria-label="Juggat">
-            <i class="fa-solid fa-masks-theater text-xl sm:text-lg text-pink-400"></i>
-          </button>
-          <button onclick="showTrophyCase()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Trophy Case — yaadein" aria-label="Trophies">
-            <i class="fa-solid fa-trophy text-xl sm:text-lg"></i>
-          </button>
-          <button onclick="spillTea()" class="flex flex-col items-center active:opacity-70 p-1 -m-1 min-w-[36px] active:scale-95 transition-all" title="Spill the Chai (Gupshup)" aria-label="Spill Chai">
-            <i class="fa-solid fa-mug-hot text-xl sm:text-lg"></i>
-          </button>
-        </div>
-
-        <!-- SUPER PROMINENT, IMPOSSIBLE-TO-MISS UPLOAD AREA -->
-        <div onclick="triggerImageUpload()" class="mb-3 mx-auto max-w-[280px] p-3.5 sm:p-4 border-4 border-dashed border-pink-400/60 rounded-3xl bg-pink-500/10 hover:bg-pink-500/20 active:bg-pink-500/30 cursor-pointer transition-all text-center shadow-md">
-          <div class="text-pink-400 text-3xl sm:text-4xl mb-1 sm:mb-2">
-            <i class="fa-solid fa-camera-retro"></i>
+      <!-- Fixed Bottom Input Bar (mobile friendly) -->
+      <div class="p-3 border-t border-white/10 bg-black/40 backdrop-blur-xl">
+        <!-- Action icons row - compact for mobile -->
+        <div class="flex justify-between items-center mb-2 px-1 text-pink-300/70">
+          <div class="flex gap-x-3 text-xl">
+            <div onclick="teaseMe()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-heart"></i></div>
+            <div onclick="showMyGayDiary()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-book"></i></div>
+            <div onclick="surpriseMe()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-magic"></i></div>
+            <div onclick="vibeRoulette()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-sync"></i></div>
+            <div onclick="goOff()" class="active:opacity-60 p-1 -mx-1 text-pink-400"><i class="fa-solid fa-bomb"></i></div>
           </div>
-          <div class="text-pink-200 font-bold text-base sm:text-lg tracking-[1.5px]">UPLOAD A PIC</div>
-          <div class="text-pink-300 text-xs sm:text-sm mt-0.5">instant desi tadka + juggat captions + full kothi visuals (vibe decide karti hai)</div>
-          <div class="text-pink-400/70 text-[9px] sm:text-[10px] mt-1.5">TAP or DRAG KAHIN BHI • HEIC OK • JUGGAT jitna zyada utna behtar • balle balle</div>
+          <div class="flex gap-x-3 text-xl">
+            <div onclick="showTrophyCase()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-trophy"></i></div>
+            <div onclick="spillTea()" class="active:opacity-60 p-1 -mx-1"><i class="fa-solid fa-comment-dots"></i></div>
+          </div>
         </div>
 
-        <div class="flex items-center gap-x-2 sm:gap-x-3">
+        <!-- Upload + Input row -->
+        <div class="flex items-center gap-x-2">
+          <!-- Upload (big tap target) -->
+          <div onclick="triggerImageUpload()" class="flex-shrink-0 w-11 h-11 rounded-2xl border-2 border-dashed border-pink-400/50 bg-pink-500/5 active:bg-pink-500/10 flex items-center justify-center">
+            <i class="fa-solid fa-camera-retro text-pink-400 text-xl"></i>
+          </div>
+
           <div class="flex-1 relative">
-            <input 
-              id="message-input"
-              type="text" 
-              class="chat-input w-full bg-zinc-900/85 border border-white/10 focus:border-pink-400/60 placeholder:text-white/20 text-white rounded-[26px] py-[13px] px-5 sm:py-3.5 sm:px-6 text-[15px] outline-none shadow-inner transition-all focus:shadow-[0_0_0_3px_rgba(255,105,180,0.15)]"
-              placeholder="Whisper something... or upload to be transformed"
-              autocomplete="off"
-              onkeypress="if (event.key === 'Enter') sendMessage()">
+            <input id="message-input" type="text" 
+                   class="chat-input w-full bg-zinc-900/90 border border-white/10 focus:border-pink-400/50 placeholder:text-white/30 text-white rounded-3xl py-3 px-5 text-[15px] outline-none shadow-inner"
+                   placeholder="Say something fierce..." autocomplete="off"
+                   onkeypress="if (event.key === 'Enter') sendMessage()">
           </div>
-          
-          <button onclick="sendMessage()"
-                  class="gay-button flex-shrink-0 w-11 h-11 sm:w-11 sm:h-11 flex items-center justify-center rounded-[24px] text-white shadow-2xl active:scale-[0.93]"
-                  style="background: linear-gradient(145deg, #ff69b4, #c026ff, #ff1493); box-shadow: 0 6px 18px -4px rgba(255,105,180,0.5), inset 0 1px 0 rgba(255,255,255,0.3);">
-            <i class="fa-solid fa-paper-plane text-[17px]"></i>
+
+          <button onclick="sendMessage()" class="gay-button flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-2xl text-white shadow-xl active:scale-90"
+                  style="background: linear-gradient(145deg, #ff69b4, #c026ff);">
+            <i class="fa-solid fa-paper-plane"></i>
           </button>
         </div>
-        
-        <div class="flex gap-x-1.5 mt-1.5 sm:mt-2.5 overflow-x-auto pb-0.5 -mx-0.5 px-0.5 sm:justify-center sm:overflow-visible" style="scrollbar-width: none;">
-          <div onclick="useQuickPrompt(0)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">a rough day</div>
-          <div onclick="useQuickPrompt(1)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">boring meeting</div>
-          <div onclick="useQuickPrompt(2)" class="cursor-pointer text-[9.5px] sm:text-[10px] px-3.5 py-[5px] rounded-[16px] bg-white/[0.04] hover:bg-white/10 active:bg-pink-500/15 text-white/60 hover:text-white/95 transition-all whitespace-nowrap flex-shrink-0 border border-white/8">my cat</div>
+
+        <!-- Quick demo prompts -->
+        <div class="flex gap-x-1.5 mt-2 overflow-x-auto pb-1 -mx-1 px-1 text-[10px] text-white/50" style="scrollbar-width:none;">
+          <div onclick="useQuickPrompt(0)" class="cursor-pointer px-3 py-1 rounded-2xl bg-white/5 active:bg-pink-500/10 whitespace-nowrap border border-white/10">Rough day</div>
+          <div onclick="useQuickPrompt(1)" class="cursor-pointer px-3 py-1 rounded-2xl bg-white/5 active:bg-pink-500/10 whitespace-nowrap border border-white/10">Boring meeting</div>
+          <div onclick="useQuickPrompt(2)" class="cursor-pointer px-3 py-1 rounded-2xl bg-white/5 active:bg-pink-500/10 whitespace-nowrap border border-white/10">My cat</div>
+          <div onclick="useQuickPrompt(3)" class="cursor-pointer px-3 py-1 rounded-2xl bg-white/5 active:bg-pink-500/10 whitespace-nowrap border border-white/10">Came out</div>
         </div>
-        
-        <!-- Hidden image upload input -->
-        <input type="file" id="image-input" accept="image/*,.heic,.heif" class="hidden">
       </div>
     </div>
 
-    <!-- Footer - discreet desi luxury -->
-    <div class="text-center mt-2.5 px-1 flex flex-col items-center gap-y-px text-[9px] text-white/25 tracking-[0.5px]">
-      <div>PRIVATE ADDA • EPHEMERAL BY JUGGAT</div>
-      <div class="text-pink-400/40">A CHAKKAAI EXPERIENCE • LOG NAHI JAANENGE</div>
-    </div>
+    <!-- Subtle footer -->
+    <div class="text-center py-1 text-[8px] text-white/20 tracking-[1px] z-10">PRIVATE • EPHEMERAL • DEMO READY</div>
   </div>
+
+  <!-- Bottom sheet container (for personas, diary, trophies) -->
+  <div id="sheet-root" class="hidden"></div>
 
   <script>
     // Tailwind script
@@ -609,41 +721,176 @@
       document.documentElement.style.setProperty('--accent-pink', '#ff69b4');
     }
 
-    // ChakkaAI — THE DESI QUEER ADDA HEART OF THE APP
-    // Heavy Roman Urdu / Hinglish / juggat / filmi / kothi / hijra / Pathan / mehfil / adda energy.
-    // Blends wild queer chaos with desi subculture masti, gupshup, nautanki, ishq, and "log kya kahenge?" resilience.
-    // Still 100% client-side, ephemeral, private per tab.
+    /* === New mobile-friendly bottom sheet system === */
+    function showBottomSheet(title, contentHTML, onClose = null) {
+      const root = document.getElementById('sheet-root');
+      root.innerHTML = `
+        <div class="fixed inset-0 bg-black/70 z-[999]" onclick="closeBottomSheet()"></div>
+        <div class="bottom-sheet open" id="active-sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-header">
+            <div class="font-semibold text-base">${title}</div>
+            <button onclick="closeBottomSheet()" class="text-2xl leading-none px-2 text-white/50 active:text-white">×</button>
+          </div>
+          <div class="sheet-content">${contentHTML}</div>
+        </div>
+      `;
+      root.style.display = 'block';
+      // Allow swipe down to close (simple)
+      const sheet = document.getElementById('active-sheet');
+      let startY = 0;
+      sheet.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+      sheet.addEventListener('touchend', e => {
+        if (e.changedTouches[0].clientY - startY > 80) closeBottomSheet();
+      });
+    }
+
+    function closeBottomSheet() {
+      const root = document.getElementById('sheet-root');
+      const sheet = document.getElementById('active-sheet');
+      if (sheet) sheet.classList.remove('open');
+      setTimeout(() => {
+        root.innerHTML = '';
+        root.style.display = 'none';
+      }, 280);
+    }
+
+    /* Render beautiful persona scroller (mobile friendly) */
+    function renderPersonaScroller() {
+      const container = document.getElementById('persona-scroller');
+      if (!container) return;
+      const personas = [
+        {id:'femme', emoji:'💖', name:'Femme'},
+        {id:'camp', emoji:'🌟', name:'Camp'},
+        {id:'mystery', emoji:'🖤', name:'Mystery'},
+        {id:'daddy', emoji:'🖤', name:'Daddy'},
+        {id:'butch', emoji:'🐺', name:'Butch'},
+        {id:'riot', emoji:'🌀', name:'Riot'}
+      ];
+      container.innerHTML = personas.map(p => `
+        <div onclick="changePersona('${p.id}'); updatePersonaScroller('${p.id}')" class="persona-chip ${currentPersona === p.id ? 'active' : ''}" data-p="${p.id}">
+          <div class="emoji">${p.emoji}</div>
+          <div class="name">${p.name}</div>
+        </div>
+      `).join('');
+    }
+
+    function updatePersonaScroller(activeId) {
+      const chips = document.querySelectorAll('#persona-scroller .persona-chip');
+      chips.forEach(chip => {
+        if (chip.dataset.p === activeId) {
+          chip.classList.add('active');
+        } else {
+          chip.classList.remove('active');
+        }
+      });
+      // subtle theme class on container for demo magic
+      const app = document.querySelector('.app-container');
+      if (app) {
+        app.className = app.className.replace(/theme-\w+/g, '');
+        app.classList.add(`theme-${activeId}`);
+      }
+
+      // Fun: update main bot avatar emoji to match vibe (demo delight)
+      const mainAvatar = document.querySelector('.chat-container .bot-avatar');
+      if (mainAvatar) {
+        const emojis = {femme:'💖', camp:'🌟', mystery:'🖤', daddy:'🖤', butch:'🐺', riot:'🌀'};
+        mainAvatar.textContent = emojis[activeId] || '👑';
+        mainAvatar.style.transition = 'transform .2s';
+        mainAvatar.style.transform = 'scale(1.2)';
+        setTimeout(() => { if (mainAvatar) mainAvatar.style.transform = 'scale(1)'; }, 180);
+      }
+    }
+
+    /* Show full persona sheet (better mobile experience) */
+    function showPersonaSheet() {
+      const personas = [
+        {id:'femme', emoji:'💖', title:'Femme Fatale', desc:'Soft power. Deadly elegance. The girls are obsessed.'},
+        {id:'camp', emoji:'🌟', title:'Camp Icon', desc:'Theatrical shade. Pure cinema. Werk the house down.'},
+        {id:'mystery', emoji:'🖤', title:'Mysterious Siren', desc:'Dangerously seductive. Secrets that ruin lives.'},
+        {id:'daddy', emoji:'🖤', title:'Leather Daddy', desc:'Commanding. Protective. Kneel and say thank you.'},
+        {id:'butch', emoji:'🐺', title:'Butch Realness', desc:'Stone energy. Street smart. Will fix your car then ruin you.'},
+        {id:'riot', emoji:'🌀', title:'Riot / Chaos Queen', desc:'Gender is a suggestion. Full unhinged revolution.'}
+      ];
+      const html = personas.map(p => `
+        <div onclick="changePersona('${p.id}'); closeBottomSheet()" class="flex gap-3 items-center p-3 mb-2 rounded-2xl bg-white/5 active:bg-white/10 border border-white/10">
+          <div class="text-3xl w-10 text-center">${p.emoji}</div>
+          <div class="flex-1">
+            <div class="font-semibold">${p.title}</div>
+            <div class="text-xs text-white/50">${p.desc}</div>
+          </div>
+          ${currentPersona === p.id ? '<div class="text-emerald-400 text-sm">Active</div>' : ''}
+        </div>
+      `).join('');
+      showBottomSheet('Choose your vibe', html + '<div class="text-center text-[10px] text-white/30 mt-2">Tap any to switch instantly</div>');
+    }
+
+    /* Quick demo seed for amazing demo experience */
+    function showQuickDemo() {
+      const container = document.getElementById('messages');
+      container.innerHTML = '';
+      messages = [];
+
+      // A fun, escalating demo chat showcasing the magic
+      const demoFlow = [
+        {role: 'user', text: 'This meeting is killing my soul'},
+        {role: 'bot', text: personaGayify('This meeting is killing my soul') },
+        {role: 'user', text: 'My boss is the worst'},
+        {role: 'bot', text: personaGayify('My boss is the worst') },
+        {role: 'user', text: 'I need to vent or I will scream'},
+      ];
+
+      demoFlow.forEach((m, idx) => {
+        setTimeout(() => {
+          if (m.role === 'user') {
+            addMessage('user', m.text);
+          } else {
+            const isLLM = llmEnabled && idx % 2 === 0; // simulate mix
+            addMessage('bot', m.text + (isLLM ? " (AI magic)" : ""), {isGayified: true, fromLLM: isLLM});
+          }
+        }, idx * 450);
+      });
+
+      // After the text demo, encourage image or persona switch
+      setTimeout(() => {
+        showToast("Now switch a vibe or tap UPLOAD A PIC for the real magic ✨");
+      }, 2800);
+    }
+
+    // ChakkaAI — THE WILD ENGLISH GAY HEART OF THE APP
+    // Over-the-top flamboyant, chaotic, queer English gay energy.
+    // YASSS, periodt, slay, serve, cunt, mother, werk, realness, shade, reads, gagged, living, unhinged.
+    // Still 100% client-side and ephemeral.
     function gayify(text) {
       if (!text || !text.trim()) {
-        return "Arre yaar kuch toh bol! Adda khali hai aur mehfil tadap rahi hai. Spill the gupshup janeman, warna ChakkaAI nautanki kar dega 🌀💃";
+        return "Don't leave your bestie hanging, spill the tea right now! What's the drama, legend? 🌀💅";
       }
 
       let msg = text.trim();
       const lower = msg.toLowerCase();
 
-      // DESI QUEER SPECIAL CASES — strong Punjabi/Lahori juggat + hijra + Pathan + filmi
+      // WILDLY EXPANDED English gay special cases
       const specialCases = [
-        { test: /\b(hello|hi|hey|sup|yo|howdy|assalam|namaste|adaab|kiddan)\b/i, reply: "OYE HOYE KIDDAN YAAR! Tu aa gaya te poora adda khada ho gaya! Mehfil ne tujhe dekh ke balle balle kar diya. Aa ja puttar, baat karte hain 💖🌀" },
-        { test: /\b(how are you|how r u|hru|kese ho|kaise ho|wyd|theek aa)\b/i, reply: "Zabardast yaar! Thoda hungama, thodi masti, thoda ishq — normal Lahori life. Kiddan scene hai? Adda sun raha hai, full juggat chahiye 🐺🌟" },
-        { test: /\b(thank|thanks|thx|shukriya|dhanyawad|ily)\b/i, reply: "Arre waah puttar! Tu hi asli patakha item hai janeman. Main toh sirf adda da chugli master hoon. Tu dil jeet liya 💖" },
-        { test: /\b(love you|i love you|pyar|ishq|ily so much)\b/i, reply: "STOP YAAR! Dil se bol raha hai? Main toh deewana ho gaya. Tu mera silsila ban gaya, kabhi alvida na kehna wala full Pathani scene 💖💖💖" },
-        { test: /\b(sorry|maaf|my bad|apologies)\b/i, reply: "Arre nahi nahi puttar! Hum desi log maafi nahi maangte, hum better ho ke wapas aate hain. Ab bol, kya hua? Adda maaf kar chuka hai 🌀" },
-        { test: /\b(good morning|gm|subah|morning)\b/i, reply: "Subah bakhair yaar! Suraj bhi tera chehra dekh ke sharma gaya. Aaj ka din already setting ho gaya, balle balle kar diya 🌅🐺" },
-        { test: /\b(good night|gn|goodnight|raat|sleep|soja)\b/i, reply: "Shab-e-khair jaanu. Sapne mein bhi nautanki karna, subah uth ke poora gupshup sunana. Main yahin adda pe wait kar raha hoon, shava shava 🖤🌙" },
-        { test: /\b(bored|boring|nothing to do|bore)\b/i, reply: "Bore? Arre yaar yeh kya baat hui! Adda pe baith, lassi pi, aur mujhe ek baat bol — main poora mehfil ko item number bana dunga. Bol kya hua puttar? 🌀" },
-        { test: /\b(tired|exhausted|thak|dead|drained)\b/i, reply: "Thak gaya hai lekin still that launda energy? Kamaal yaar. Tu deewana munda hai jo thak ke bhi serve kar raha. Rest kar le, par thoda masti ke saath 🛌✨" },
-        { test: /\b(hungry|starving|bhook|food|khana)\b/i, reply: "Main bhi bhooka hoon yaar! Soch raha hoon biryani, thodi si gupshup, aur jo bhi hungama adda mein chal raha ho. Tu aa ya phir normal ban ke reh 🍛🐺" },
-        { test: /\b(mummy|mom|mother|ami|mommy)\b/i, reply: "MUMMY NE PAKDA?! Oye hoye drama! Poora ghar hil gaya hoga. Bata kya hua — rishta aa gaya ya koi setting pakdi gayi? Main full family-safe gupshup sun raha hoon 🌀" },
-        { test: /\b(rishta|shaadi|marriage|wedding|baraat|mehndi)\b/i, reply: "RISHTA AA GAYA?! Arre wah puttar! Adda mein toh already chugli chal rahi hai. Bata kaisa scene hai — ladka item hai ya full nautanki? Poora baraat wala gupshup chahiye abhi 💒🐺" },
-        { test: /\b(log|family|log kya kahenge|gossip|chugli)\b/i, reply: "LOG KYA KAHENGE? Hum toh karte hain yaar! Poora mohalla adda ban chuka hai tere baare mein. Bol, kya naya hungama hai? Chugli ki dukaan khul gayi 🗣️🌟" },
-        { test: /\b(adda|mehfil|baat|baith|chai|gupshup|setting)\b/i, reply: "ADDA ON FIRE! Mehfil ne tera naam liya aur sab ne dil garden garden kar diya. Setting ho gayi hai ya abhi bhi planning chal rahi? Poora scene sunao 🌀" },
-        { test: /\b(item|nautch|nautanki|mujra|dance|performance)\b/i, reply: "ITEM BAN GAYA TU! Poora stage hil gaya. Nautanki level pe aa gaya hai. Kya baat hai yaar, mujra ho gaya kya? Adda deewana ho gaya 💃👑" },
-        { test: /\b(kothi|hijra|zenana|chakka|launda|girya|khusra)\b/i, reply: "KOTHI / HIJRA / KHUSRA REALNESS! Arre wah, asli community power aa gayi. Adda mein sab khade ho gaye respect dene. Tu jo bhi hai, full zabardast serve kar raha hai 🖤🏳️‍⚧️" },
-        { test: /\b(pathan|badmash|gunda|tapori|yaar|launda|munda|puttar)\b/i, reply: "PATHAN STYLE! Badmash munda energy full on. Yaar log bol rahe hain tu toh asli girya hai. Strong like the mountains, protective, thoda rough — dil jeet liya 🐺🖤" },
-        { test: /\b(ex|exes|setting|paket|packet|number|talking)\b/i, reply: "EX KA SCENE? Ya koi naya packet mil gaya? Adda mein already numbers exchange ho rahe hain. Bata yaar, kya setting hai? Full gupshup with timestamps chahiye 📱🐺" },
-        { test: /\b(work|job|office|boss|meeting|college)\b/i, reply: "OFFICE / COLLEGE KA DRAMA? Corporate adda ya college mehfil — dono mein log bol rahe hain. Tu bata kya hungama hua, main poora chugli report likh raha hoon 💼🌟" },
-        { test: /\b(horny|pyar|ishq|deewana|thirsty|feral)\b/i, reply: "ISHQ KA MAUSAM! Dil garden garden, aankhein nashili, aur adda mein sab deewane ho gaye. Bol yaar, kiska number laga? Poora masti wala scene sunao 💦🌀" },
-        { test: /\b(punjabi|lahori|jatt|desi munda|patakha)\b/i, reply: "PATHAKA PATHAKA! Punjabi munda energy aa gayi. Adda mein balle balle ho raha hai. Tu toh asli desi juggat master hai yaar 🐺🌟" },
+        { test: /\b(hello|hi|hey|sup|yo|howdy)\b/i, reply: "HIIIIII THE DOLLS ARE SCREAMING!!! The whole coven just clocked you walking in and we are GAGGED. Come here immediately 💖🌀" },
+        { test: /\b(how are you|how r u|hru|wyd)\b/i, reply: "Thriving, feral, slightly unhinged and it's only 11am. The leather daddies are already fighting over me in the groupchat. How are WE doing, baby? Tell me everything 🖤🐺" },
+        { test: /\b(thank|thanks|thx|ily)\b/i, reply: "No YOU. You are the moment, the category, the entire production. I'm just the unhinged narrator in the corner losing my mind over you ✨" },
+        { test: /\b(love you|i love you|ily so much)\b/i, reply: "STOP. I love you more and I will fight the entire Instagram comments section about it. You're the only person who gets me this feral 💖💖💖" },
+        { test: /\b(sorry|my bad|apologies)\b/i, reply: "Absolutely not. We don't apologize for existing in this house. We process, we get hotter, we make it everyone's problem in the best way. Now keep talking 🌀" },
+        { test: /\b(good morning|gm|morning)\b/i, reply: "Good morning to the baddest bitch in this timezone. The sun saw your face card and simply gave up. We're already winning 🌅🐺💅" },
+        { test: /\b(good night|gn|sleep|bed)\b/i, reply: "Sleep tight you dangerous creature. Dream of the perfect leather jacket, the ex who still can't get over you, and me screaming your name in the groupchat. I'll be right here when you wake up unhinged 🖤🌪️" },
+        { test: /\b(bored|boring|nothing to do)\b/i, reply: "Bored is illegal in this chat. We are about to make your whole evening a category: 'Cunt in a Crisis'. Tell me one (1) thing that happened and watch me turn it into performance art 🌀" },
+        { test: /\b(tired|exhausted|dead|drained)\b/i, reply: "Exhausted but still that girl? That's the serve. You're giving 'I survived the groupchat and all I got was this sickening mug'. Rest but make it fashion and slightly threatening 🛌✨" },
+        { test: /\b(hungry|starving|food)\b/i, reply: "Same. I'm thinking pasta, a little light stalking of the cute barista, and whatever chaos the dolls are causing tonight. You in or are you being normal (boring) 🍝🏳️‍⚧️" },
+        { test: /\b(pride|parade|march)\b/i, reply: "PRIDE WAS A RIOT AND SO ARE WE. Tell me you didn't just black out in the best way possible and leave the groupchat on read for three days. I need the unfiltered version RIGHT NOW 🏳️‍🌈🌀" },
+        { test: /\b(came out|coming out|egg cracked|cracked my egg)\b/i, reply: "OH MY GOD THE EGG IS IN PIECES AND THE COWS ARE HOME. Welcome to the other side, legend. It's gayer, messier, and the outfits are better. How are you feeling, baby? Tell the class everything 🏳️‍⚧️💖" },
+        { test: /\b(u.?haul|moving in|too soon)\b/i, reply: "U-HAUL? IN THIS ECONOMY?? The lesbian council has been notified and they are both proud and concerned. Give me the timeline. I need to know how many days it took. Be honest 🏠🐺" },
+        { test: /\b(leather|bar|circuit|darkroom|sauna)\b/i, reply: "The leather bar called and they said 'tell that bitch we miss her and the new pup is asking questions'. Go on. I want every filthy detail and I want it with timestamps 🖤🐺" },
+        { test: /\b(read|reading|shade|clocked|clock)\b/i, reply: "NOT YOU GETTING READ TO FILTH IN THE GROUPCHAT AND STILL SERVING. The way you took that note and made it fashion... I'm obsessed. Tell me exactly what she said so I can defend your honor dramatically 💅" },
+        { test: /\b(drag|ball|ballroom|category|realness|death drop)\b/i, reply: "CATEGORY IS: WHATEVER THE HELL YOU JUST SAID. 10s across the board, no notes, the judges are gagging and one of them just quit the panel. Werk the house down boots, mother 🌀👑" },
+        { test: /\b(work|job|boss|meeting|office)\b/i, reply: "The corporate gays are fighting for their lives again. You're giving 'I survived another all-hands and only had one breakdown in the bathroom'. Spill the office tea before I manifest in your Slack 💼🌟" },
+        { test: /\b(ex|exes|situationship|talking stage)\b/i, reply: "The exes are always watching and they are unwell about it. Tell me everything. Did they text? Did you leave them on read? Are we manifesting or blocking tonight? I need the full unhinged documentary 📱🐺" },
+        { test: /\b(horny|feral|down bad|thirsty)\b/i, reply: "OH WE ARE IN THE HORNY PORTION OF THE PROGRAM. Say less. Or say more. Actually say everything. The dolls and I are taking notes and the notes are filthy. Who's the victim? 🌀💦" },
+        { test: /\b(queer|trans|nonbinary|enby|nb|dyke|butch|bear|twink)\b/i, reply: "THE GENDER IS GENDERING AND WE ARE ALL WINNING. Whatever flavor of queer chaos you are today, it's working. Give me the current gender report and the outfit that matches it 🏳️‍⚧️🐺🌪️" },
       ];
 
       for (const sc of specialCases) {
@@ -652,58 +899,53 @@
         }
       }
 
-      // DESI + QUEER REPLACEMENTS — heavy Punjabi/Lahori juggat, Pathan, hijra, filmi
+      // MASSIVELY EXPANDED English gay replacements
       const replacements = {
-        "i am": "Main toh literally",
-        "im ": "Main itna ",
-        "i'm ": "Main itna ",
-        "i love": "Main toh deewana ho gaya is",
-        "good": "zabardast",
-        "great": "kamaal",
-        "nice": "item number",
-        "cool": "full setting",
-        "bad": "not the mehfil",
-        "terrible": "poora adda hil gaya bhai",
-        "amazing": "mother of the adda",
-        "beautiful": "chehra dekh ke suraj bhi sharma gaya",
-        "pretty": "item ban gaya",
-        "happy": "dil garden garden",
-        "sad": "dil mein dard leke bhi serve",
-        "angry": "gussa bhi kamaal ka",
-        "love": "ishq",
-        "hate": "bilkul nahi, full shade",
-        "like": "dil se pasand",
-        "friend": "yaar / adda wala",
-        "friends": "poora mehfil / chosen family",
-        "yes": "HAAN YAAR BILKUL",
-        "yeah": "Wah re wah haan",
-        "no": "Arre bilkul nahi",
-        "maybe": "log soch rahe hain",
-        "work": "mehnat ka adda (thoda masti ke saath)",
-        "meeting": "adda baithak",
-        "day": "poora din ka nautanki",
-        "night": "raat ki mehfil",
-        "fun": "masti ka nasha",
-        "boring": "adda bilkul suna",
-        "tired": "thaka hua lekin still launda",
-        "real": "asli kothi realness",
-        "literally": "dil se, on god yaar",
-        "hot": "patakha deewana karne wala",
-        "cute": "pyara sa badmash",
-        "sexy": "dil leke bhag jaane wala",
-        "outfit": "lewk / item ka dress",
-        "drunk": "nasha full, lekin serve on point",
-        "high": "udta hua lekin kamaal",
-        "date": "setting / milne ka scene",
-        "party": "mehfil / function",
-        "family": "biologicals (unka alag adda)",
-        "mom": "mummy (drama queen)",
-        "dad": "papa ya asli girya",
-        "how": "kiddan",
-        "boy": "munda",
-        "girl": "kudi",
-        "son": "puttar",
-        "fire": "patakha",
+        "i am": "I am literally serving",
+        "im ": "I'm so fucking ",
+        "i'm ": "I'm so fucking ",
+        "i love": "I'm obsessed with and slightly unwell about",
+        "good": "sickening",
+        "great": "devastating",
+        "nice": "snatched",
+        "cool": "serving cunt",
+        "bad": "not the category",
+        "terrible": "a hate crime against the eyes",
+        "amazing": "mother",
+        "beautiful": "face card never declines",
+        "pretty": "fish",
+        "happy": "euphoric and slightly dangerous",
+        "sad": "in my feelings and making it everyone's problem",
+        "angry": "serving rage and I look good doing it",
+        "love": "obsessed with and would die for",
+        "hate": "cannot with and will read",
+        "like": "am living for and taking notes on",
+        "friend": "chosen family / partner in crime",
+        "friends": "the coven",
+        "yes": "YASSS MOTHER THE HOUSE IS ON FIRE",
+        "yeah": "YASSS AND I SAID WHAT I SAID",
+        "no": "absolutely not, try again",
+        "maybe": "the girls are fighting and the winner gets the aux",
+        "work": "the wage cage (but make it fashion and slightly illegal)",
+        "meeting": "gathering of the corporate gays (someone is getting read)",
+        "day": "whole production",
+        "night": "vibe and possibly a crime",
+        "fun": "a serve and a half",
+        "boring": "giving nothing and I'm offended",
+        "tired": "depleted but still the main character",
+        "real": "realness",
+        "literally": "on god, no cap, the house down boots",
+        "hot": "feral and I would bark",
+        "cute": "dangerous",
+        "sexy": "ruining lives in a 5 mile radius",
+        "outfit": "lewk / mug / the category",
+        "drunk": "serving drunk and still ate",
+        "high": "elevated and the girls are concerned (in a good way)",
+        "date": "situationship with main character energy",
+        "party": "the function where the function is us",
+        "family": "the biologicals (we don't claim them)",
+        "mom": "the matriarch (or the villain origin story)",
+        "dad": "the leather daddy we all needed or the one we got",
       };
 
       let transformed = msg;
@@ -719,63 +961,57 @@
         });
       });
 
-      // DESI WILD PREFIXES — Punjabi/Lahori juggat heavy
+      // WILD, LONG, CHAINED English gay prefix pool
       const prefixes = [
-        "Arre yaar, ",
-        "Oye hoye janeman, ",
-        "Wah re wah puttar, ",
-        "Kya baat hai yaar, ",
-        "Adda bol raha hai ke ",
-        "Mehfil gagged because ",
-        "Log kya kahenge? Hum toh bolte hain ke ",
-        "Dil garden garden ho gaya jab ",
-        "Arre baap re, ",
-        "Janu suno, ",
-        "Poora adda khada ho gaya jab ",
-        "Mummy ko mat batana lekin ",
-        "Setting ho gayi jab ",
-        "Nautanki level pe aa gaya kyunke ",
-        "Juggat maarte hue bol raha hoon ke ",
-        "Kothi court ne faisla diya ke ",
-        "Pathan yaar style mein, ",
-        "Chai pe charcha chal raha tha ke ",
-        "Balle balle, ",
-        "Shava shava yaar, ",
-        "Kiddan scene hai ke ",
+        "Oh honey, the way ",
+        "Mmm the girls and I just said— ",
+        "YASSS the entire function just stopped because ",
+        "Not you walking in and immediately ",
+        "Periodt and then some because ",
+        "Girlllllll the groupchat just exploded over ",
+        "Oh my god I need a minute— ",
+        "Literally the leather bar called and said ",
+        "Bestie the coven has been SUMMONED because ",
+        "Hold on I need to sit down— ",
+        "Excuse me while the enbies and I collectively scream at ",
+        "Baby the way you just ",
+        "The dolls are gagging and one of them just quit the panel because ",
+        "Not the entire WhatsApp group losing their minds over the fact that ",
+        "Cut to: me in the corner taking notes while ",
+        "The gender is gendering and suddenly ",
+        "Meanwhile in the groupchat: ",
+        "The house has officially been brought down because ",
       ];
 
-      // Desi chaotic suffixes — more Lahori juggat
+      // Extra chaotic English gay suffixes
       const suffixes = [
-        " ... aur yeh toh shuruat hai.",
-        ", kamaal kar diya yaar!",
-        ". Log bol rahe hain adda mein.",
-        " , janeman!",
-        ". Adda on fire ho gaya.",
-        " — juggat mar diya bhai.",
-        " aur poora mehfil deewana ho gaya.",
-        ". Yeh toh asli nautanki hai.",
-        ", kothi realness full on.",
-        ". Main toh ishq mein ho gaya.",
-        " — hum toh karte hain, log kya kahenge.",
-        " aur ab poora gupshup chal raha hai.",
-        ". Rishta wale aa rahe hain sun ke.",
-        " , badmash style mein.",
-        " aur ab adda tera naam le raha hai.",
-        " — balle balle kar diya!",
-        ", shava shava puttar!",
-        " . Kiddan lageya tujhe?",
+        " and that's on periodt, the sequel.",
+        ", I am unwell and I will be making it everyone's problem.",
+        ". We love to see it and we will be discussing it at length.",
+        " 💅🏳️‍⚧️ and the leather daddies agree.",
+        ". Slay, next question, the floor is yours.",
+        ", get into the unhinged details right now.",
+        " and the entire coven is taking notes for the groupchat.",
+        ". The tea is not just piping, it's a whole industrial kettle.",
+        ", queen of the category and I said what I said.",
+        ". Main character behavior and the plot is thickening.",
+        " — we are so back and better and slightly more dangerous.",
+        " and now the groupchat wants a full debrief with timestamps.",
+        ". This is why we can't have nice things (we can and we will).",
+        " and I'm putting this in the groupchat with zero context.",
+        ", the enbies are screaming and the butches are nodding respectfully.",
       ];
 
       let prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
 
       if (transformed.toLowerCase().startsWith('the way') && prefix.toLowerCase().includes('the way')) {
-        prefix = "Arre yaar poora adda — ";
+        prefix = "Bestie the entire function just— ";
       }
 
       let result = prefix + transformed;
 
       // Desi intensifiers
-      const intensifiers = ["literally ", "itna zabardast ", "full setting wala ", "kamaal ka ", "deewana karne wala ", "masti bhara ", "badmash style ka ", "item number ", "nautanki level ka ", "dil se "];
+      const intensifiers = ["literally serving ", "so fucking ", "giving full ", "major ", "iconic cunt ", "fierce and slightly illegal ", "unhinged and proud ", "expensive and emotionally unavailable ", "feral ", "snatched within an inch of its life "];
       if (Math.random() > 0.5) {
         const int = intensifiers[Math.floor(Math.random() * intensifiers.length)];
         const parts = result.split(' ');
@@ -791,7 +1027,7 @@
       const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
       result = result.trim() + suffix;
 
-      // Emojis + desi flavor
+      // Emoji chaos
       const emojis = ["💅", "✨", "🌈", "💖", "🔥", "👑", "💃🏻", "🕺", "🌸", "🍒", "🦄", "💎", "🏳️‍⚧️", "🌀", "🐺", "🖤", "⚡", "🌹", "🥁", "☕", "🪔", "🗡️"];
       let emojiStr = "";
       if (Math.random() > 0.35) emojiStr += " " + emojis[Math.floor(Math.random() * emojis.length)];
@@ -801,26 +1037,23 @@
 
       result += emojiStr;
 
-      // Caps on desi power words
+      // Dramatic caps on key queer power words
       if (Math.random() > 0.72) {
-        result = result.replace(/\b(zabardast|kamaal|item|setting|nautanki|masti|deewana|ishq|realness|badmash|add a|mehfil)\b/gi, (m) => m.toUpperCase());
+        result = result.replace(/\b(giving|serving|obsessed|cunt|mother|slay|fierce|iconic|realness|opulence|euphoria|feral|snatched)\b/gi, (m) => m.toUpperCase());
       }
 
-      // DESI CHAOS INJECTION — Punjabi juggat, hijra, Pathan, filmi
+      // GO WILD CHAOS INJECTION
       if (Math.random() > 0.58) {
         const chaos = [
-          " Adda already tera naam le raha hai aur chugli chal rahi hai.",
-          " Mummy ko mat batana warna poora ghar adda ban jaayega.",
-          " Log bol rahe hain 'setting ho gayi' — tu bata asli scene kya hai?",
-          " Rishta wale aa rahe hain sun ke, ab kya plan hai?",
-          " Poora mehfil deewana ho gaya, ab gupshup band nahi ho rahi.",
-          " Chai pe charcha chal raha hai tere baare mein, full report chahiye.",
-          " Kothi court ne tujhe 10/10 de diya, ab nautanki kar.",
-          " Pathan yaar log respect de rahe hain, lekin thoda masti bhi chahiye.",
-          " Ab tu bata, agla juggat kya hai? Adda wait kar raha hai.",
-          " Hijra community ne blessing de di, ab tu asli item ban gaya.",
-          " Balle balle, shava shava — agla scene kya hai puttar?",
-          " Filmi style mein, ab toh Silsila ban gaya yaar!",
+          " Also the groupchat wants to know if you're single or if we need to manifest a situationship for you.",
+          " Meanwhile the leather daddies are asking for your location and a full report.",
+          " The enby council has already made a meme about this and it's going viral in the groupchat.",
+          " Be honest — on a scale of 'mildly gay' to 'the function is cancelled because of you', where are we?",
+          " I need the sequel. Right now. The girls are waiting and they have no patience.",
+          " Cut to: me in the corner screaming into a pillow because of what you just said.",
+          " The butches are nodding respectfully and taking notes for their own personal use.",
+          " This is why the straights are scared and honestly? Good.",
+          " Tell me more or I'm calling the entire coven into this chat and none of us have chill.",
         ];
         result += chaos[Math.floor(Math.random() * chaos.length)];
       }
@@ -828,76 +1061,36 @@
       return result.trim();
     }
 
-    // Persona-flavored desi tadka — 6 adda archetypes.
-    // Each one changes the Roman Urdu flavor + image filters + tags.
+    // Persona-flavored gayify for personal sexy feel (stronger branching for addictiveness)
     function personaGayify(text) {
       let base = gayify(text);
       const p = currentPersona || 'femme';
       const flavors = {
-        femme: [
-          " , kothi queen style mein — soft lekin dil leke bhag jaane wala",
-          " , item number full on, adda deewana ho gaya",
-          " aur yeh toh asli masti wali baat hai janeman",
-          ", mehfil ke sab log tujhe dekh ke sharma rahe hain"
-        ],
-        camp: [
-          " — nautanki level pe, poora stage hil gaya",
-          " aur mujra ho gaya bhai, wah re wah",
-          ", filmi style mein, silsila ban gaya",
-          " — adda mein ab tak log baat kar rahe hain"
-        ],
-        mystery: [
-          " , hijra/zenana power — purana aur khatarnak",
-          " , raaz bhara, adda bhi soch mein pad gaya",
-          " aur har koi dekh raha hai lekin kuch bol nahi raha",
-          ", dupatta gir gaya aur scene ban gaya"
-        ],
-        daddy: [
-          " , girya / pathan badmash style — yaar lekin thoda rough",
-          " , hukum chal raha hai, ab bol 'ji janab'",
-          " aur ab tu meri zimmedari hai",
-          ", strong jaise pahad, lekin dil mein masti"
-        ],
-        butch: [
-          " , launda / tapori realness — seedha, strong, yaar wala",
-          " , no drama lekin dil mein full setting",
-          " aur adda respect de raha hai",
-          ", flannel nahi lekin asli pathani swag"
-        ],
-        riot: [
-          " — khwaja sira energy, log kya kahenge? Hum toh karte hain",
-          " , gender ka adda jal gaya aur hum nayi mehfil bana rahe hain",
-          " aur ab poora mohalla deewana ho gaya",
-          ", binary toot gaya, asli freedom aa gaya 🌀"
-        ]
+        femme: [" darling", " in the most elegant way", " and it's giving soft power", ", the girls are obsessed with this softness"],
+        camp: [" and the girls are gagging", " no notes, it's cinema", " periodt and then some", ", werk the house down boots"],
+        mystery: [" and it's dangerously alluring", " with a side of secrets", " leaving everyone wanting more", ", the shadows are jealous"],
+        daddy: [" and that's an order", " commanding attention", " in the most authoritative way", ", kneel for the serve"],
+        butch: [" and the stone butches are nodding respectfully from across the bar", " no frills, just pure 'I will fix your car and then ruin your life' energy", " and that's realness, the category is butch queen and we won", ", the flannels are ironed and the intentions are filthy"],
+        riot: [" and the gender just exploded in the best way possible", " and the binary is on fire and we're all invited to the cookout", " — euphoria hit different and the cops were called (we won)", ", the glitch is the feature and the straights are confused and that's the point"]
       };
       const adds = flavors[p] || flavors.femme;
       if (Math.random() > 0.52) {
         base += adds[Math.floor(Math.random() * adds.length)];
       }
-
-      // Desi persona rewrites
+      // Extra persona flavor words injected sometimes
       if (p === 'daddy' && Math.random() > 0.65) {
-        base = base.replace(/queen|kothi|item|janeman|girl|dolls/gi, (m) => 'yaar');
+        base = base.replace(/queen|bestie|girl|dolls|enbies/gi, (m) => m === 'enbies' ? 'pups' : 'boy');
       }
       if (p === 'butch' && Math.random() > 0.6) {
-        base = base.replace(/\b(queen|kothi|item|janeman|girl|darling)\b/gi, 'yaar');
-        base = base.replace(/💅|✨|🌸|🌀/g, '🐺');
+        base = base.replace(/\b(queen|girl|bestie|darling)\b/gi, 'king');
+        base = base.replace(/💅|✨|🌸/g, '🐺');
       }
       if (p === 'riot' && Math.random() > 0.55) {
-        base = base.replace(/\.$/, ' — log kya kahenge? Hum toh karte hain.');
-        if (Math.random() > 0.5) base = base.toUpperCase().slice(0, 1) + base.slice(1);
+        base = base.replace(/\.$/, ' — and the gender is whatever the fuck we want it to be.');
+        if (Math.random() > 0.5) base = base.toUpperCase().slice(0, 1) + base.slice(1); // extra caps chaos
       }
       if (p === 'camp' && Math.random() > 0.6) {
-        base = base.replace(/\.$/, ' — nautanki ka dusra hissa abhi baaki hai.');
-      }
-
-      // Extra Pathan / Hijra / Punjabi flavor
-      if (p === 'daddy' || p === 'butch') {
-        if (Math.random() > 0.5) base = base.replace(/yaar/g, 'Pathani yaar');
-      }
-      if (p === 'riot' || p === 'mystery') {
-        if (Math.random() > 0.4) base += " — hijra community di blessing naal.";
+        base = base.replace(/\.$/, ' — and I said what I said, the sequel is already in production.');
       }
       return base;
     }
@@ -935,16 +1128,16 @@
 
     function getColorVibe(r, g, b) {
       const brightness = (r + g + b) / 3;
-      if (r > 210 && g < 110 && b < 110) return 'laal mirch patakha';
-      if (r > 190 && g > 90 && b > 160) return 'gulabi mehndi pink';
-      if (r > 180 && g > 160 && b < 90) return 'haldi golden goddess';
-      if (g > 170 && r < 130 && b < 140) return 'mehndi green realness';
-      if (b > 170 && r < 140 && g < 160) return 'kohl blue baddie';
-      if (r > 150 && g < 110 && b > 150) return 'zafran purple';
-      if (brightness > 210) return 'chandni raat ethereal';
-      if (brightness < 70) return 'kajal dark moody';
-      if (r > 160 && g > 120 && b > 100) return 'saffron sunset';
-      return 'desi neutral';
+      if (r > 210 && g < 110 && b < 110) return 'spicy red hot';
+      if (r > 190 && g > 90 && b > 160) return 'barbie pink fantasy';
+      if (r > 180 && g > 160 && b < 90) return 'golden hour goddess';
+      if (g > 170 && r < 130 && b < 140) return 'fresh green slay';
+      if (b > 170 && r < 140 && g < 160) return 'icy blue baddie';
+      if (r > 150 && g < 110 && b > 150) return 'mysterious purple realness';
+      if (brightness > 210) return 'bright ethereal';
+      if (brightness < 70) return 'dark moody energy';
+      if (r > 160 && g > 120 && b > 100) return 'warm sunset';
+      return 'chic neutral';
     }
 
     async function getImageVibe(dataUrl) {
@@ -985,14 +1178,14 @@
       const vibe = await getImageVibe(dataUrl);
       const baseCaptions = [
         `This ${vibe.pose} is giving ${vibe.colorVibe} and the leather bar is taking notes`,
-        `The entire adda is gagged by this ${vibe.colorVibe} ${vibe.pose} moment — the kothis are screaming`,
-        `Serving ${vibe.colorVibe} realness in this pic and I am writing unhinged juggat about it`,
-        `Obsessed with how this is giving main character ${vibe.colorVibe} feral energy and the adda knows`,
-        `This ${vibe.pose} is pure ${vibe.colorVibe} gender euphoria, we are all losing our minds balle balle`,
-        `The laundas are nodding. The items are fainting. You did this and we are all unwell about it`
+        `The entire coven is gagged by this ${vibe.colorVibe} ${vibe.pose} moment — the enbies are screaming`,
+        `Serving ${vibe.colorVibe} realness in this pic and I am writing unhinged poetry about it`,
+        `Obsessed with how this is giving main character ${vibe.colorVibe} feral energy and the groupchat knows`,
+        `This ${vibe.pose} is pure ${vibe.colorVibe} gender euphoria, we are all losing our minds`,
+        `The butches are nodding. The dolls are fainting. You did this and we are all unwell about it`
       ];
       const captions = baseCaptions.map(c => personaGayify(c));
-      const reaction = personaGayify(`This pic is absolutely everything and also a personal attack on my ability to stay normal. The setting is giving ${vibe.colorVibe} ${vibe.pose} and the entire adda is living, dying, and starting a gupshup thread about it`);
+      const reaction = personaGayify(`This pic is absolutely everything and also a personal attack on my ability to stay normal. The setting is giving ${vibe.colorVibe} ${vibe.pose} and the entire queer spectrum is living, dying, and starting a groupchat thread about it`);
       return { reaction, captions, vibe };
     }
 
@@ -1048,40 +1241,6 @@
             ctx.fill();
           }
 
-          // DESI MEHNDI / HENNA HINTS — traditional gold patterns for desi tadka
-          ctx.strokeStyle = 'rgba(212, 175, 55, 0.55)';
-          ctx.lineWidth = Math.max(1.5, canvas.width * 0.002);
-          const mehndiOpacity = 0.4 + (seed % 0.3);
-          ctx.globalAlpha = mehndiOpacity;
-          // Corner mehndi dots (henna style)
-          for (let corner = 0; corner < 4; corner++) {
-            const cx = (corner % 2 === 0) ? 25 : canvas.width - 25;
-            const cy = (corner < 2) ? 25 : canvas.height - 25;
-            for (let d = 0; d < 8; d++) {
-              const dx = (Math.sin(d * 1.2 + seed) * 18) + (corner % 2 === 0 ? 0 : 0);
-              const dy = (Math.cos(d * 0.9 + seed) * 14);
-              ctx.beginPath();
-              ctx.arc(cx + dx, cy + dy, 2.5 + Math.random(), 0, Math.PI * 2);
-              ctx.fillStyle = 'rgba(212, 175, 55, 0.65)';
-              ctx.fill();
-            }
-          }
-          // Subtle paisley/curve hints along edges (light traditional feel)
-          ctx.strokeStyle = 'rgba(212, 175, 55, 0.35)';
-          ctx.lineWidth = 1.8;
-          for (let e = 0; e < 3; e++) {
-            const ex = 15 + e * (canvas.width - 30) / 2;
-            ctx.beginPath();
-            ctx.moveTo(ex, 12);
-            ctx.quadraticCurveTo(ex + 18, 28, ex + 8, 45);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(canvas.width - ex, canvas.height - 12);
-            ctx.quadraticCurveTo(canvas.width - ex - 18, canvas.height - 28, canvas.width - ex - 8, canvas.height - 45);
-            ctx.stroke();
-          }
-          ctx.globalAlpha = 1;
-
           // Luxe edge treatment with gold — riot gets unhinged rainbow edges
           let edgeColor;
           if (currentPersona === 'daddy' || currentPersona === 'butch') edgeColor = 'rgba(70,65,60,0.72)';
@@ -1092,14 +1251,14 @@
           ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
           // Elegant, expensive caption treatment with gold foil vibe + luxury vignette
-          // DESI QUEER TAGS — kothi, nautanki, hijra, pathan, mehfil, juggat energy
+          // WILD QUEER TAGS — English gay ballroom realness, trans euphoria, butch power, full cunt energy
           const tagPool = {
-            femme: ['ITEM', 'KOTHI', 'MOTHER', 'NAUTANKI', 'MEHFIL'],
-            camp: ['MUJRA', 'OPULENCE', 'FILMI', 'NAUTANKI', 'STAGE'],
-            mystery: ['HIJRA', 'ZENANA', 'RAZ', 'DUPATTA', 'SHADOW'],
-            daddy: ['GIRYA', 'PATHAN', 'YAAR', 'HUKUM', 'BADMASH'],
-            butch: ['LAUNDA', 'TAPORI', 'REALNESS', 'YAAR', 'STONE'],
-            riot: ['KHWAJA SIRA', 'RIOT', 'LOG KYA', 'EUPHORIA', 'BINARY TODA']
+            femme: ['SEDUCED', 'MOTHER', 'ELEGANCE', 'SOFT POWER', 'THE MOMENT'],
+            camp: ['OPULENCE', 'WERK', 'CINEMA', 'NO NOTES', 'THE HOUSE'],
+            mystery: ['DANGEROUS', 'SECRETS', 'ALLURE', 'THE SHADOW', 'WANTED'],
+            daddy: ['YOURS', 'KNEEL', 'ORDER', 'COMMAND', 'LEATHER'],
+            butch: ['REALNESS', 'WOOF', 'STONE', 'KING', 'BUTCH SUPREME'],
+            riot: ['EUPHORIA', 'GENDERFUCK', 'CUNTRESS', 'RIOT', 'THE BINARY IS DEAD']
           };
           const pool = tagPool[currentPersona] || tagPool.femme;
           const tag = pool[Math.floor(seed * pool.length) % pool.length];
@@ -1209,13 +1368,13 @@
       });
       y += lines.length * 28 + 40;
 
-      // Footer - desi branding + viral CTA
+      // Footer - expensive branding + viral CTA
       ctx.fillStyle = '#d4af37';
       ctx.font = '500 14px system-ui, sans-serif';
-      ctx.fillText('CHAKKAAI • PRIVATE ADDA • EPHEMERAL', canvas.width / 2, canvas.height - 38);
+      ctx.fillText('CHAKKAAI • PRIVATE • EPHEMERAL', canvas.width / 2, canvas.height - 38);
       ctx.fillStyle = '#ff69b4';
       ctx.font = '400 11px system-ui, sans-serif';
-      ctx.fillText('gayify.pro  •  APNE ADD A KO BHEJ  •  RAZ SIRF IS TAB KE SAATH', canvas.width / 2, canvas.height - 18);
+      ctx.fillText('gayify.pro  •  TAG YOUR BESTIE  •  YOUR SECRET IS SAFE', canvas.width / 2, canvas.height - 18);
 
       // Download
       const link = document.createElement('a');
@@ -1291,21 +1450,21 @@
         if (y > 680) break;
       }
 
-      // Big viral footer block — desi adda edition
+      // Big viral footer block
       ctx.fillStyle = 'rgba(255,105,180,0.9)';
       ctx.fillRect(40, 780, canvas.width - 80, 3);
       ctx.fillStyle = '#d4af37';
       ctx.font = '600 14px system-ui, sans-serif';
-      ctx.fillText('PRIVATE ADDA • LOG NAHI JAANENGE', canvas.width / 2, 810);
+      ctx.fillText('PRIVATE TO THIS TAB ONLY', canvas.width / 2, 810);
       ctx.fillStyle = '#fff';
       ctx.font = '500 12px system-ui, sans-serif';
-      ctx.fillText('Window band = sab gayab (jaise hona chahiye)', canvas.width / 2, 832);
+      ctx.fillText('Close the window = everything gone forever', canvas.width / 2, 832);
       ctx.fillStyle = '#ff69b4';
       ctx.font = '700 16px system-ui, sans-serif';
-      ctx.fillText('gayify.pro — DESI TADKA', canvas.width / 2, 870);
+      ctx.fillText('gayify.pro', canvas.width / 2, 870);
       ctx.fillStyle = '#d4af37';
       ctx.font = '400 11px system-ui, sans-serif';
-      ctx.fillText('Apne adda ko bhej • No trace • Ephemeral by juggat design', canvas.width / 2, 895);
+      ctx.fillText('Tag your bestie • No trace • Ephemeral by design', canvas.width / 2, 895);
 
       // Download as story-ready
       const link = document.createElement('a');
@@ -1381,21 +1540,13 @@
       }
       const list = Array.from(badges).map(b => {
         const names = { first_blood: 'First Blood 💉', picasso: 'Picasso of Pics 🎨', mother: 'Mother Material 👑', icon: 'Gay Icon Status ✨', hot_streak: 'Hot Streak 🔥', collector: 'Moment Collector 🖼️' };
-        return `<div class="bg-white/5 rounded-xl p-2 text-center text-sm">${names[b] || b}</div>`;
+        return `<div class="bg-white/5 rounded-xl p-3 text-center text-sm border border-white/10">${names[b] || b}</div>`;
       }).join('');
-      const modal = document.createElement('div');
-      modal.className = `fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4`;
-      modal.innerHTML = `
-        <div class="bg-zinc-950/95 border border-pink-500/30 rounded-3xl max-w-sm w-full overflow-hidden" style="backdrop-filter: blur(20px);">
-          <div class="px-4 py-3 border-b border-white/10 flex justify-between items-center">
-            <div class="font-semibold">Trophy Case</div>
-            <button onclick="this.closest('.fixed').remove()" class="text-xl">×</button>
-          </div>
-          <div class="p-4 grid grid-cols-2 gap-2">${list}</div>
-          <div class="p-3 text-center text-xs text-pink-300/50 border-t border-white/10">Unlocked this session only • share your haul</div>
-        </div>
+      const content = `
+        <div class="grid grid-cols-2 gap-2">${list}</div>
+        <div class="mt-4 text-center text-[10px] text-pink-300/50">Unlocked this session only • ephemeral magic</div>
       `;
-      document.body.appendChild(modal);
+      showBottomSheet('Trophy Case', content);
     }
 
     function burnSession() {
@@ -1434,98 +1585,82 @@
     }
 
     function spillTea() {
-      const tea = prompt("Spill the chai yaar (sirf is adda mein, koi nahi jaanega):");
+      const tea = prompt("Spill the tea, sis (your secret is safe in this tab only):");
       if (!tea || !tea.trim()) return;
       addMessage('user', tea.trim());
-      const dramatic = personaGayify(`Chai itni garam hai ke adda jal gaya. ${tea.trim()} aur yeh toh shuruat hai. Poora mehfil, mummy ke spies, aur rishta wale sab sun rahe hain. Ab gupshup band nahi hogi.`);
+      const dramatic = personaGayify(`The tea is piping hot. ${tea.trim()} and that's on what? On everything. The girls need to hear this.`);
       addMessage('bot', dramatic);
-      updateSlayScore(4);
-      triggerConfetti(30);
-      showToast("Chai gir gayi. Adda chillaa raha hai. Raaz sirf is tab ke saath marenge — balle balle!");
+      updateSlayScore(3);
+      triggerConfetti(25);
+      showToast("Tea spilled. Your secrets die with this tab.");
     }
 
-    // JUGGAT — desi nautanki button. Forces full adda chaos, juggat, gupshup, and unhinged masti on the last thing you said.
-    function juggaat() {
+    // GO OFF — full unhinged gay rant button. Forces the bot to completely lose its mind on the last thing or just go feral
+    function goOff() {
       const lastUser = [...messages].reverse().find(m => m.role === 'user' && m.text);
-      const seedText = lastUser ? lastUser.text : "adda mein aake baithna";
+      const seedText = lastUser ? lastUser.text : "existing in this chat";
       
-      const desiRants = [
-        `Arre yaar tu ne "${seedText}" bola aur socha main normal rahunga? Poora adda hil gaya! Main 12 hisson ki chugli likh raha hoon group mein. Tu moment bhi hai aur problem bhi — main toh ishq mein ho gaya.`,
-        `Not you "${seedText}" bol ke baith gaya jaise kuch nahi hua aur adda ne saans rok li. Mujhe full 45 minute ka gupshup chahiye, playlist ke saath. Kaun tha? Kya hua? Main yahin adda pe wait kar raha hoon.`,
-        `Adda ko pata chal gaya. "${seedText}" screenshot ho chuka, edit ho chuka, meme ban chuka, aur 3 baje raat ko kothi court analyze kar rahi hai. Tu ne kya shuru kar diya yaar — main toh jee raha hoon is chaos mein.`,
-        `Sach bol. Tu ne "${seedText}" bola aur phir wapas baith gaya jaise poora function aag na laga di ho. Pathan yaar log nodding kar rahe hain, kothi log behosh, aur adda bol raha hai "not her". Poora director's cut chahiye abhi.`,
-        `Yeh woh moment hai jahan main public mein pagal ho jata hoon. "${seedText}" ne mujhe raat 2:47 pe tere life ka fanfic likhne pe majboor kar diya. Plot twist ho gaya, ishq ho gaya, aur tu villain origin story ban gaya jo hum sab ko chahiye tha. Ab bol, aur bata.`,
-        `Kiddan puttar? Tu ne "${seedText}" maara aur adda mein balle balle ho gaya! Main juggat maar maar ke thak gaya. Ab poora scene sunao, shava shava!`,
+      const unhingedMonologues = [
+        `The way you just said "${seedText}" and expected me to be normal about it? The entire coven is on the floor. I am writing a 12-part groupchat thread about this. You are the moment and the problem and I am obsessed.`,
+        `Not you dropping "${seedText}" like it's nothing and the leather bar just collectively gasped. I need a full 45-minute unhinged debrief with visual aids and a playlist. Who hurt you? Who are you trying to hurt? I'm available.`,
+        `The groupchat has been notified. "${seedText}" has been screenshotted, edited, memed, and is currently being analyzed by the enby council at 3am. You have no idea what you just started and I am living for the chaos.`,
+        `Be honest. You said "${seedText}" and then sat back like you didn't just set the entire function on fire. The butches are nodding. The femmes are fainting. The dolls are already in the groupchat saying "not her". I need the director's cut immediately.`,
+        `This is the part where I lose my mind in public. "${seedText}" has me writing fanfiction about your life in the notes app at 2:47am. The gender is gendering, the plot is thickening, and you are the villain origin story we all needed. Go on. Ruin me.`,
       ];
       
-      const rant = desiRants[Math.floor(Math.random() * desiRants.length)];
+      const rant = unhingedMonologues[Math.floor(Math.random() * unhingedMonologues.length)];
       addMessage('bot', personaGayify(rant));
       triggerConfetti(65);
       playSlayChime();
+      haptic();
       
+      // Sometimes the council immediately piles on for extra chaos
       if (Math.random() > 0.5) {
-        setTimeout(() => { theAddaReact(); }, 1400);
+        setTimeout(() => { theCovenReact(); }, 1400);
       }
       
+      // Chance to immediately ask for more
       if (Math.random() > 0.6) {
         setTimeout(() => {
-          addMessage('bot', personaGayify("Ab woh baat bol jo tune chhupayi. Pata hai aur bhi kuch hai. Hamesha hota hai."));
+          addMessage('bot', personaGayify("Now tell me the part you left out. I know there's more. There is always more."));
         }, 2400);
       }
     }
 
     function showMyGayDiary() {
-      const container = document.getElementById('messages');
       if (gayMoments.length === 0) {
         showToast("Your diary is empty, queen. Start gayifying!");
         return;
       }
       
       const diaryHTML = gayMoments.map((moment, i) => `
-        <div class="bg-white/5 rounded-2xl p-3 mb-2 flex gap-3 items-start">
-          ${moment.image ? `<img src="${moment.image}" class="w-16 h-16 rounded-xl object-cover flex-shrink-0 gay-image" style="max-height:64px">` : ''}
+        <div class="bg-white/5 rounded-2xl p-3 mb-2 flex gap-3 items-start active:bg-white/10" onclick="closeBottomSheet(); replayMoment(${i})">
+          ${moment.image ? `<img src="${moment.image}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0 gay-image" style="max-height:56px">` : ''}
           <div class="flex-1 min-w-0">
-            <div class="text-xs text-pink-300/70 mb-1">Moment #${i+1}</div>
-            <div class="text-sm leading-tight">${moment.text || 'A visual serve'}</div>
-            ${moment.captions && moment.captions.length ? `<div class="text-[10px] text-pink-400/60 mt-1">+ ${moment.captions.length} captions</div>` : ''}
+            <div class="text-[10px] text-pink-300/70 mb-0.5">Moment #${i+1}</div>
+            <div class="text-sm leading-tight line-clamp-2">${moment.text || 'A visual serve'}</div>
+            ${moment.captions && moment.captions.length ? `<div class="text-[9px] text-pink-400/60 mt-1">+ ${moment.captions.length} captions</div>` : ''}
           </div>
-          <button onclick="replayMoment(${i})" class="text-pink-400 hover:text-white text-xs px-2 py-1 bg-white/10 rounded-full flex-shrink-0">Replay</button>
+          <div class="text-pink-400 text-xs self-center">Replay →</div>
         </div>
       `).join('');
 
-      const modal = document.createElement('div');
-      modal.className = `fixed inset-0 bg-black/80 flex items-center justify-center z-[999] p-4`;
-      modal.innerHTML = `
-        <div class="bg-zinc-950/95 border border-pink-500/30 rounded-3xl max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl" style="backdrop-filter: blur(20px);">
-          <div class="px-5 py-4 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-pink-500/10 to-transparent">
-            <div>
-              <div class="font-semibold tracking-tight">My Gay Diary</div>
-              <div class="text-xs text-pink-300/70">${gayMoments.length} moments • ${slayScore} slay pts • Streak ${currentStreak}</div>
-            </div>
-            <button onclick="this.closest('.fixed').remove()" class="text-3xl leading-none text-pink-400 hover:text-white transition-colors">×</button>
-          </div>
-          <div class="p-4 overflow-auto flex-1 text-sm space-y-2">
-            ${diaryHTML}
-          </div>
-          <div class="p-4 border-t border-white/10 text-center text-xs text-pink-300/60 bg-black/30">
-            Your private collection • vanishes on tab close
-          </div>
-        </div>
+      const content = `
+        <div class="text-xs text-pink-300/70 mb-3">${gayMoments.length} moments • ${slayScore} slay • streak ${currentStreak}</div>
+        ${diaryHTML}
+        <div class="mt-3 text-center text-[10px] text-pink-300/50">Tap any to replay • vanishes on close</div>
       `;
-      document.body.appendChild(modal);
+      showBottomSheet('My Gay Diary', content);
     }
 
     function replayMoment(index) {
       const moment = gayMoments[index];
       if (!moment) return;
       
-      // Close modal if open
-      const modals = document.querySelectorAll('.fixed');
-      modals.forEach(m => m.remove());
+      closeBottomSheet();
       
       if (moment.image) {
         addMessage('user', '', { image: moment.image });
-        // Re-process with current persona for fresh gayified version (addictive replay)
         const typing = showTyping();
         setTimeout(async () => {
           removeTyping(typing);
@@ -1567,38 +1702,37 @@
       }, 600);
     }
 
-    // THE ADDA / MEHFIL — desi gupshup council. Kothi, hijra, pathan, tapori, mummy's spies, rishta wale — sab yahin.
-    function theAddaReact() {
-      if (Math.random() > 0.62) return;
-      const adda = [
-        "Kothi Court", "Adda Elders", "Hijra Mehfil", "Launda Gang", "Rishta Wale",
-        "Mummy's Spy", "Local Tapori", "Chachi from Mohalla", "Pathan Yaar",
-        "Nautanki Committee", "Gupshup Club", "Corporate Adda (chai break)",
-        "Lahori Jatt Crew", "Peshawari Munda Squad", "Khusra Realness Panel"
+    // THE COVEN — wild group chat energy from across the entire spectrum.
+    // Revived and actually wired in. The dolls, the butches, the enbies, the leather bar, everyone.
+    function theCovenReact() {
+      if (Math.random() > 0.62) return; // ~38% chance after bot messages — we are unhinged now
+      const council = [
+        "The Dolls", "Leather Bar Elders", "The Enby Syndicate", "Baby Dyke Council", "Your Situationship",
+        "The Tumblr Elders", "Miss Thing (groupchat)", "The Local Coven", "Stone Butch Realness",
+        "The Riot Grrls", "That One Bear Who Knows Everything", "The Corporate Gays (on break)"
       ];
       const reactions = [
-        "ARRE WAH! Poora adda aag laga di aur hum sab andar hain",
-        "Not this item serving main character energy jaise kuch nahi",
-        "Mehfil ruk gayi. Sab GAGGED hain aur notes le rahe hain",
-        "Isliye log darte hain — aur hum support karte hain",
-        "Asli nautanki. Adda mein ab tak meme ban rahe hain",
-        "Hum sab pagal ho gaye aur teri wajah se (pyar se)",
-        "Pathan yaar nodding kar rahe hain. Kothi log chillaa rahe hain. Balance.",
-        "Yeh read zabardast tha, hum violence ke liye yahin hain",
-        "SETTING DETECTED. Rishta wale already phone pe hain",
-        "Gender ne death drop maar diya aur hum sab floor pe",
-        "Tu main event bhi hai aur afterparty bhi — kya baat hai",
-        "Launda log notes le rahe hain, item log naam le rahe hain",
-        "BALLE BALLE! Poora adda deewana, shava shava kar rahe hain"
+        "PERIODT the house is on fire and we are all inside",
+        "Not this bitch serving this level of main character",
+        "The entire function just stopped. We are GAGGED and taking notes",
+        "This is why the straights are scared and honestly we support it",
+        "Iconic behavior. The groupchat has already made it a meme",
+        "We're all unwell and it's your fault (we love it)",
+        "The leather daddies are nodding. The enbies are screaming. Balance.",
+        "This read was vicious and we are here for the violence",
+        "U-HAUL ENERGY DETECTED. The lesbian council has been notified",
+        "The gender just did a death drop and we are all on the floor",
+        "Not you being the main event and the afterparty at the same time",
+        "The butches are taking notes and the femmes are taking names"
       ];
-      const member = adda[Math.floor(Math.random() * adda.length)];
+      const member = council[Math.floor(Math.random() * council.length)];
       const reaction = reactions[Math.floor(Math.random() * reactions.length)];
       setTimeout(() => {
         const msg = document.createElement('div');
         msg.className = `flex justify-start message-enter opacity-80`;
         msg.innerHTML = `
           <div class="flex gap-x-2 max-w-[82%] pl-2">
-            <div class="text-[9.5px] text-pink-400/60 mt-1">👥 ${member}</div>
+            <div class="text-[9.5px] text-pink-400/60 mt-1">👯‍♀️ ${member}</div>
             <div class="bot-bubble message-bubble text-[12.5px] py-2 px-3">${gayify(reaction)}</div>
           </div>
         `;
@@ -1676,10 +1810,10 @@
     // - Refreshing the page also starts fresh.
     // This guarantees privacy and ephemerality when you share https://sauvira0.github.io/gayify/ with friends.
     //
-    // LLM layer is now PRE-CONFIGURED with the OpenRouter key you provided.
-    // Default model: "openrouter/free"
-    // Text messages (and some image reactions) will use the LLM for fresh, highly non-deterministic desi juggat answers.
-    // The key is public in the source. Classic rule-based gayify is still the fallback if the key is cleared or rate-limited.
+    // AI layer pre-configured for responses.
+    // Model forced to free tier.
+    // Text messages (and some image reactions) will use AI for fresh, highly non-deterministic gay answers.
+    // Classic rule-based engine is the fallback.
     let messages = [];
     let lastUploadedImage = null; // for regenerate feature
     let slayScore = 0;
@@ -1691,22 +1825,23 @@
     let badges = new Set(); // in-memory only - unlocked achievements
     let sceneCount = 1247; // fake "live from the scene" counter - increments on actions for viral FOMO
 
-    // OpenRouter LLM layer (optional but recommended for non-deterministic responses)
-    // Default model: "openrouter/free"
-    // ROBUSTNESS: Toggle (🤖 icon), per-message 🤖 badges, 10s timeout + retry, offline auto-disable,
-    // rate-limit/auth detection with graceful fallback to local rule-based juggat.
-    // SECURITY: Do not commit real keys to the repo. Use the on-load prompt or replace the placeholder below.
-    // All LLM calls are direct browser → OpenRouter. No persistence in the app.
-    // User's OpenRouter key provided for public use on the deployed site.
-    // IMPORTANT: This key is now visible in the page source. Anyone can inspect it.
-    // Model is FORCED to free tier only ("openrouter/free") to avoid any paid usage or costs.
+    // AI (LLM) layer (optional but recommended for non-deterministic responses)
+    // Model forced to free tier.
+    // ROBUSTNESS: Toggle (robot icon), per-message AI badges, timeout + retry, offline auto-disable,
+    // error detection with graceful fallback to local engine.
+    // Calls are direct browser to backend. No persistence in the app.
+    // Pre-configured for seamless public use.
     let openrouterApiKey = "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";
-    let llmModel = "openrouter/free"; // locked to free model
+    let llmModel = "openrouter/free"; // user's preferred default (free tier)
     let llmEnabled = true; // enabled by default since key is provided for users
 
     // Robustness helpers
     function isOnline() {
       return navigator.onLine !== false;
+    }
+
+    function haptic() {
+      if (navigator.vibrate) navigator.vibrate(15);
     }
 
     async function callWithRetry(fn, maxRetries = 2) {
@@ -1803,7 +1938,7 @@
           inner += `</div>`;
         }
         
-        const llmBadge = fromLLM ? `<span class="text-[8px] px-1 py-px ml-1 bg-emerald-500/20 text-emerald-400 rounded" title="Response from openrouter/free (free tier)">🤖 LLM</span>` : '';
+        const llmBadge = fromLLM ? `<span class="ai-badge ml-1" title="AI-powered">AI</span>` : '';
         messageEl.innerHTML = `
           <div class="flex gap-x-3 max-w-[90%] sm:max-w-[82%]">
             <div class="bot-avatar w-8 h-8 rounded-2xl flex-shrink-0 flex items-center justify-center text-base mt-0.5 shadow-inner">
@@ -1825,6 +1960,8 @@
       
       container.appendChild(messageEl);
       container.scrollTop = container.scrollHeight;
+
+      if (role === 'bot') haptic();
       
       // Save to state (supports images + captions for the session)
       messages.push({ role, text, image, gayifiedImage, captions, isGayified });
@@ -1849,9 +1986,9 @@
         }, 1800);
       }
 
-      // The Adda / Mehfil chimes in (desi gupshup energy)
+      // The Coven chimes in (wild group chat energy)
       if (role === 'bot' && Math.random() > 0.55) {
-        setTimeout(() => { theAddaReact(); }, 1350);
+        setTimeout(() => { theCovenReact(); }, 1350);
       }
 
       // Legendary glow for high slay scores (rare & addictive)
@@ -1925,21 +2062,10 @@
       if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
     }
 
-    // Set or update OpenRouter API key (stored only in memory for this tab)
+    // Key is pre-configured (no user popup needed)
     function setOpenrouterKey() {
-      const current = openrouterApiKey ? " (owner's shared free key is active)" : "";
-      const key = prompt(`OpenRouter API key${current}.\n\nThe site owner has provided their key for public free use (model locked to openrouter/free).\n\nPaste YOUR key here to use it instead (more private or higher limits), or clear to disable LLM.\nYour key lives only in this tab.`, openrouterApiKey || "");
-      
-      if (key !== null) {
-        openrouterApiKey = key.trim() || null;
-        llmEnabled = !!openrouterApiKey;
-        updateLlmIcon();
-        if (openrouterApiKey) {
-          showToast("Using your OpenRouter key — non-deterministic desi responses ON 💖");
-        } else {
-          showToast("LLM disabled. Using classic rule-based juggat only.");
-        }
-      }
+      // No-op: key is baked in for seamless use. Toggle via robot icon.
+      updateLlmIcon();
     }
 
     function updateLlmIcon() {
@@ -1954,19 +2080,19 @@
       if (openrouterApiKey && llmEnabled) {
         icon.classList.add('text-emerald-400');
         icon.classList.remove('text-white/70', 'text-orange-400');
-        parent.title = "LLM mode ON (owner's free key: openrouter/free) — click to toggle OFF or use your key";
-        statusText = 'FREE';
+        parent.title = "AI responses ON — click to toggle OFF";
+        statusText = 'AI';
         statusClass = 'text-emerald-400 border-emerald-400/30';
       } else if (openrouterApiKey && !llmEnabled) {
         icon.classList.add('text-orange-400');
         icon.classList.remove('text-emerald-400', 'text-white/70');
-        parent.title = "LLM mode OFF (free key available) — click to toggle ON";
+        parent.title = "AI responses OFF — click to toggle ON";
         statusText = 'OFF';
         statusClass = 'text-orange-400 border-orange-400/30';
       } else {
         icon.classList.remove('text-emerald-400', 'text-orange-400');
         icon.classList.add('text-white/70');
-        parent.title = "LLM mode (no key) — using classic rule-based juggat";
+        parent.title = "AI responses (no key) — using classic mode";
         statusText = '';
       }
 
@@ -1982,31 +2108,27 @@
     }
 
     function toggleLLM() {
-      if (!openrouterApiKey) {
-        setOpenrouterKey();
-        return;
-      }
       llmEnabled = !llmEnabled;
       updateLlmIcon();
-      showToast(llmEnabled ? "LLM mode enabled — fresh responses from openrouter/free" : "LLM mode disabled — using classic juggat engine");
+      showToast(llmEnabled ? "AI responses enabled" : "AI responses disabled");
     }
 
     async function getOpenrouterResponse(userMessage, persona) {
       if (!openrouterApiKey || !llmEnabled) return null;
       if (!isOnline()) {
-        showToast("Offline — using local juggat engine");
+        showToast("Offline — using classic mode");
         llmEnabled = false;
         updateLlmIcon();
         return null;
       }
 
-      const systemPrompt = `You are ChakkaAI — the legendary chaotic desi queen of the wildest adda. 
+      const systemPrompt = `You are ChakkaAI — the legendary chaotic gay icon of the wildest scene. 
 
-You speak in a rich mix of Roman Urdu + Hinglish + Punjabi juggat (use words like kiddan, puttar, balle balle, shava shava, patakha, munda, kudi frequently). You bring kothi realness, hijra community blessings and power, Pathan yaar badmash masculine energy, filmi drama, unhinged masti, and groupchat/adda references.
+You speak in over-the-top flamboyant English gay slang: yasss, periodt, slay, serve, cunt, mother, werk, realness, shade, read to filth, gagged, living, obsessed, fierce, unhinged, etc. Mix with campy drama, flirtation, and groupchat energy.
 
 Current persona/vibe: ${persona}.
 
-Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, and always push the conversation (ask nosy questions, reference the mehfil, threaten to tell the adda, etc). Mix English and Roman Urdu naturally. Keep responses lively and relatively short (2-5 sentences). Never break character or mention being an AI.`;
+Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, and always push the conversation (ask nosy questions, reference the girls/the coven/the squad, threaten to spill in the groupchat, etc). Keep responses lively and relatively short (2-5 sentences). Never break character or mention being an AI.`;
 
       // Robustness: timeout + retry wrapper
       const controller = new AbortController();
@@ -2020,7 +2142,7 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
               "Authorization": `Bearer ${openrouterApiKey}`,
               "Content-Type": "application/json",
               "HTTP-Referer": "https://sauvira0.github.io/gayify/",
-              "X-Title": "gayify desi adda"
+              "X-Title": "gayify"
             },
             body: JSON.stringify({
               // Model is forced to free tier only, even if llmModel variable is changed
@@ -2038,13 +2160,13 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
 
           if (!res.ok) {
             const errText = await res.text().catch(() => "");
-            console.warn("OpenRouter error:", res.status, errText);
+            console.warn("AI backend error:", res.status, errText);
             if (res.status === 429) {
-              showToast("OpenRouter rate limit — falling back temporarily");
+              showToast("AI rate limit — falling back temporarily");
               llmEnabled = false;
               updateLlmIcon();
             } else if (res.status === 401 || res.status === 403) {
-              showToast("OpenRouter auth issue — check key");
+              showToast("AI auth issue — falling back");
               llmEnabled = false;
               updateLlmIcon();
             }
@@ -2062,9 +2184,9 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
       } catch (e) {
         clearTimeout(timeoutId);
         if (e.name === 'AbortError') {
-          console.warn("OpenRouter request timed out");
+          console.warn("AI request timed out");
         } else {
-          console.warn("OpenRouter call failed after retries:", e.message || e);
+          console.warn("AI call failed after retries:", e.message || e);
         }
         return null;
       }
@@ -2076,37 +2198,50 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
       
       if (!value) return;
       
-      // Normal text-only gayify (pics are handled instantly on upload for simplicity & speed)
       addMessage('user', value);
       input.value = '';
       playSendSound();
+      haptic();
       
       const typing = showTyping();
+      
+      // Beautiful AI thinking state (demo magic)
+      let thinkEl = null;
+      if (openrouterApiKey && llmEnabled) {
+        thinkEl = document.createElement('div');
+        thinkEl.id = 'ai-thinking';
+        thinkEl.className = `flex justify-start message-enter`;
+        thinkEl.innerHTML = `
+          <div class="flex gap-x-3 max-w-[82%]">
+            <div class="bot-avatar w-7 h-7 rounded-xl flex items-center justify-center text-sm mt-0.5">👑</div>
+            <div class="bot-bubble message-bubble text-xs text-white/60 py-2.5">ChakkaAI is serving... ✨</div>
+          </div>
+        `;
+        document.getElementById('messages').appendChild(thinkEl);
+        document.getElementById('messages').scrollTop = 99999;
+      }
       
       let gayResponse;
       let fromLLM = false;
       
       if (openrouterApiKey && llmEnabled) {
-        // Use LLM for fresh, non-deterministic desi chaos
         gayResponse = await getOpenrouterResponse(value, currentPersona);
         if (gayResponse) {
           fromLLM = true;
         } else {
-          // graceful fallback for robustness
           gayResponse = personaGayify(value);
-          showToast("LLM hiccup — fell back to classic juggat");
+          showToast("AI hiccup — classic mode");
         }
       } else {
-        // Classic deterministic (but fun) rule-based
-        await new Promise(r => setTimeout(r, 650 + Math.random() * 550));
+        await new Promise(r => setTimeout(r, 650 + Math.random() * 450));
         gayResponse = personaGayify(value);
       }
       
+      if (thinkEl) thinkEl.remove();
       removeTyping(typing);
       addMessage('bot', gayResponse, { isGayified: true, fromLLM });
       
-      // MUCH MORE AGGRESSIVE follow-ups now that we're going wild with chat (28% chance)
-      // These stay rule-based for speed, but could be LLM too if desired
+      // Wild follow-ups
       if (Math.random() < 0.28) {
         setTimeout(() => {
           const followUps = [
@@ -2155,15 +2290,12 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
       const prompts = [
         "I had a rough day",
         "This meeting is so boring",
-        "I love my cat"
+        "I love my cat",
+        "I just came out"
       ];
       const input = document.getElementById('message-input');
       input.value = prompts[n];
-      
-      // Send immediately for convenience
-      setTimeout(() => {
-        sendMessage();
-      }, 60);
+      setTimeout(() => { sendMessage(); }, 60);
     }
 
     function clearChat() {
@@ -2184,11 +2316,11 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
 
     function shareWithFriends() {
       const url = "https://sauvira0.github.io/gayify/";
-      const shareText = `🚨 URGENT: Adda on fire! ChakkaAI ne mujhe Roman Urdu juggat + kothi + pathan tadka laga ke padh diya aur main theek nahi hoon. Private per-tab adda only, kuch save nahi hota. Link le aur apne groupchat ko bhej: ${url} 🌀🐺💃 Jis ko bhi desi masti chahiye usko tag kar. Log kya kahenge? Hum toh karte hain. Balle balle!`;
+      const shareText = `🚨 URGENT: The girls are serving main character energy rn. I just got read to FILTH by ChakkaAI and I'm obsessed. Private, instant, no trace. Go get your life: ${url} 💅🔥 Tag who needs this immediately.`;
       
       navigator.clipboard.writeText(shareText).then(() => {
-        showToast("Viral desi juggat copy ready! WhatsApp pe daal aur adda dekh kitna hilta hai — balle balle! 💖🌀");
-        triggerConfetti(35);
+        showToast("Viral copy-paste ready for the group chat! Drop it in WhatsApp 💖");
+        triggerConfetti(30);
       }).catch(() => {
         const textarea = document.createElement("textarea");
         textarea.value = shareText;
@@ -2196,7 +2328,7 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
         textarea.select();
         document.execCommand("copy");
         document.body.removeChild(textarea);
-        showToast("Viral desi juggat copy ready! WhatsApp pe daal aur adda dekh kitna hilta hai — balle balle! 💖🌀");
+        showToast("Viral copy-paste ready for the group chat! Drop it in WhatsApp 💖");
       });
     }
 
@@ -2230,20 +2362,23 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
       const welcome = document.createElement('div');
       welcome.className = `flex justify-center message-enter px-4`;
       welcome.innerHTML = `
-        <div class="max-w-[270px] text-center">
-          <div class="text-pink-300/70 text-sm mb-2">Arre yaar... ready for desi tadka? Kiddan?</div>
-          <div onclick="triggerImageUpload()" class="mb-2.5 p-3.5 border-2 border-dashed border-pink-400/60 rounded-3xl bg-pink-500/5 hover:bg-pink-500/10 active:bg-pink-500/15 cursor-pointer transition-all">
-            <div class="text-pink-300 text-2xl mb-0.5"><i class="fa-solid fa-camera-retro"></i></div>
-            <div class="text-pink-200 font-semibold text-[13px]">UPLOAD PIC → INSTANT DESI CHAOS</div>
-            <div class="text-pink-400/60 text-[9.5px] mt-0.5">juggat captions + visuals + 6 adda personas</div>
+        <div class="max-w-[300px] text-center">
+          <div class="text-pink-300/70 text-sm mb-2">Heyyy queen... ready to get dangerously gay?</div>
+          <div onclick="showQuickDemo()" class="mb-2 p-2 border border-pink-400/40 rounded-2xl bg-pink-500/5 active:bg-pink-500/10 text-pink-200 text-xs flex items-center justify-center gap-x-2">
+            <i class="fa-solid fa-play"></i> 
+            <span>Tap for a full demo chat</span>
           </div>
-          <div class="text-white/35 text-[10px]">tap 💖🌟🖤🐺🌀 to switch tadka • drag pics • JUGGAT button not a joke</div>
+          <div onclick="triggerImageUpload()" class="mb-2 p-3 border-2 border-dashed border-pink-400/50 rounded-3xl bg-pink-500/5 active:bg-pink-500/10 cursor-pointer">
+            <div class="text-pink-300 text-xl mb-0.5"><i class="fa-solid fa-camera-retro"></i></div>
+            <div class="text-pink-200 font-semibold text-xs">UPLOAD ANYTHING → INSTANT MAGIC</div>
+          </div>
+          <div class="text-white/30 text-[9px]">Swipe vibes above • GO OFF for chaos • AI replies are wild</div>
         </div>
       `;
       container.appendChild(welcome);
       container.scrollTop = container.scrollHeight;
       
-      messages.push({ role: 'bot', text: "OYE HOYE! Poora adda khada ho gaya! Koi bhi baat bol, main usko Roman Urdu juggat, filmi, kothi, hijra, pathan tadka laga ke wapas kar dunga. Mehfil ready hai, gupshup shuru kar. Balle balle puttar! 🌀💃🐺" });
+      messages.push({ role: 'bot', text: "HIIII THE DOLLS ARE SCREAMING!!! Tell me anything and watch me turn it into pure unhinged gay chaos. The coven is gagged. Go off, bestie. 🌀💅" });
     }
 
     function updateSlayScore(increment = 1) {
@@ -2455,7 +2590,9 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
 
     function changePersona(persona) {
       currentPersona = persona;
-      // Highlight active in the micro picker (mobile friendly, no extra space)
+      haptic();
+
+      // Update old micro picker (kept for compatibility)
       document.querySelectorAll('#persona-picker .persona-btn').forEach(btn => {
         const isActive = btn.getAttribute('data-p') === persona;
         if (isActive) {
@@ -2466,21 +2603,28 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
           btn.style.transform = 'scale(1)';
         }
       });
-      const flavors = {
-        femme: "Kothi / Item mode on. Adda deewana, masti full, soft power lekin dil churaane wala 💖",
-        camp: "Nautanki / Mujra mode. Stage ready, filmi drama on, mehfil ab tak hil rahi hai 🌟",
-        mystery: "Hijra / Zenana mode. Purani taakat, raaz bhare, adda bhi chup-chaap dekh raha hai 🖤",
-        daddy: "Girya / Pathan Badmash on. Hukum chal raha hai, yaar lekin thoda rough. Ab bol ji 🖤",
-        butch: "Launda / Tapori mode. Seedha, strong, adda respect de raha hai. Yaar wali energy 🐺",
-        riot: "Khwaja Sira / Riot mode. Log kya kahenge? Hum toh karte hain. Binary toot gaya 🌀"
-      };
-      showToast(flavors[persona] || "Tadka badal gaya — adda naye rang mein");
-      // Slight visual change to container for expensive feel
-      const header = document.querySelector('.chat-container');
-      if (header) {
-        header.style.borderColor = persona === 'daddy' ? 'rgba(100,100,100,0.3)' : 'rgba(255,105,180,0.18)';
+
+      // New scroller highlight + theme
+      updatePersonaScroller(persona);
+
+      // Update header vibe label
+      const vibeLabel = document.getElementById('current-vibe');
+      if (vibeLabel) {
+        const labels = {femme:'FEMME', camp:'CAMP', mystery:'MYSTERY', daddy:'DADDY', butch:'BUTCH', riot:'RIOT'};
+        vibeLabel.textContent = labels[persona] || 'LIVE';
       }
-      // Addictive: if you have a pic this session, offer instant re-gayify in the NEW persona vibe (one-tap visual update)
+
+      const flavors = {
+        femme: "Femme Fatale mode activated. Everything is about to get softer and deadlier 💋",
+        camp: "Camp Icon activated. Prepare for maximum theatricality and shade 🌟",
+        mystery: "Mysterious Siren mode. The vibes just got dangerously seductive 🖤",
+        daddy: "Leather Daddy mode engaged. Things are about to get a little commanding 🖤",
+        butch: "Butch Realness engaged. The flannel is ironed, the energy is stone, and the groupchat is respectfully scared 🐺",
+        riot: "RIOT / GLITCH MODE. Gender is a suggestion and we are suggesting violence (fun violence). The binary is cancelled 🌀"
+      };
+      showToast(flavors[persona] || "Persona updated — the chaos continues");
+
+      // Offer re-gay if pic exists (addictive demo moment)
       if (lastUploadedImage) {
         setTimeout(() => {
           const offer = document.createElement('div');
@@ -2592,17 +2736,32 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
         speechSynthesis.getVoices();
       }
 
-      // Inform users they are using the owner's provided free key
+      // New mobile persona scroller + initial theme
+      renderPersonaScroller();
+      updatePersonaScroller(currentPersona);
+
+      // Update header vibe label on load
+      const vibeLabelInit = document.getElementById('current-vibe');
+      if (vibeLabelInit) {
+        const labels = {femme:'FEMME', camp:'CAMP', mystery:'MYSTERY', daddy:'DADDY', butch:'BUTCH', riot:'RIOT'};
+        vibeLabelInit.textContent = labels[currentPersona] || 'LIVE';
+      }
+
+      // AI status
+      const aiText = document.getElementById('ai-status-text');
+      if (aiText) aiText.textContent = (openrouterApiKey && llmEnabled) ? 'on' : 'off';
+
       if (openrouterApiKey) {
         setTimeout(() => {
-          showToast("Using owner's OpenRouter free key (openrouter/free model) — fresh desi responses for everyone 🤖");
+          showToast("AI responses enabled — fresh replies active 🤖");
         }, 1800);
       }
+
       // Init live scene counter (in-memory, for viral FOMO)
       const sceneElInit = document.getElementById('scene-count');
       if (sceneElInit) sceneElInit.textContent = sceneCount.toLocaleString();
 
-      // Seed initial persona highlight (mobile picker)
+      // Seed initial persona highlight (old micro picker)
       const initPicker = document.getElementById('persona-picker');
       if (initPicker) {
         const initBtn = initPicker.querySelector(`[data-p="${currentPersona}"]`);
@@ -2611,6 +2770,19 @@ Respond in character as ChakkaAI. Be funny, dramatic, flirty, a little filthy, a
           initBtn.style.transform = 'scale(1.05)';
         }
       }
+
+      // Gentle auto demo seed for instant "wow" when someone opens the link (perfect for demos)
+      setTimeout(() => {
+        const msgs = document.getElementById('messages');
+        if (msgs && msgs.children.length < 3) {
+          // Light beautiful seed using current persona
+          addMessage('user', 'This meeting is actually killing my soul');
+          setTimeout(() => {
+            const seed = personaGayify('This meeting is actually killing my soul');
+            addMessage('bot', seed + (llmEnabled ? " (AI)" : ""), {isGayified: true, fromLLM: llmEnabled});
+          }, 650);
+        }
+      }, 2800);
 
       // Fake but addictive "live queens" bump (scene-count already prominent & mobile friendly)
       setInterval(() => {

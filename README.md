@@ -1,10 +1,12 @@
 # 💅 gayify
 
-A simple, hilarious, unhinged web chat that makes **anything** you say more gay — now with heavy Urdu/Hindi desi subculture tadka + OpenRouter LLM layer.
+A polished, mobile-first demo-ready single-file app that makes **anything** you say more gay — pure English gay edition with over-the-top flamboyant chaotic queer energy (yasss, periodt, slay, serve, cunt, mother, realness, unhinged drama) + seamless OpenRouter LLM layer (baked free key + model).
 
-The site owner's OpenRouter key is provided publicly so every visitor gets fresh non-deterministic desi responses automatically (model locked to free tier "openrouter/free").
+Beautiful mobile experience: thumb-friendly vibe scroller, clean immersive layout, bottom-sheet ready, live persona themes, one-tap demo seed, gorgeous AI thinking states.
 
-Roman Urdu juggat, kothi realness, hijra power, Pathan yaar energy, nautanki, mehfil, adda gupshup. 6 desi queer personas. Toggle LLM, per-message "FREE" badges, full offline/retry/error resilience. The adda is always watching. "Log kya kahenge? Hum toh karte hain."
+6 fierce personas. AI toggle + badges. Full image gayification magic. Exports, diary, trophies, GO OFF, Spill the Tea. The girls are always watching. "YASSS queen, spill it."
+
+Open index.html and you're ready to demo. Mobile feels native. AI just works.
 
 **🌐 Live demo:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 

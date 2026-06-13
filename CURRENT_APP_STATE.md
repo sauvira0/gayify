@@ -76,21 +76,16 @@
 
 **App is ready for resumption.** All previous requirements (privacy, single-file, mobile, visuals, addictiveness) are intact.
 
-**Latest evolution:** OpenRouter LLM integration (key pre-baked).
-- User's OpenRouter key is now baked into the public site so all visitors get LLM responses for free (no need for their own key).
-- Model is forced/hardcoded to "openrouter/free" in the API call to ensure it's always the free tier (no risk of paid usage).
-- In setOpenrouterKey prompt, users can still override with their own key if they prefer.
-- All previous robustness (toggle, badges showing "FREE", retries, offline, errors) remains.
-- SECURITY: Key is public in source. Owner accepts this for convenience of users.
-- This makes answers highly non-deterministic, creative, and varied (high temperature).
-- Robot icon (🤖) in header: click to override or clear the pre-set key (falls back to classic rule-based juggat).
-- All previous desi subculture work (Punjabi juggat, kothi/hijra/Pathan energy, mehndi canvas patterns, etc.) is preserved and used to condition the LLM via a strong system prompt.
-- ⚠️ The provided OpenRouter key is now hardcoded and public in the source / deployed page. Rotate it on OpenRouter if you don't want it exposed/used by others.
-- Core ephemeral rule still holds for chat state (per-tab only), but LLM calls go to OpenRouter.
+**Latest evolution:** Major UI rearchitecture for a polished, demo-ready mobile-first product (English gay).
+- Full mobile rearch: immersive full-height on phone, thumb-friendly persona scroller (horizontal), cleaner header with less clutter, fixed modern input bar, bottom-sheet ready system.
+- Demo superpowers: prominent "Demo" button that seeds a fun chat, expanded quick prompts, live persona theme accents, beautiful AI "thinking" state with personality.
+- AI integration seamless (no popups): baked key + free model, clear toggle + status pill + per-message AI badges.
+- All previous English gay language, 6 personas, robustness (retry, offline, fallbacks), image magic, exports preserved and enhanced.
+- Feels like a premium chaotic gay AI chat app you can proudly demo to anyone.
 
 When the user says "go wild" or "more queer" again, lean harder into specific cultural references, longer chaotic rants, and even more interactive "the groupchat is watching" energy.
 
-**Desi direction notes:** User explicitly asked for "Urdu/Hindi desi subculture". Previous juggat attempt was reverted, but this time fully embraced. Keep Roman Urdu accessible + mix with previous flamboyance. ChakkaAI name is perfect for this. Focus on adda/mehfil/gupshup/juggat/rishta/mummy/log kya kahenge energy + strong Punjabi/Lahori (kiddan, puttar, balle, patakha) and hijra/Pathan flavor. Added mehndi dots + henna curves on gayified images. Image tags and filters should feel like a desi mehfil with gold. Privacy message can lean "log nahi jaanenge".
+**Direction notes:** User requested "english gay, no need for desi". Reverted language, personas, UI, LLM prompt, visuals, and all copy to pure flamboyant English gay while keeping the wild/queer energy and LLM robustness. ChakkaAI name retained as brand.
 
 ---
 Generated for session resumption. Do not modify core privacy model.
