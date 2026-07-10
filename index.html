@@ -1471,136 +1471,124 @@
       }
     }
 
+  
+    /* SIMPLE MODE */
+    .splash-tag {
+      margin: 12px 0 0;
+      color: rgba(255,255,255,0.55);
+      font-size: 15px;
+    }
+    .splash-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+    }
+    .simple-top {
+      padding: 14px 16px 10px;
+    }
+    .simple-stage {
+      margin: 0 12px;
+      border-radius: 22px;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .simple-stage .messages {
+      flex: 1;
+      padding: 16px 14px 20px;
+    }
+    .simple-composer {
+      padding: 12px 14px calc(14px + var(--safe-b));
+    }
+    .simple-composer .prompts {
+      justify-content: center;
+    }
+    .simple-composer .composer-row {
+      max-width: 100%;
+    }
+    /* Hide complex chrome leftovers */
+    .section-label-wrap, .primary-actions, .stage-head, .footer-tag,
+    .util-row, .games, .cotd-banner, .dbl-hint, .react-row, .quick-replies {
+      display: none !important;
+    }
+    .bubble.bot { max-width: 92%; }
+    .bot-wrap .meta { margin-top: 4px; }
+    .studio-badge, .ai-badge { display: none; }
+
   </style>
 </head>
 <body class="grain">
-  <!-- Splash: enter → optional Add to Home Screen → app -->
+  <!-- Minimal splash -->
   <div id="splash">
     <div class="splash-panel active" id="splash-home">
       <div class="splash-logo">💅</div>
       <div class="splash-title">gayify</div>
-      <p style="margin:10px 0 0;color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:0.04em;">funny · private · nothing saved</p>
-      <button type="button" class="splash-btn" id="splash-enter">Start chatting ✦</button>
-      <p style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.28);">Tip: close the tab and everything disappears</p>
-    </div>
-    <div class="splash-panel" id="splash-a2hs">
-      <div style="font-size:40px;line-height:1;">📱</div>
-      <div class="display" style="font-size:1.45rem;font-weight:800;margin-top:10px;color:#fff;">Add to Home Screen</div>
-      <p style="margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.55);line-height:1.4;">Feels like an app. Chat still dies when you close it — privacy stays.</p>
-      <ol class="a2hs-steps" id="a2hs-steps">
-        <!-- filled by JS for iOS / Android / desktop -->
-      </ol>
-      <button type="button" class="splash-btn" id="splash-install">Install / Add now</button>
-      <button type="button" class="splash-btn ghost" id="splash-skip">Continue to chat</button>
+      <p class="splash-tag">Type anything. Get a funnier reply.</p>
+      <button type="button" class="splash-btn" id="splash-enter">Chat</button>
+      <p class="splash-note">Private · nothing saved</p>
     </div>
   </div>
 
   <div class="app theme-femme" id="app">
-    <!-- Ambient stage lights -->
     <div class="ambient" aria-hidden="true">
       <span class="orb orb-a"></span>
       <span class="orb orb-b"></span>
-      <span class="orb orb-c"></span>
     </div>
 
-    <!-- Clean header -->
-    <header class="topbar">
+    <header class="topbar simple-top">
       <div class="brand-lockup">
         <div class="brand-mark" aria-hidden="true">💅</div>
-        <div class="brand-text">
+        <div>
           <h1 class="display brand-title">gayify</h1>
-          <p class="brand-sub"><span class="live-dot" aria-hidden="true"></span><span id="scene-count">2,418</span> online · private</p>
+          <p class="brand-sub">private chat · close tab = gone</p>
         </div>
       </div>
-      <div class="header-actions">
-        <button type="button" class="chip chip-slay" onclick="showSlayRecap()" id="slay-chip" aria-label="Slay score">
-          <span class="slay-label">SLAY</span>
-          <span id="slay-value">0</span>
-          <span id="slay-level">🌱</span>
-        </button>
-        <button type="button" class="chip chip-ai" onclick="toggleLLM()" id="llm-chip" aria-label="Toggle AI">
-          <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-          <span id="llm-status">AI</span>
-        </button>
-        <button type="button" class="chip icon-only" onclick="showMoreSheet()" aria-label="More options" title="More">
-          <i class="fa-solid fa-ellipsis"></i>
-        </button>
-      </div>
+      <button type="button" class="chip icon-only" onclick="clearChat()" aria-label="New chat" title="New chat">
+        <i class="fa-solid fa-plus"></i>
+      </button>
     </header>
 
-    <!-- Persona picker — primary, obvious -->
-    <section class="section-label-wrap">
-      <div class="section-label">Your vibe</div>
-    </section>
-    <div class="persona-rail" id="persona-rail" aria-label="Choose your vibe"></div>
-
-    <!-- Primary actions only -->
-    <div class="primary-actions" role="toolbar" aria-label="Main actions">
-      <button type="button" class="pa-btn pa-hero" onclick="playCategoryOfDay()">
-        <span class="pa-kicker">Today</span>
-        <span class="pa-title" id="cotd-title">Category of the Day</span>
-      </button>
-      <button type="button" class="pa-btn" onclick="startBallroom()">
-        <span class="pa-emoji">🏆</span>
-        <span class="pa-name">Ballroom</span>
-      </button>
-      <button type="button" class="pa-btn" onclick="runGame('roast')">
-        <span class="pa-emoji">🔥</span>
-        <span class="pa-name">Roast</span>
-      </button>
-      <button type="button" class="pa-btn" onclick="runCinematicDemo()">
-        <span class="pa-emoji">▶</span>
-        <span class="pa-name">Demo</span>
-      </button>
-      <button type="button" class="pa-btn" onclick="showPlaySheet()">
-        <span class="pa-emoji">✦</span>
-        <span class="pa-name">More play</span>
-      </button>
-    </div>
-
-    <!-- Chat stage -->
-    <main class="stage">
-      <div class="stage-head">
-        <div class="avatar" id="bot-avatar">👑</div>
-        <div class="stage-meta">
-          <div class="stage-name-row">
-            <span class="stage-name">ChakkaAI</span>
-            <span id="current-vibe" class="vibe-pill">FEMME</span>
-          </div>
-          <div class="stage-sub">Private tab · <span id="source-status-text">Studio + Live</span> · close = gone</div>
-        </div>
-        <button type="button" class="demo-btn ghost-demo" onclick="showHelpSheet()" aria-label="Help">?</button>
-      </div>
+    <main class="stage simple-stage">
       <div id="messages" class="messages"></div>
-      <button type="button" id="scroll-fab" onclick="scrollChatToBottom()" aria-label="Jump to latest"><i class="fa-solid fa-arrow-down"></i></button>
     </main>
 
-    <div class="footer-tag">
-      <button type="button" class="privacy-meter" onclick="showPrivacySheet()">
-        <i aria-hidden="true"></i> Private · ephemeral · <span id="msg-count">0 msgs</span>
-      </button>
-    </div>
-
-    <!-- Composer -->
-    <div class="composer">
-      <div class="status-line" id="status-line">Type a message and hit send ↑</div>
+    <div class="composer simple-composer">
       <div class="composer-row">
-        <button type="button" class="upload-btn" onclick="triggerImageUpload()" title="Upload a pic" aria-label="Upload photo">
-          <i class="fa-solid fa-camera"></i>
-        </button>
-        <input id="message-input" type="text" placeholder="What's the tea?" autocomplete="off" enterkeyhint="send" inputmode="text" aria-label="Message">
+        <input id="message-input" type="text" placeholder="Say something…" autocomplete="off" enterkeyhint="send" inputmode="text" aria-label="Message">
         <button type="button" class="send-btn" onclick="sendMessage()" aria-label="Send">
           <i class="fa-solid fa-arrow-up"></i>
         </button>
       </div>
       <div class="prompts" id="prompt-row">
-        <button type="button" class="prompt" onclick="usePrompt('This meeting is killing my soul')">Meeting hell</button>
-        <button type="button" class="prompt" onclick="usePrompt('I just saw my ex at the grocery store')">Ex sighting</button>
-        <button type="button" class="prompt" onclick="usePrompt('I made pasta and it slapped')">Pasta slap</button>
-        <button type="button" class="prompt" onclick="usePrompt('Came out to my friend today')">Came out</button>
+        <button type="button" class="prompt" onclick="usePrompt('how are you')">how are you</button>
+        <button type="button" class="prompt" onclick="usePrompt('I had a rough day')">rough day</button>
+        <button type="button" class="prompt" onclick="usePrompt('my boss is annoying')">my boss</button>
       </div>
     </div>
   </div>
+
+  <!-- Hidden elements kept so old JS does not crash -->
+  <div id="persona-rail" hidden></div>
+  <span id="slay-value" hidden>0</span>
+  <span id="slay-level" hidden></span>
+  <i id="slay-fill" hidden></i>
+  <span id="llm-status" hidden>STUDIO</span>
+  <span id="source-status-text" hidden></span>
+  <span id="net-status-text" hidden></span>
+  <span id="scene-count" hidden>0</span>
+  <span id="bot-avatar" hidden>👑</span>
+  <span id="current-vibe" hidden>FEMME</span>
+  <span id="status-line" hidden></span>
+  <span id="msg-count" hidden></span>
+  <span id="cotd-title" hidden></span>
+  <div id="llm-chip" hidden></div>
+  <div id="slay-chip" hidden></div>
+  <div id="scroll-fab" hidden></div>
+  <div id="voice-icon" hidden></div>
+  <div id="sound-icon" hidden></div>
+  <div id="install-banner" hidden></div>
+  <div id="a2hs-steps" hidden></div>
 
   <input type="file" id="image-input" accept="image/*,.heic,.heif" capture="environment" hidden>
   <div id="sheet-root"></div>
@@ -2357,107 +2345,46 @@
   }
 
   function emergencyReply(userMessage) {
-    const q = String(userMessage || 'that').trim().slice(0, 80) || 'that';
-    const lines = [
-      "I'm right here. You said \"" + q + "\" — and the groupchat is already typing. Tell me more.",
-      "Got it. \"" + q + "\" is a whole plot. Keep going — I'm listening and slightly unhinged about it.",
-      "Okay. \"" + q + "\". Not boring. Hit me with the next detail.",
-      "Heard. \"" + q + "\" just entered the chat. What's the rest of the story?"
-    ];
-    return lines[Math.floor(Math.random() * lines.length)];
+    const q = String(userMessage || '').trim().slice(0, 60) || 'that';
+    return 'Got it — "' + q + '". Tell me more.';
   }
 
   async function deliverComedy(userMessage, opts = {}) {
-    const { forceText = null, skipCoven = false, forceStudio = false, forcedTopics = null } = opts;
+    const { forceText = null, forcedTopics = null } = opts;
     let typing = null;
     try {
       typing = showTyping();
-      await sleep(180 + Math.random() * 220);
-
+      await sleep(200);
       let main = forceText;
-      let source = 'studio';
-      let side = null;
-      let follow = null;
-
-      // FIRST IMPRESSIONS: Studio first, always. Never make the user wait on Live AI.
-      // Live AI is optional spice only if already enabled AND forceStudio is false —
-      // but we still prefer Studio for reliability. Live only if forceText not set and
-      // user explicitly enabled Live AND we try with short timeout without blocking studio.
-      // Policy: always Studio for the main reply. Instant. Funny. Guaranteed.
       if (!main) {
         try {
           const pkg = studioPackage(userMessage, { forcedTopics });
-          main = ensureFunnyGay(pkg.main || emergencyReply(userMessage), userMessage);
-          side = skipCoven ? null : pkg.side;
-          follow = pkg.follow;
-          source = 'studio';
-          if (!side && !skipCoven && chance(0.35)) {
-            try { side = pickFresh(COVEN_LINES, usedCovenFP); } catch (e) {}
-          }
+          main = (pkg && pkg.main) ? pkg.main : emergencyReply(userMessage);
         } catch (e) {
-          console.warn('studioPackage failed', e);
           main = emergencyReply(userMessage);
-          source = 'studio';
         }
-      } else {
-        try { main = ensureFunnyGay(main, userMessage); } catch (e) { main = String(main); }
       }
-
       if (!main || !String(main).trim()) main = emergencyReply(userMessage);
-
+      // light cleanup of persona spam prefixes if double
+      main = String(main).trim();
       removeTyping(typing);
       typing = null;
-      addMessage('bot', main, { isGayified: true, fromLLM: source === 'live', source: 'studio' });
+      addMessage('bot', main, { isGayified: true, source: 'studio', skipQuick: true });
       try { remember(userMessage, main); } catch (e) {}
-      try { playSlayChime(0.3); } catch (e) {}
-
-      // Optional: if Live AI is ON, fetch in background and post a second spicy take (never blocks first reply)
-      if (!forceStudio && !forceText && openrouterApiKey && llmEnabled && isOnline()) {
-        getOpenrouterResponse(userMessage, currentPersona).then(llm => {
-          if (!llm || !liveQualityOK(llm, userMessage)) return;
-          try {
-            const liveMain = ensureFunnyGay(llm.trim(), userMessage);
-            if (liveMain && !tooSimilarToRecent(liveMain)) {
-              addMessage('bot', liveMain, { isGayified: true, fromLLM: true, source: 'live', skipQuick: true });
-              remember(userMessage, liveMain);
-            }
-          } catch (e) {}
-        }).catch(() => {});
-      }
-
-      if (side) {
-        try {
-          await sleep(400);
-          if (side && !wasUsed(side)) {
-            addMessage('side', side, { side: true });
-            markUsedLine(side);
-          }
-        } catch (e) {}
-      }
-
-      if (follow && !wasUsed(follow) && !tooSimilarToRecent(follow)) {
-        try {
-          await sleep(500);
-          addMessage('bot', follow, { isGayified: true, source: 'studio', skipQuick: true });
-          markUsedLine(follow);
-        } catch (e) {}
-      }
-
+      try { playSlayChime(0.25); } catch (e) {}
       return { source: 'studio', main };
     } catch (err) {
-      console.error('deliverComedy fatal', err);
-      try { if (typing) removeTyping(typing); } catch (e) {}
+      console.error(err);
+      try { removeTyping(typing); } catch (e) {}
       try {
-        const fallback = emergencyReply(userMessage);
-        addMessage('bot', fallback, { isGayified: true, source: 'studio', skipQuick: true });
+        addMessage('bot', emergencyReply(userMessage), { isGayified: true, source: 'studio', skipQuick: true });
       } catch (e2) {
         const c = document.getElementById('messages');
         if (c) {
           const d = document.createElement('div');
           d.className = 'msg-row bot';
-          d.innerHTML = '<div class="bot-wrap"><div class="bubble bot"><p>I\'m here. Try sending that again — glitch on my side.</p></div></div>';
+          d.innerHTML = '<div class="bot-wrap"><div class="bubble bot"><p>Still here — try that again.</p></div></div>';
           c.appendChild(d);
-          c.scrollTop = c.scrollHeight;
         }
       }
       return { source: 'studio', main: null };
@@ -2852,52 +2779,15 @@ ${mem}` : ''}`;
           <button class="mini-btn" onclick="rateMoment(false)">Mid</button></div>`;
       }
 
-      if (!skipQuick && text && !captions && typeof pickQuickReplies === 'function') {
-        const qrs = pickQuickReplies(text);
-        inner += `<div class="quick-replies">` + qrs.map(q =>
-          `<button type="button" class="qchip" onclick='usePrompt(${JSON.stringify(q.v)})'>${q.l}</button>`
-        ).join('') + `</div>`;
-      }
-      if (typeof reactToMsg === 'function') {
-        inner += `<div class="react-row">
-          <button type="button" class="react-btn" onclick="reactToMsg(this,'🔥')">🔥</button>
-          <button type="button" class="react-btn" onclick="reactToMsg(this,'💅')">💅</button>
-          <button type="button" class="react-btn" onclick="reactToMsg(this,'💀')">💀</button>
-          <button type="button" class="react-btn" onclick="reactToMsg(this,'✨')">✨</button>
-        </div>`;
-      }
-
-      const srcBadge = (source === 'live' || fromLLM)
-        ? '<span class="ai-badge" title="Live AI path">LIVE</span>'
-        : '<span class="studio-badge" title="Authored Studio comedy">STUDIO</span>';
+      const em = (typeof persona === 'function' && persona()) ? persona().emoji : '👑';
       row.innerHTML = `
         <div class="bot-wrap">
-          <div class="avatar">${persona().emoji}</div>
+          <div class="avatar">${em}</div>
           <div>
             <div class="bubble bot">${inner}</div>
-            <div class="meta">
-              <span>ChakkaAI</span>${srcBadge}
-              <button class="copy-btn" onclick="copyGayVersion(this)" title="Copy"><i class="fa-solid fa-copy"></i></button>
-              <span class="dbl-hint">dbl-tap copy</span>
-            </div>
+            <div class="meta"><span>ChakkaAI</span></div>
           </div>
         </div>`;
-
-      setTimeout(() => {
-        const bub = row.querySelector('.bubble.bot');
-        if (!bub) return;
-        let lastTap = 0;
-        bub.addEventListener('click', (e) => {
-          if (e.target.closest('button, a, .qchip, .react-btn, .mini-btn, .cap-item')) return;
-          const now = Date.now();
-          if (now - lastTap < 320) {
-            const t = bub.querySelector('p')?.textContent || text || '';
-            navigator.clipboard.writeText(t).then(() => showToast('Copied ✨')).catch(() => {});
-            haptic();
-          }
-          lastTap = now;
-        });
-      }, 0);
     }
 
     container.appendChild(row);
@@ -4244,82 +4134,41 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     try {
       const input = document.getElementById('message-input');
       if (!input) return;
-      let value = (input.value || '').trim();
+      const value = (input.value || '').trim();
       if (!value) return;
       if (isBusy) {
-        // Don't drop the message — queue isn't available; show feedback
-        showToast('One sec — finishing the last bit…');
+        showToast('One sec…');
         return;
       }
-
-      const cmd = value.toLowerCase();
-      if (cmd.startsWith('/')) {
-        input.value = '';
-        haptic();
-        try {
-          if (cmd === '/help' || cmd === '/?') { showHelpSheet(); return; }
-          if (cmd === '/roast') { runGame('roast'); return; }
-          if (cmd === '/ball' || cmd === '/category' || cmd === '/cat') { startBallroom(); return; }
-          if (cmd === '/today' || cmd === '/cotd') { playCategoryOfDay(); return; }
-          if (cmd === '/tea') { runGame('tea'); return; }
-          if (cmd === '/go' || cmd === '/gooff') { runGame('gooff'); return; }
-          if (cmd === '/demo') { runCinematicDemo(); return; }
-          if (cmd === '/studio') { forceStudioReply(); return; }
-          if (cmd === '/share') { shareWithFriends(); return; }
-          if (cmd === '/burn') { burnSession(); return; }
-          if (cmd === '/undo') { undoLastTurn(); return; }
-          if (cmd === '/cinema') { toggleCinemaMode(); return; }
-          if (cmd === '/compliment') { runGame('compliment'); return; }
-          if (cmd === '/twist') { runGame('twist'); return; }
-          showToast('Unknown command — try /help');
-        } catch (e) { showToast('Command failed — just type normally'); }
-        return;
-      }
-
       isBusy = true;
       input.value = '';
       try {
         addMessage('user', value);
       } catch (e) {
-        console.error('add user failed', e);
-        // restore input if user bubble failed
         input.value = value;
         isBusy = false;
-        showToast('Could not send — try again');
+        showToast('Try again');
         return;
       }
       try { playSendSound(); } catch (e) {}
       try { haptic(); } catch (e) {}
-
       try {
+        // games if somehow active
         if (ballroom && ballroom.phase === 'serve') {
           await judgeBallroomServe(value);
-        } else if (gameMode === 'roast') {
-          gameMode = null;
-          await deliverComedy(value, { forceStudio: true, forcedTopics: ['roast'] });
-        } else if (gameMode === 'compliment') {
-          gameMode = null;
-          await deliverComedy('Compliment me: ' + value, { forceStudio: true });
-        } else if (gameMode === 'twist') {
-          gameMode = null;
-          await deliverComedy('Plot twist for: ' + value, { forceStudio: true });
-        } else if (gameMode === 'hotseat' || gameMode === 'tea') {
-          gameMode = null;
-          await deliverComedy(value, { forceStudio: true });
         } else {
-          await deliverComedy(value, { forceStudio: true }); // always studio path for reliability
+          await deliverComedy(value, { forceStudio: true });
         }
       } catch (e) {
-        console.error('reply failed', e);
+        console.error(e);
         try {
           addMessage('bot', emergencyReply(value), { isGayified: true, source: 'studio', skipQuick: true });
         } catch (e2) {
-          showToast('Reply glitched — tap send again');
+          showToast('Reply failed — try again');
         }
       }
     } catch (e) {
-      console.error('sendMessage fatal', e);
-      showToast('Something broke — refresh if it keeps happening');
+      console.error(e);
     } finally {
       isBusy = false;
     }
@@ -4333,16 +4182,13 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   function clearChat() {
     messages = [];
     sessionMemory = [];
-    resetComedySession();
-    const c = $('messages');
-    c.innerHTML = '';
+    try { resetComedySession(); } catch (e) {}
+    ballroom = null;
+    gameMode = null;
+    const c = document.getElementById('messages');
+    if (c) c.innerHTML = '';
     seedEmpty();
-    addMessage('system', 'New chat. Studio library refreshed. Previous drama evaporated.');
-    addMessage('bot', pick([
-      "Clean slate. Make it messier. What's the opening number?",
-      "Fresh chat. Don't waste it on small talk — give me plot. Or hit Category Is."
-    ]), { isGayified: true, source: 'studio' });
-    showToast("New chat · anti-repeat reset ✨");
+    addMessage('bot', "Fresh start. What's next?", { isGayified: true, source: 'studio', skipQuick: true });
   }
 
   function burnSession() {
@@ -4451,14 +4297,9 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     const hero = document.createElement('div');
     hero.className = 'empty-hero';
     hero.innerHTML = `
-      <div style="font-size:40px;line-height:1;">👑</div>
-      <h2>Type anything below</h2>
-      <p>You'll get a funny reply instantly.<br>Nothing is saved. Close the tab = gone.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;">
-        <button type="button" class="qchip" onclick="usePrompt('how are you')">how are you</button>
-        <button type="button" class="qchip" onclick="usePrompt('I had a rough day')">rough day</button>
-        <button type="button" class="qchip" onclick="runGame('roast')">🔥 Roast me</button>
-      </div>`;
+      <div style="font-size:36px;">💅</div>
+      <h2>What's up?</h2>
+      <p>Type below. I'll reply.</p>`;
     c.appendChild(hero);
   }
 
@@ -4488,114 +4329,43 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   // ═══════════════════════════════════════════════════════════
 
   function init() {
-    // Slow network → Studio-only by default (instant comedy, no waiting on free AI)
-    preferStudioOnSlowNetwork();
-
-    renderPersonas();
-    updateSlayScore(0);
-    updateLlmIcon();
-    if (typeof updateNetPill === 'function') updateNetPill();
-    if (typeof refreshCotdBanner === 'function') refreshCotdBanner();
-    setupMobileChrome();
-    if (typeof setupScrollFab === 'function') setupScrollFab();
-    if (typeof setupShakeRoulette === 'function') setupShakeRoulette();
+    try { preferStudioOnSlowNetwork(); } catch (e) {}
+    llmEnabled = false; // keep replies instant
+    try { renderPersonas(); } catch (e) {}
+    try { updateSlayScore(0); } catch (e) {}
+    try { updateLlmIcon(); } catch (e) {}
+    try { setupMobileChrome(); } catch (e) {}
     addWelcome();
-    setInterval(() => { if (typeof updateNetPill === 'function') updateNetPill(); }, 12000);
-    setInterval(() => {
-      if (isBusy || cinemaMode || document.hidden) return;
-      if (chance(0.12) && messages.length > 2 && typeof ambientCovenNow === 'function') ambientCovenNow();
-    }, 45000);
 
-    $('message-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
-    });
-
-    $('image-input').addEventListener('change', (e) => {
-      if (e.target.files?.[0]) {
-        handleImageUpload(e.target.files[0]);
-        e.target.value = '';
-      }
-    });
-
-    // Drag & drop (desktop); mobile uses camera button
-    const zone = $('messages');
-    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.style.outline = '1px dashed rgba(255,77,184,0.5)'; });
-    zone.addEventListener('dragleave', () => { zone.style.outline = ''; });
-    zone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      zone.style.outline = '';
-      const file = e.dataTransfer.files[0];
-      if (file) handleImageUpload(file);
-    });
-
-    window.addEventListener('offline', () => {
-      if (llmEnabled) {
-        llmEnabled = false;
-        studioOnlyReason = 'offline';
-        updateLlmIcon();
-        showToast("Offline — Studio comedy still works 💅");
-      }
-    });
-    window.addEventListener('online', () => {
-      showToast("Back online — tap LIVE if you want AI (Studio is always sharp)");
-    });
-
-    // Connection quality changes mid-session
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (conn && conn.addEventListener) {
-      conn.addEventListener('change', () => {
-        if (isSlowNetwork() && llmEnabled) {
-          llmEnabled = false;
-          studioOnlyReason = 'slow';
-          updateLlmIcon();
-          showToast("Network got slow — Studio-only for snappy replies");
+    const input = document.getElementById('message-input');
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
+      });
+    }
+    const imageInput = document.getElementById('image-input');
+    if (imageInput) {
+      imageInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleImageUpload(e.target.files[0]);
+          e.target.value = '';
         }
       });
     }
-
-    // FOMO ticker
-    setInterval(() => {
-      sceneCount += chance(0.55) ? 1 : 0;
-      const el = $('scene-count');
-      if (el) el.textContent = sceneCount.toLocaleString();
-    }, 18000);
-
-    setTimeout(() => {
-      showToast("You're in — type anything for a reply 💅");
-    }, 600);
-
-    // Mobile: don't force-focus (opens keyboard too early). Desktop: focus.
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    if (!coarse) {
-      setTimeout(() => $('message-input').focus(), 800);
-    }
-    console.log('%c[ gayify ] mobile-first web. slow net = Studio. A2HS. close tab = gone.', 'color:#ff4db8;font-weight:bold;');
+    console.log('[gayify] simple mode — type and get a reply');
   }
 
-  // Boot mobile shell immediately (before splash ends)
-  setupMobileChrome();
-  registerServiceWorker();
-  setupInstallPrompt();
-  fillA2HSSteps();
-  preferStudioOnSlowNetwork(); // early — icon reflects on first paint after init
+  // Boot
+  try { setupMobileChrome(); } catch (e) {}
+  try { registerServiceWorker(); } catch (e) {}
+  try { preferStudioOnSlowNetwork(); } catch (e) {}
+  llmEnabled = false;
 
-  // Expose for inline onclick (mobile Safari safety)
   window.sendMessage = sendMessage;
   window.usePrompt = usePrompt;
-  window.changePersona = changePersona;
-  window.startBallroom = startBallroom;
-  window.playCategoryOfDay = playCategoryOfDay;
-  window.runGame = runGame;
-  window.runCinematicDemo = runCinematicDemo;
-  window.showMoreSheet = showMoreSheet;
-  window.showPlaySheet = showPlaySheet;
-  window.showHelpSheet = showHelpSheet;
-  window.showPrivacySheet = showPrivacySheet;
-  window.showSlayRecap = showSlayRecap;
-  window.toggleLLM = toggleLLM;
+  window.clearChat = clearChat;
   window.triggerImageUpload = triggerImageUpload;
 
-  // Splash → straight into chat
   const splashBtn = document.getElementById('splash-enter');
   if (splashBtn) {
     splashBtn.addEventListener('click', () => {
