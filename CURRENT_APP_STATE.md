@@ -1,6 +1,6 @@
 # gayify / ChakkaAI — Current App State
 
-**Snapshot:** Mobile-first **website** competition mode — PWA (manifest + SW + icons), visualViewport keyboard chrome, native share, A2HS banner, compact phone UI. Comedy: Monday-grade Studio + anti-repeat. Chat still ephemeral (SW caches shell only).
+**Snapshot:** Giant feature pack on mobile-first web — Category of the Day, quick replies, reactions, slash commands, undo, transcript export, cinema mode, shake roulette, persona long-press, Studio force, net pill, ambient coven, scroll FAB, privacy/help sheets. PWA + A2HS + slow-net Studio. Ephemeral chat unchanged.
 
 **Live:** https://sauvira0.github.io/gayify/  
 **Repo:** https://github.com/sauvira0/gayify

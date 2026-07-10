@@ -817,6 +817,143 @@
     .kb-open .topbar { padding-top: 4px; padding-bottom: 2px; }
     .kb-open .stage-head { display: none; }
 
+
+    /* ═══ GIANT FEATURE PACK styles ═══ */
+    .net-pill {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.04em;
+      padding: 2px 7px; border-radius: 999px;
+      background: rgba(93,255,199,0.12); color: var(--mint);
+      border: 1px solid rgba(93,255,199,0.25);
+    }
+    .net-pill.slow { background: rgba(232,197,71,0.12); color: var(--gold); border-color: rgba(232,197,71,0.3); }
+    .net-pill.off { background: rgba(255,80,100,0.12); color: #ff8a9a; border-color: rgba(255,80,100,0.3); }
+
+    .quick-replies {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+    }
+    .qchip {
+      font-size: 11px; font-weight: 600;
+      padding: 6px 10px; border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+      cursor: pointer; touch-action: manipulation;
+      min-height: 32px;
+    }
+    .qchip:active { transform: scale(0.96); background: rgba(255,77,184,0.15); }
+
+    .react-row {
+      display: flex; gap: 4px; margin-top: 6px; align-items: center;
+    }
+    .react-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 3px 8px; font-size: 12px;
+      cursor: pointer; touch-action: manipulation;
+      opacity: 0.7;
+    }
+    .react-btn.on { opacity: 1; border-color: rgba(255,77,184,0.45); background: rgba(255,77,184,0.12); }
+    .react-btn:active { transform: scale(1.08); }
+
+    #scroll-fab {
+      display: none;
+      position: absolute;
+      right: 12px; bottom: 12px;
+      z-index: 25;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(20,10,30,0.9);
+      color: #fff;
+      box-shadow: 0 8px 20px -8px #000;
+      cursor: pointer;
+      align-items: center; justify-content: center;
+      touch-action: manipulation;
+    }
+    #scroll-fab.show { display: flex; }
+
+    .status-line {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 16px;
+    }
+    .status-line em { color: rgba(255,180,220,0.7); font-style: normal; }
+
+    .cotd-banner {
+      margin: 0 10px 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(232,197,71,0.12), rgba(255,77,184,0.1));
+      border: 1px solid rgba(232,197,71,0.28);
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      cursor: pointer;
+      touch-action: manipulation;
+      flex-shrink: 0;
+    }
+    .cotd-banner strong { color: var(--gold); display: block; font-size: 10px; letter-spacing: 0.08em; margin-bottom: 3px; }
+
+    .util-row {
+      display: flex; gap: 6px; overflow-x: auto;
+      padding: 0 10px 6px;
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+    .util-row::-webkit-scrollbar { display: none; }
+    .ubtn {
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 10px; font-weight: 600;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.65);
+      cursor: pointer; touch-action: manipulation;
+      white-space: nowrap;
+    }
+    .ubtn:active { transform: scale(0.96); }
+    .ubtn.on { color: var(--mint); border-color: rgba(93,255,199,0.35); }
+
+    body.cinema-mode .topbar,
+    body.cinema-mode .persona-rail,
+    body.cinema-mode .games,
+    body.cinema-mode .util-row,
+    body.cinema-mode .cotd-banner,
+    body.cinema-mode .footer-tag,
+    body.cinema-mode .prompts,
+    body.cinema-mode .status-line { display: none !important; }
+    body.cinema-mode .stage { margin: 0; border-radius: 0; border: none; }
+    body.cinema-mode .stage-head { display: none; }
+
+    .msg-row.bot .bubble.bot { cursor: pointer; }
+    .dbl-hint { font-size: 9px; color: rgba(255,255,255,0.25); margin-left: 4px; }
+
+    #feature-dock {
+      position: fixed;
+      left: 50%; transform: translateX(-50%);
+      bottom: calc(72px + var(--safe-b));
+      z-index: 50;
+      display: none;
+      gap: 8px;
+      pointer-events: none;
+    }
+    body.kb-open #feature-dock { display: none !important; }
+
+    .privacy-meter {
+      display: flex; gap: 4px; align-items: center;
+      font-size: 9px; color: rgba(255,255,255,0.4);
+    }
+    .privacy-meter i {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--mint); box-shadow: 0 0 6px var(--mint);
+    }
+
     @media (min-width: 640px) {
       .app { max-width: 440px; border-left: 1px solid rgba(255,255,255,0.04); border-right: 1px solid rgba(255,255,255,0.04); }
       .stage { border-radius: 24px; border-bottom: 1px solid var(--glass-border); margin-bottom: 8px; }
@@ -862,12 +999,14 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+        <span class="net-pill" id="net-pill" title="Network / comedy path">NET</span>
         <div class="chip" onclick="showSlayRecap()" title="Slay score" id="slay-chip">
           <span style="color:#ff8ec8;font-size:9px;">SLAY</span>
           <span id="slay-value" style="font-weight:700;">0</span>
           <span id="slay-level">🌱</span>
           <div class="slay-bar"><i id="slay-fill"></i></div>
         </div>
+        <div class="chip" onclick="toggleSound()" title="Sound" id="sound-chip"><i class="fa-solid fa-volume-high" id="sound-icon"></i></div>
         <div class="chip" onclick="toggleVoice()" title="Voice"><i class="fa-solid fa-microphone" id="voice-icon"></i></div>
         <div class="chip chip-ai" onclick="toggleLLM()" title="AI on/off" id="llm-chip">
           <i class="fa-solid fa-robot"></i><span id="llm-status">AI</span>
@@ -880,19 +1019,40 @@
     <!-- Personas -->
     <div class="persona-rail" id="persona-rail" aria-label="Personas"></div>
 
+    <!-- Category of the Day -->
+    <div class="cotd-banner" id="cotd-banner" onclick="playCategoryOfDay()" role="button" tabindex="0">
+      <strong>CATEGORY OF THE DAY</strong>
+      <span id="cotd-title">Loading…</span>
+    </div>
+
     <!-- Games -->
     <div class="games">
       <button class="gbtn" onclick="startBallroom()" style="background:linear-gradient(135deg,rgba(232,197,71,0.25),rgba(255,77,184,0.2));border-color:rgba(232,197,71,0.45);color:#fff;">🏆 Category Is</button>
+      <button class="gbtn" onclick="playCategoryOfDay()">📅 Today’s Cat</button>
       <button class="gbtn" onclick="runGame('roast')">🔥 Roast Me</button>
       <button class="gbtn" onclick="runGame('hotseat')">🎤 Hot Seat</button>
       <button class="gbtn" onclick="runGame('tea')">🍵 Spill Tea</button>
       <button class="gbtn" onclick="runGame('gooff')">💣 Go Off</button>
+      <button class="gbtn" onclick="runGame('compliment')">💖 Compliment</button>
+      <button class="gbtn" onclick="runGame('twist')">🌀 Plot Twist</button>
       <button class="gbtn" onclick="vibeRoulette()">🎲 Vibe Roulette</button>
       <button class="gbtn" onclick="showMyGayDiary()">📔 Diary</button>
       <button class="gbtn" onclick="showTrophyCase()">🏅 Trophies</button>
       <button class="gbtn" onclick="createMemeCard()">🖼️ Meme</button>
       <button class="gbtn" onclick="exportStoryRecap()">📱 Story</button>
       <button class="gbtn" onclick="shareWithFriends()">📤 Share</button>
+    </div>
+
+    <!-- Utility row -->
+    <div class="util-row" id="util-row">
+      <button type="button" class="ubtn" onclick="forceStudioReply()" title="Force Studio bit">✨ Studio now</button>
+      <button type="button" class="ubtn" onclick="undoLastTurn()" title="Undo last exchange">↩️ Undo</button>
+      <button type="button" class="ubtn" onclick="exportTranscript()" title="Copy transcript">📝 Transcript</button>
+      <button type="button" class="ubtn" onclick="toggleCinemaMode()" id="cinema-btn" title="Hide chrome">🎬 Cinema</button>
+      <button type="button" class="ubtn" onclick="showPrivacySheet()" title="Privacy">🔒 Privacy</button>
+      <button type="button" class="ubtn" onclick="showHelpSheet()" title="Commands">/? Help</button>
+      <button type="button" class="ubtn" onclick="shufflePrompts()" title="Shuffle prompts">🔀 Prompts</button>
+      <button type="button" class="ubtn" onclick="ambientCovenNow()" title="Summon coven">👻 Coven</button>
     </div>
 
     <!-- Chat stage -->
@@ -904,23 +1064,28 @@
             <span style="font-weight:700;font-size:14px;">ChakkaAI</span>
             <span id="current-vibe" style="font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--persona) 25%,transparent);color:#fff;">FEMME</span>
           </div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.38);">private · <span id="source-status-text">Studio + Live</span> · close = gone</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.38);">private · <span id="source-status-text">Studio + Live</span> · <span id="net-status-text">net ok</span></div>
         </div>
         <button class="demo-btn" onclick="runCinematicDemo()"><i class="fa-solid fa-play" style="font-size:9px;"></i> Demo</button>
       </div>
       <div id="messages"></div>
+      <button type="button" id="scroll-fab" onclick="scrollChatToBottom()" aria-label="Scroll to latest"><i class="fa-solid fa-arrow-down"></i></button>
     </main>
 
-    <div class="footer-tag">PRIVATE · EPHEMERAL · HILARIOUS ON PURPOSE</div>
+    <div class="footer-tag">
+      <span class="privacy-meter" onclick="showPrivacySheet()" role="button" tabindex="0"><i></i> PRIVATE · EPHEMERAL · TAB-ONLY</span>
+      · <span id="msg-count">0 msgs</span>
+    </div>
 
     <!-- Composer -->
     <div class="composer">
+      <div class="status-line" id="status-line">Type anything · <em>/roast /ball /tea /help</em> · double-tap reply to copy</div>
       <div class="composer-row">
         <div class="upload-btn" onclick="triggerImageUpload()" title="Upload a pic"><i class="fa-solid fa-camera-retro"></i></div>
-        <input id="message-input" type="text" placeholder="Say something fierce…" autocomplete="off" enterkeyhint="send">
+        <input id="message-input" type="text" placeholder="Say something fierce… or /roast" autocomplete="off" enterkeyhint="send" inputmode="text">
         <button class="send-btn" onclick="sendMessage()" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
-      <div class="prompts">
+      <div class="prompts" id="prompt-row">
         <div class="prompt" onclick="usePrompt('This meeting is killing my soul')">Meeting hell</div>
         <div class="prompt" onclick="usePrompt('I just saw my ex at the grocery store')">Ex sighting</div>
         <div class="prompt" onclick="usePrompt('I made pasta and it slapped')">Pasta slap</div>
@@ -1007,6 +1172,27 @@
   let openrouterApiKey = "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";
   let llmEnabled = true;
   let studioOnlyReason = null; // session note when we auto-disable Live
+  let soundEnabled = true;
+  let cinemaMode = false;
+  let msgDomCount = 0;
+  let undoStack = []; // {user, botSnapshot} last turns for undo
+  let lastUserText = '';
+  let shakeArmed = true;
+  const PROMPT_POOL = [
+    ['This meeting is killing my soul', 'Meeting hell'],
+    ['I just saw my ex at the grocery store', 'Ex sighting'],
+    ['I made pasta and it slapped', 'Pasta slap'],
+    ['My boss just scheduled a Friday 4pm meeting', 'Boss crime'],
+    ['I finally cleaned my room', 'Clean room'],
+    ['Came out to my friend today', 'Came out'],
+    ['I left them on read for three days', 'Read receipt crime'],
+    ['The groupchat is fighting without me', 'Groupchat FOMO'],
+    ['I bought something I cannot afford', 'Retail therapy'],
+    ['My situationship just texted hey', 'Hey stranger'],
+    ['I need an outfit for a wedding', 'Wedding lewk'],
+    ['I am spiraling about a text I sent', 'Text spiral'],
+  ];
+
 
   const $ = (id) => document.getElementById(id);
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -2067,13 +2253,13 @@ ${mem}` : ''}`;
 
   function addMessage(role, text = '', options = {}) {
     const container = $('messages');
-    // clear empty hero
     const empty = container.querySelector('.empty-hero');
     if (empty) empty.remove();
 
     const {
       image = null, gayifiedImage = null, captions = null,
-      isGayified = false, fromLLM = false, source = null, side = false
+      isGayified = false, fromLLM = false, source = null, side = false,
+      skipQuick = false
     } = options;
     if (!source) source = fromLLM ? 'live' : (role === 'bot' ? 'studio' : null);
 
@@ -2083,6 +2269,7 @@ ${mem}` : ''}`;
       row.innerHTML = `<div class="bubble side"><p>${escapeHtml(text)}</p></div>`;
       container.appendChild(row);
       container.scrollTop = container.scrollHeight;
+      if (typeof updateMsgCount === 'function') updateMsgCount();
       return;
     }
     if (role === 'system') {
@@ -2090,6 +2277,7 @@ ${mem}` : ''}`;
       row.innerHTML = `<div class="bubble system"><p>${escapeHtml(text)}</p></div>`;
       container.appendChild(row);
       container.scrollTop = container.scrollHeight;
+      if (typeof updateMsgCount === 'function') updateMsgCount();
       return;
     }
 
@@ -2100,6 +2288,7 @@ ${mem}` : ''}`;
       if (image) inner += `<img src="${image}" class="solo-pic" alt="upload" style="margin-bottom:6px;max-height:200px;">`;
       if (text) inner += `<p>${escapeHtml(text)}</p>`;
       row.innerHTML = `<div class="bubble user">${inner || '<p>…</p>'}</div>`;
+      if (typeof lastUserText !== 'undefined') lastUserText = text || '';
     } else {
       let inner = '';
       if (image && gayifiedImage) {
@@ -2123,9 +2312,24 @@ ${mem}` : ''}`;
           <button class="mini-btn" onclick="rateMoment(false)">Mid</button></div>`;
       }
 
+      if (!skipQuick && text && !captions && typeof pickQuickReplies === 'function') {
+        const qrs = pickQuickReplies(text);
+        inner += `<div class="quick-replies">` + qrs.map(q =>
+          `<button type="button" class="qchip" onclick='usePrompt(${JSON.stringify(q.v)})'>${q.l}</button>`
+        ).join('') + `</div>`;
+      }
+      if (typeof reactToMsg === 'function') {
+        inner += `<div class="react-row">
+          <button type="button" class="react-btn" onclick="reactToMsg(this,'🔥')">🔥</button>
+          <button type="button" class="react-btn" onclick="reactToMsg(this,'💅')">💅</button>
+          <button type="button" class="react-btn" onclick="reactToMsg(this,'💀')">💀</button>
+          <button type="button" class="react-btn" onclick="reactToMsg(this,'✨')">✨</button>
+        </div>`;
+      }
+
       const srcBadge = (source === 'live' || fromLLM)
         ? '<span class="ai-badge" title="Live AI path">LIVE</span>'
-        : (role === 'bot' ? '<span class="studio-badge" title="Authored Studio comedy">STUDIO</span>' : '');
+        : '<span class="studio-badge" title="Authored Studio comedy">STUDIO</span>';
       row.innerHTML = `
         <div class="bot-wrap">
           <div class="avatar">${persona().emoji}</div>
@@ -2134,20 +2338,42 @@ ${mem}` : ''}`;
             <div class="meta">
               <span>ChakkaAI</span>${srcBadge}
               <button class="copy-btn" onclick="copyGayVersion(this)" title="Copy"><i class="fa-solid fa-copy"></i></button>
+              <span class="dbl-hint">dbl-tap copy</span>
             </div>
           </div>
         </div>`;
+
+      setTimeout(() => {
+        const bub = row.querySelector('.bubble.bot');
+        if (!bub) return;
+        let lastTap = 0;
+        bub.addEventListener('click', (e) => {
+          if (e.target.closest('button, a, .qchip, .react-btn, .mini-btn, .cap-item')) return;
+          const now = Date.now();
+          if (now - lastTap < 320) {
+            const t = bub.querySelector('p')?.textContent || text || '';
+            navigator.clipboard.writeText(t).then(() => showToast('Copied ✨')).catch(() => {});
+            haptic();
+          }
+          lastTap = now;
+        });
+      }, 0);
     }
 
     container.appendChild(row);
     container.scrollTop = container.scrollHeight;
     if (role === 'bot') haptic();
 
-    messages.push({ role, text, image, gayifiedImage, captions, isGayified });
+    messages.push({ role, text, image, gayifiedImage, captions, isGayified, source });
     if (role === 'user' || role === 'bot') updateSlayScore(role === 'user' ? 1 : 2);
+    if (typeof updateMsgCount === 'function') updateMsgCount();
 
     if (role === 'bot' && text) {
       setTimeout(() => speakText(text), 200);
+      if (typeof undoStack !== 'undefined' && lastUserText) {
+        undoStack.push({ user: lastUserText, bot: text });
+        if (undoStack.length > 8) undoStack.shift();
+      }
     }
 
     if (role === 'bot' && (image || (text && text.length > 20))) {
@@ -2155,11 +2381,13 @@ ${mem}` : ''}`;
       if (gayMoments.length > 14) gayMoments.shift();
     }
 
-    // FOMO counter
     if (chance(0.4)) {
       sceneCount += 1;
       const el = $('scene-count');
       if (el) el.textContent = sceneCount.toLocaleString();
+    }
+    if (typeof setStatusLine === 'function') {
+      setStatusLine(role === 'bot' ? pickStatusAfterBot() : 'Your move, legend…');
     }
   }
 
@@ -2283,6 +2511,7 @@ ${mem}` : ''}`;
       roast: 'Took the Heat',
       ballroom: 'Walked the Floor',
       mother: 'Mother of the Floor',
+      cotd: 'Daily Walker',
       icon: 'Gay Icon'
     };
     if (names[id] || id.startsWith('level_')) {
@@ -2314,6 +2543,7 @@ ${mem}` : ''}`;
       ['roast', '🍳', 'Took the Heat'],
       ['ballroom', '🏆', 'Walked the Floor'],
       ['mother', '🏠', 'Mother of the Floor'],
+      ['cotd', '📅', 'Daily Walker'],
       ['icon', '🌈', 'Gay Icon']
     ];
     const html = all.map(([id, e, n]) => `
@@ -2373,6 +2603,7 @@ ${mem}` : ''}`;
   }
 
   function playSendSound() {
+    if (!soundEnabled) return;
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const o = ctx.createOscillator();
@@ -2387,6 +2618,7 @@ ${mem}` : ''}`;
   }
 
   function playSlayChime(vol = 0.5) {
+    if (!soundEnabled) return;
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const o = ctx.createOscillator();
@@ -2434,6 +2666,304 @@ ${mem}` : ''}`;
     }
     tick();
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // GIANT FEATURE PACK — mobile web competitive layer
+  // ═══════════════════════════════════════════════════════════
+
+  function updateMsgCount() {
+    const el = $('msg-count');
+    if (!el) return;
+    const n = messages.filter(m => m.role === 'user' || m.role === 'bot').length;
+    el.textContent = n + ' msgs';
+  }
+
+  function setStatusLine(t) {
+    const el = $('status-line');
+    if (el) el.innerHTML = t;
+  }
+
+  function pickStatusAfterBot() {
+    return pick([
+      'Double-tap a reply to copy · <em>/roast</em> for heat',
+      'Shake phone for vibe roulette · <em>/ball</em> for Category Is',
+      'Studio is the soul · LIVE is optional spice',
+      'Close tab = gone forever · that is the feature',
+      'Try Category of the Day · house is watching',
+      'Undo exists · use it if the plot gets too spicy'
+    ]);
+  }
+
+  function pickQuickReplies(botText) {
+    const pool = [
+      { l: 'Go deeper', v: 'Go deeper on that. More detail. More shade.' },
+      { l: 'Roast me', v: 'Roast me based on what I just said' },
+      { l: 'Be nicer', v: 'Okay but say it softer. Still funny.' },
+      { l: 'Plot twist', v: 'Give me a plot twist ending for this situation' },
+      { l: 'Groupchat take', v: 'What would the groupchat say about this?' },
+      { l: 'What should I do?', v: 'Give me three options: petty, soft, and feral.' },
+      { l: 'Make it gayer', v: 'Make that even gayer and funnier' },
+      { l: 'Category Is', v: 'Turn this into a ballroom category and score me' },
+    ];
+    const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 3);
+  }
+
+  function reactToMsg(btn, emoji) {
+    haptic();
+    const row = btn.closest('.react-row');
+    if (!row) return;
+    row.querySelectorAll('.react-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    updateSlayScore(1);
+    if (emoji === '🔥' || emoji === '💅') {
+      showToast(pick(['Logged. The house agrees ' + emoji, 'Reaction noted ' + emoji, 'The coven felt that ' + emoji]));
+      if (chance(0.35)) playSlayChime(0.25);
+    } else if (emoji === '💀') {
+      showToast('Dead. Noted. Continue the crime 💀');
+    } else {
+      showToast('Pride sealed');
+    }
+  }
+
+  function scrollChatToBottom() {
+    const c = $('messages');
+    if (c) c.scrollTo({ top: c.scrollHeight, behavior: 'smooth' });
+    const fab = $('scroll-fab');
+    if (fab) fab.classList.remove('show');
+  }
+
+  function setupScrollFab() {
+    const c = $('messages');
+    const fab = $('scroll-fab');
+    if (!c || !fab) return;
+    c.addEventListener('scroll', () => {
+      const dist = c.scrollHeight - c.scrollTop - c.clientHeight;
+      fab.classList.toggle('show', dist > 140);
+    }, { passive: true });
+  }
+
+  function categoryOfDay() {
+    const cats = BALL_CATEGORIES;
+    const d = new Date();
+    const key = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+    return cats[key % cats.length];
+  }
+
+  function refreshCotdBanner() {
+    const cat = categoryOfDay();
+    const el = $('cotd-title');
+    if (el) el.textContent = cat.title + ' — tap to walk';
+  }
+
+  async function playCategoryOfDay() {
+    const cat = categoryOfDay();
+    haptic();
+    awardBadge('cotd');
+    gameMode = 'ballroom';
+    ballroom = {
+      phase: 'serve',
+      round: 1,
+      maxRounds: 1,
+      rounds: [],
+      usedCats: [cat.id],
+      category: cat
+    };
+    addMessage('system', 'CATEGORY OF THE DAY · one legendary walk');
+    addMessage('bot',
+      'Today the house only wants: ' + cat.title + '.\n\n' + cat.prompt + '\n\nOne serve. Make it count.',
+      { isGayified: true, source: 'studio', skipQuick: true }
+    );
+    showToast(cat.title);
+  }
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    const icon = $('sound-icon');
+    if (icon) icon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+    showToast(soundEnabled ? 'Sound on' : 'Sound off');
+  }
+
+  function toggleCinemaMode() {
+    cinemaMode = !cinemaMode;
+    document.body.classList.toggle('cinema-mode', cinemaMode);
+    const b = $('cinema-btn');
+    if (b) b.classList.toggle('on', cinemaMode);
+    showToast(cinemaMode ? 'Cinema mode — tap Cinema again to exit' : 'Chrome restored');
+    haptic();
+  }
+
+  async function forceStudioReply() {
+    if (isBusy) return;
+    const seed = lastUserText || pick([
+      'Say something dry and devastating about modern dating',
+      'Give me an unprompted read on my aura',
+      'Open with a cold open monologue'
+    ]);
+    setStatusLine('Studio fetching a fresh bit…');
+    await deliverComedy(seed, { forceStudio: true });
+  }
+
+  function undoLastTurn() {
+    if (!undoStack.length) {
+      showToast('Nothing to undo');
+      return;
+    }
+    undoStack.pop();
+    let removed = 0;
+    for (let i = messages.length - 1; i >= 0 && removed < 2; i--) {
+      if (messages[i].role === 'bot' || messages[i].role === 'user') {
+        messages.splice(i, 1);
+        removed++;
+      }
+    }
+    const c = $('messages');
+    if (c) {
+      const rows = [...c.querySelectorAll('.msg-row.user, .msg-row.bot')];
+      let n = 0;
+      for (let i = rows.length - 1; i >= 0 && n < 2; i--) {
+        rows[i].remove();
+        n++;
+      }
+    }
+    updateMsgCount();
+    showToast('Undid last exchange (tab only)');
+    addMessage('system', 'Plot rewritten. Previous beat evaporated.');
+    haptic();
+  }
+
+  async function exportTranscript() {
+    const lines = messages
+      .filter(m => m.role === 'user' || m.role === 'bot' || m.role === 'system')
+      .map(m => {
+        const who = m.role === 'user' ? 'YOU' : (m.role === 'bot' ? 'CHAKKAAI' : 'SYSTEM');
+        return who + ': ' + (m.text || '[image/moment]');
+      });
+    const header = 'gayify transcript · private session · ' + new Date().toISOString() +
+      '\nClose tab = this file is the only copy.\n\n';
+    const body = header + lines.join('\n\n');
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'gayify transcript', text: body });
+        showToast('Transcript shared');
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(body);
+      showToast('Transcript copied');
+    } catch (e) {
+      showToast('Could not copy transcript');
+    }
+  }
+
+  function showPrivacySheet() {
+    showBottomSheet('Privacy (the feature)', `
+      <div style="font-size:13px;line-height:1.55;color:rgba(255,255,255,0.8);">
+        <p><strong style="color:var(--mint);">This tab only.</strong> Chat lives in memory. Close or refresh = gone forever.</p>
+        <p style="margin-top:10px;">No accounts. No chat on disk. Service worker caches the shell for offline — not your messages.</p>
+        <p style="margin-top:10px;">Images stay in-browser. Share the link so friends get their own private booth.</p>
+        <p style="margin-top:10px;color:var(--gold);">Burn deletes this session with drama.</p>
+        <button class="splash-btn" style="margin-top:16px;width:100%;" onclick="closeBottomSheet();burnSession()">Burn session now</button>
+      </div>`);
+  }
+
+  function showHelpSheet() {
+    showBottomSheet('Commands & gestures', `
+      <div style="font-size:13px;line-height:1.6;color:rgba(255,255,255,0.8);">
+        <p><strong>Slash commands</strong></p>
+        <ul style="margin:8px 0;padding-left:18px;">
+          <li><code>/roast</code> · <code>/ball</code> · <code>/today</code></li>
+          <li><code>/tea</code> · <code>/go</code> · <code>/demo</code></li>
+          <li><code>/studio</code> · <code>/undo</code> · <code>/cinema</code></li>
+          <li><code>/share</code> · <code>/burn</code> · <code>/help</code></li>
+        </ul>
+        <p style="margin-top:12px;"><strong>Gestures</strong></p>
+        <ul style="margin:8px 0;padding-left:18px;">
+          <li>Double-tap bot reply → copy</li>
+          <li>Shake phone → vibe roulette</li>
+          <li>Long-press persona → voice card</li>
+          <li>React under replies · quick-reply chips</li>
+        </ul>
+      </div>`);
+  }
+
+  function shufflePrompts() {
+    const row = $('prompt-row');
+    if (!row) return;
+    const picks = PROMPT_POOL.slice().sort(() => Math.random() - 0.5).slice(0, 6);
+    row.innerHTML = picks.map(([v, l]) =>
+      '<div class="prompt" onclick=\'usePrompt(' + JSON.stringify(v) + ')\'>' + l + '</div>'
+    ).join('');
+    showToast('Prompts shuffled');
+    haptic();
+  }
+
+  async function ambientCovenNow() {
+    const line = pickFresh(COVEN_LINES, usedCovenFP);
+    addMessage('side', line, { side: true });
+    setStatusLine('The coven has entered the chat…');
+    haptic();
+  }
+
+  function setupShakeRoulette() {
+    let last = 0;
+    window.addEventListener('devicemotion', (e) => {
+      if (!shakeArmed || isBusy || cinemaMode) return;
+      const a = e.accelerationIncludingGravity;
+      if (!a) return;
+      const force = Math.abs(a.x || 0) + Math.abs(a.y || 0) + Math.abs(a.z || 0);
+      const now = Date.now();
+      if (force > 28 && now - last > 2500) {
+        last = now;
+        shakeArmed = false;
+        vibeRoulette();
+        showToast('Shake → vibe roulette');
+        setTimeout(() => { shakeArmed = true; }, 2000);
+      }
+    }, { passive: true });
+  }
+
+  function setupPersonaLongPress() {
+    document.querySelectorAll('.pchip').forEach(chip => {
+      let t = null;
+      const id = chip.getAttribute('data-p');
+      const start = (e) => {
+        t = setTimeout(() => {
+          const p = PERSONAS.find(x => x.id === id) || persona();
+          showBottomSheet(p.emoji + ' ' + p.name, `
+            <p style="font-size:14px;line-height:1.5;color:rgba(255,255,255,0.85);">${escapeHtml(p.voice)}</p>
+            <button class="splash-btn" style="width:100%;margin-top:14px;" onclick="closeBottomSheet();changePersona('${p.id}')">Activate ${p.name}</button>
+          `);
+          haptic();
+        }, 480);
+      };
+      const cancel = () => { if (t) clearTimeout(t); };
+      chip.addEventListener('touchstart', start, { passive: true });
+      chip.addEventListener('touchend', cancel);
+      chip.addEventListener('touchmove', cancel);
+      chip.addEventListener('mousedown', start);
+      chip.addEventListener('mouseup', cancel);
+      chip.addEventListener('mouseleave', cancel);
+    });
+  }
+
+  function updateNetPill() {
+    const pill = $('net-pill');
+    const st = $('net-status-text');
+    if (!pill) return;
+    let label = 'FAST', cls = '';
+    if (!isOnline()) { label = 'OFF'; cls = 'off'; }
+    else if (isSlowNetwork()) { label = 'SLOW'; cls = 'slow'; }
+    else if (llmEnabled) { label = 'LIVE'; cls = ''; }
+    else { label = 'STUDIO'; cls = 'slow'; }
+    pill.textContent = label;
+    pill.className = 'net-pill' + (cls ? ' ' + cls : '');
+    if (st) st.textContent = !isOnline() ? 'offline' : (isSlowNetwork() ? 'slow net' : 'net ok');
+  }
+
 
   // ═══════════════════════════════════════════════════════════
   // GAMES — Category Is is the killer loop
@@ -2680,6 +3210,19 @@ ${mem}` : ''}`;
         `Go completely off about: ${seed}. Maximum unhinged monologue. Then dare me.`,
         { forceStudio: true }
       );
+      return;
+    }
+    if (type === 'compliment') {
+      addMessage('system', 'COMPLIMENT MODE — witty, gay, shockingly sincere');
+      addMessage('bot', pick([
+        "Fine. I'll be nice. Tell me one thing about you and I'll make it fashion.",
+        "Compliment booth is open. Don't make it weird. Or do."
+      ]), { isGayified: true, source: 'studio', skipQuick: true });
+      return;
+    }
+    if (type === 'twist') {
+      addMessage('system', 'PLOT TWIST — pitch a situation, I ruin the ending');
+      addMessage('bot', 'One sentence. I will append chaos.', { isGayified: true, source: 'studio', skipQuick: true });
       return;
     }
   }
@@ -3051,6 +3594,7 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
         <div class="e">${p.emoji}</div>
         <div class="n">${p.name}</div>
       </div>`).join('');
+    if (typeof setupPersonaLongPress === 'function') setTimeout(setupPersonaLongPress, 0);
   }
 
   function changePersona(id) {
@@ -3079,8 +3623,31 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
 
   async function sendMessage() {
     const input = $('message-input');
-    const value = input.value.trim();
+    let value = input.value.trim();
     if (!value || isBusy) return;
+
+    const cmd = value.toLowerCase();
+    if (cmd.startsWith('/')) {
+      input.value = '';
+      haptic();
+      if (cmd === '/help' || cmd === '/?') { showHelpSheet(); return; }
+      if (cmd === '/roast') { runGame('roast'); return; }
+      if (cmd === '/ball' || cmd === '/category' || cmd === '/cat') { startBallroom(); return; }
+      if (cmd === '/today' || cmd === '/cotd') { playCategoryOfDay(); return; }
+      if (cmd === '/tea') { runGame('tea'); return; }
+      if (cmd === '/go' || cmd === '/gooff') { runGame('gooff'); return; }
+      if (cmd === '/demo') { runCinematicDemo(); return; }
+      if (cmd === '/studio') { forceStudioReply(); return; }
+      if (cmd === '/share') { shareWithFriends(); return; }
+      if (cmd === '/burn') { burnSession(); return; }
+      if (cmd === '/undo') { undoLastTurn(); return; }
+      if (cmd === '/cinema') { toggleCinemaMode(); return; }
+      if (cmd === '/compliment') { runGame('compliment'); return; }
+      if (cmd === '/twist') { runGame('twist'); return; }
+      showToast('Unknown command — try /help');
+      return;
+    }
+
     isBusy = true;
     input.value = '';
     addMessage('user', value);
@@ -3088,7 +3655,6 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     haptic();
 
     try {
-      // Killer game takes priority
       if (ballroom && ballroom.phase === 'serve') {
         await judgeBallroomServe(value);
         return;
@@ -3096,6 +3662,16 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
       if (gameMode === 'roast') {
         gameMode = null;
         await deliverComedy(value, { forceStudio: true, forcedTopics: ['roast', ...detectTopics(value)] });
+        return;
+      }
+      if (gameMode === 'compliment') {
+        gameMode = null;
+        await deliverComedy('Compliment me sincerely but still witty based on: ' + value, { forceStudio: true });
+        return;
+      }
+      if (gameMode === 'twist') {
+        gameMode = null;
+        await deliverComedy('Give a wild plot twist for: ' + value, { forceStudio: true });
         return;
       }
       if (gameMode === 'hotseat' || gameMode === 'tea') {
@@ -3185,6 +3761,7 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     if (chip) chip.classList.toggle('off', !live);
     if (st) st.textContent = live ? 'LIVE' : 'STUDIO';
     if (src) src.textContent = live ? 'Studio + Live' : 'Studio only';
+    if (typeof updateNetPill === 'function') updateNetPill();
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -3231,22 +3808,31 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   function seedEmpty(withHero = true) {
     const c = $('messages');
     if (!withHero) return;
+    const cat = (typeof categoryOfDay === 'function') ? categoryOfDay() : { title: 'Category Is' };
     const hero = document.createElement('div');
     hero.className = 'empty-hero';
     hero.innerHTML = `
       <div style="font-size:36px;">👑</div>
       <h2>The function is open</h2>
-      <p>Dry wit. Extremely gay. Type anything — or play Category Is.<br>Private to this tab. Close it = gone.</p>`;
+      <p>Dry wit. Extremely gay. Private tab · close = gone.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;">
+        <button type="button" class="qchip" onclick="playCategoryOfDay()">📅 ${escapeHtml(cat.title)}</button>
+        <button type="button" class="qchip" onclick="runCinematicDemo()">▶ Demo</button>
+        <button type="button" class="qchip" onclick="runGame('roast')">🔥 Roast</button>
+        <button type="button" class="qchip" onclick="startBallroom()">🏆 Ballroom</button>
+      </div>
+      <p style="margin-top:12px;font-size:11px;opacity:0.5;">/help · shake for roulette · double-tap to copy</p>`;
     c.appendChild(hero);
   }
 
   function addWelcome() {
     seedEmpty();
     setTimeout(() => {
+      const cotd = typeof categoryOfDay === 'function' ? categoryOfDay() : { title: 'Category Is' };
       addMessage('bot', pick([
-        "Oh good. You're here. I'm ChakkaAI — dry, gay, overqualified. Say something boring so I can make it worse (better).",
-        "Hi criminal. This chat dies when the tab dies. Perfect liability structure. What's the tea?",
-        "You made it. I pretended not to care. Failed. Type, upload, or hit Demo if you're shy (still funny)."
+        "Oh good. You're here. I'm ChakkaAI — dry, gay, overqualified. Today's walk: " + cotd.title + ". Or type something boring.",
+        "Hi criminal. Tab dies when you leave. /help for commands. What's the tea?",
+        "You made it. Demo, Category of the Day, or /roast. I pretended not to care. Failed."
       ]), { isGayified: true, source: 'studio' });
     }, 400);
   }
@@ -3262,8 +3848,17 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     renderPersonas();
     updateSlayScore(0);
     updateLlmIcon();
+    if (typeof updateNetPill === 'function') updateNetPill();
+    if (typeof refreshCotdBanner === 'function') refreshCotdBanner();
     setupMobileChrome();
+    if (typeof setupScrollFab === 'function') setupScrollFab();
+    if (typeof setupShakeRoulette === 'function') setupShakeRoulette();
     addWelcome();
+    setInterval(() => { if (typeof updateNetPill === 'function') updateNetPill(); }, 12000);
+    setInterval(() => {
+      if (isBusy || cinemaMode || document.hidden) return;
+      if (chance(0.12) && messages.length > 2 && typeof ambientCovenNow === 'function') ambientCovenNow();
+    }, 45000);
 
     $('message-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }

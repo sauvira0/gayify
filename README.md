@@ -2,7 +2,7 @@
 
 **Mobile-first gay comedy website** with Monday-grade wit. Dry, sarcastic, hilarious on purpose — ChakkaAI is your overqualified reluctant bestie (think OpenAI’s Monday, but extremely gay).
 
-**Compete on the web:** installable PWA, keyboard-safe composer, native share, offline shell, thumb-friendly UI. Private per-tab. Close = gone forever.
+**Compete on the web:** installable PWA, keyboard-safe composer, native share, offline shell, Category of the Day, quick replies, slash commands (`/help`), shake-to-roulette, cinema mode, transcript export. Private per-tab. Close = gone forever.
 
 **🌐 Live:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 
