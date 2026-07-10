@@ -18,11 +18,13 @@
 
 ### Comedy engine (Studio)
 - **STUDIO_BITS**: ~95 authored multi-beat bits (main + optional side + follow), topic-tagged
-- **Anti-repeat**: usedBitIds, usedLineFP, usedCovenFP, recentBotTexts — no same bit twice per session
-- Topic detection → best unused bit; general pool recycles only when exhausted
-- **Multi-beat delivery:** main → coven → follow/callback
+- **Anti-repeat (aggressive)**: bit IDs, full line FP, openers (first 5 words), hooks, coven FP, trigram similarity vs last 24 bot lines
+- Soft recycle frees oldest ~40% of bits only when needed; then **spice remix**; then **procedural gay rants** (RANT_OPEN/MID/END) so silence never copies
+- Topic overuse penalty pushes variety; top-tier shuffle so same topic ≠ same bit
+- `ensureFunnyGay()` wraps beige lines; Live quality gate requires queer/comedy signal
+- **Multi-beat delivery:** main → coven → follow/callback (all anti-repeat checked)
 - **sessionMemory** for callbacks + LLM context (ephemeral)
-- Persona polish is light (doesn't smother authored lines)
+- ~139 authored mains + expanded coven/follow banks
 
 ### Honest AI / local split
 - **STUDIO** (gold badge) = authored comedy — default quality path

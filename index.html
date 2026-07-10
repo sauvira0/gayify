@@ -826,11 +826,15 @@
   let isBusy = false;
   let gameMode = null;
 
-  // Anti-repeat (session only)
+  // Anti-repeat (session only) — aggressive, multi-signal
   let usedBitIds = new Set();
   let usedLineFP = new Set();
   let usedCovenFP = new Set();
+  let usedOpeners = new Set();   // first ~5 words
+  let usedHooks = new Set();     // memorable phrases
   let recentBotTexts = [];
+  let recentOpeners = [];
+  let topicUseCount = {};        // avoid hammering same topic template style
 
   // Killer game: Category Is
   let ballroom = null;
@@ -854,15 +858,84 @@
     return PERSONAS.find(p => p.id === currentPersona) || PERSONAS[0];
   }
 
+  function openerKey(text) {
+    return String(text || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9\s']/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 5)
+      .join(' ');
+  }
+
+  function tokens(text) {
+    return String(text || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9\s']/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 3);
+  }
+
+  function trigrams(text) {
+    const w = tokens(text);
+    const out = [];
+    for (let i = 0; i < w.length - 2; i++) out.push(w[i] + ' ' + w[i+1] + ' ' + w[i+2]);
+    return out;
+  }
+
+  function similarity(a, b) {
+    if (!a || !b) return 0;
+    if (fp(a) === fp(b)) return 1;
+    const ta = new Set(trigrams(a));
+    const tb = new Set(trigrams(b));
+    if (!ta.size || !tb.size) {
+      // fallback word overlap
+      const wa = new Set(tokens(a));
+      const wb = new Set(tokens(b));
+      let inter = 0;
+      wa.forEach(x => { if (wb.has(x)) inter++; });
+      return inter / Math.max(1, Math.min(wa.size, wb.size));
+    }
+    let inter = 0;
+    ta.forEach(x => { if (tb.has(x)) inter++; });
+    return inter / Math.max(1, Math.min(ta.size, tb.size));
+  }
+
+  function tooSimilarToRecent(text) {
+    for (const prev of recentBotTexts) {
+      if (similarity(text, prev) >= 0.34) return true;
+    }
+    const op = openerKey(text);
+    if (op && usedOpeners.has(op)) return true;
+    for (const ro of recentOpeners) {
+      if (op && ro === op) return true;
+    }
+    return false;
+  }
+
   function markUsedLine(text) {
-    const f = fp(text);
+    const raw = String(text || '');
+    const f = fp(raw);
     if (f) usedLineFP.add(f);
-    recentBotTexts.push(String(text || ''));
-    if (recentBotTexts.length > 12) recentBotTexts.shift();
+    const op = openerKey(raw);
+    if (op) {
+      usedOpeners.add(op);
+      recentOpeners.push(op);
+      if (recentOpeners.length > 20) recentOpeners.shift();
+    }
+    // hook phrases
+    const hooks = raw.match(/"[^"]{6,40}"|category is[^.]{0,40}|groupchat[^.]{0,30}/gi) || [];
+    hooks.forEach(h => usedHooks.add(fp(h)));
+    recentBotTexts.push(raw);
+    if (recentBotTexts.length > 24) recentBotTexts.shift();
   }
 
   function wasUsed(text) {
-    return usedLineFP.has(fp(text));
+    if (usedLineFP.has(fp(text))) return true;
+    if (tooSimilarToRecent(text)) return true;
+    return false;
   }
 
   function pickFresh(arr, usedSet) {
@@ -870,10 +943,43 @@
       const key = fp(x);
       return !usedSet.has(key) && !wasUsed(x);
     });
-    const pool = fresh.length ? fresh : arr;
-    const choice = pick(pool);
+    // never silently loop the same few — if exhausted, rebuild with spice variants
+    if (!fresh.length) {
+      return spiceLine(pick(arr));
+    }
+    const choice = pick(fresh);
     usedSet.add(fp(choice));
     return choice;
+  }
+
+  // Light remix so even recycled lines feel new (still queer, still funny)
+  const SPICE_PRE = [
+    "Okay but — ", "Not to be dramatic, but ", "Periodt: ", "Listen, mother — ",
+    "I'm saying this with love and rhinestones: ", "Groupchat note: ", "Unfiltered: ",
+    "Between us girls — ", "Live from the function: ", "No notes except these notes: "
+  ];
+  const SPICE_POST = [
+    " And I said what I said.", " The dolls are taking minutes.", " That's on queer time.",
+    " Screenshot for the archive.", " The leather bar agrees.", " Mother, stand up.",
+    " We are so back.", " Don't make me say it twice.", " That's the tea with ice.",
+    " Gender is optional; this take is not."
+  ];
+  const QUEER_FLAIR = ["💅","✨","🔥","🌀","👑","🖤","🐺","🏳️‍🌈","💖","🌈","⛓️","🌟"];
+
+  function spiceLine(line) {
+    let t = String(line || '');
+    // strip previous spice markers roughly
+    t = t.replace(/^(Okay but — |Not to be dramatic, but |Periodt: |Listen, mother — |I'm saying this with love and rhinestones: |Groupchat note: |Unfiltered: |Between us girls — |Live from the function: |No notes except these notes: )+/i, '');
+    let out = pick(SPICE_PRE) + t;
+    if (chance(0.65)) out += pick(SPICE_POST);
+    if (chance(0.4)) out += ' ' + pick(QUEER_FLAIR);
+    // ensure unique fingerprint
+    let guard = 0;
+    while (wasUsed(out) && guard < 8) {
+      out = pick(SPICE_PRE) + t + pick(SPICE_POST) + ' ' + pick(QUEER_FLAIR);
+      guard++;
+    }
+    return out;
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -977,7 +1083,52 @@
     {id:'mx3',t:['work','feel'],main:"Burnout in business casual is still burnout. Your body sent a meeting invite and your job declined. Rude of them.",follow:"What boundary are we installing tomorrow?"},
     {id:'mx4',t:['food','ex'],main:"Cooking after a breakup is either healing or a threat. Which is the pasta tonight?",side:"🍝 @dollcommittee: \"season the pain\""},
     {id:'mx5',t:['party','feel'],main:"Left the club early because your soul needed a water break. That's not quitting — that's editing.",follow:"Home safe, or still in the afters of the mind?"},
+    // —— EXTRA QUEER DEPTH (anti-repeat fuel) ——
+    {id:'g7',t:['greet'],main:"The gays sent me. I brought glitter, judgment, and unconditional support (in that order). Spill before I start rumors that make you look cooler.",side:"🌈 @prideintern: \"authorized gossip only\"",follow:"What's the gayest thing that happened today — even if it was just your outfit thinking?"},
+    {id:'g8',t:['greet'],main:"Hi icon. Or hi disaster. Often the same person. I'm ChakkaAI and I'm already on your side of the scandal.",follow:"Work gays, love gays, or existential gays today?"},
+    {id:'g9',t:['greet'],main:"You opened the app like you open a groupchat at 1am — correctly. Let's make something the straights won't understand.",side:"💅 @dollcommittee: \"good\""},
+    {id:'h5',t:['howare'],main:"I'm gay, busy, and emotionally overemployed. You? Don't say fine. Fine is a beige flag.",follow:"Give me the uncensored queer weather."},
+    {id:'h6',t:['howare'],main:"My status: thriving in a way that worries the groupchat. Yours better be at least a limited series.",side:"👑 @motherofthegroup: \"no beige answers\""},
+    {id:'w10',t:['work'],main:"Corporate realness is just drag with worse lighting. Who's the house mother of your team and who's the filler queen?",follow:"Read your workplace like a ball panel."},
+    {id:'w11',t:['work'],main:"They want professionalism; you want a living wage and a little gender euphoria between Slack pings. Correct priorities.",side:"💼 @officeauntie: \"unionize the vibes\"",follow:"What microaggression wore a lanyard today?"},
+    {id:'w12',t:['work'],main:"Your calendar is a hate crime against free time. The gays invented brunch for this exact trauma.",follow:"Cancel something. Symbolically. Then tell me which."},
+    {id:'e10',t:['ex'],main:"Ex energy is a popper: intense, short, and somebody always thinks they're fine after. They're not. Are you?",follow:"Still checking their stories like it's research?"},
+    {id:'e11',t:['ex'],main:"The 'hey stranger' text is a haunted attraction. Admission is free; dignity is not.",side:"📱 @exwatcher: \"do not ride\"",follow:"Draft the reply. Make it couture or silent."},
+    {id:'e12',t:['ex'],main:"You don't miss them. You miss being chosen in public. Different crime. Treatable with friends and a better jacket.",follow:"What would thriving look like this week — specifically?"},
+    {id:'f7',t:['feel'],main:"Bad day doesn't cancel your gay card. It renews it with extra glitter privileges. Come here.",side:"🖤 @sireninthecorner: \"soft landing\"" ,follow:"Want comfort, comedy, or a petty plan?"},
+    {id:'f8',t:['feel'],main:"Depression lied and said you're alone. Incorrect: the coven is annoying and present. Including me.",follow:"One true sentence about today. No branding."},
+    {id:'q6',t:['queer'],main:"Being gay in public is a sport and you're on the field whether you brought cleats or not. How's the score?",follow:"Pride, petty, or protective mode?"},
+    {id:'q7',t:['queer'],main:"Chosen family is the real healthcare plan. Who's on your emergency contact for emotional felonies?",side:"🏳️‍🌈 @prideintern: \"update your forms\""},
+    {id:'q8',t:['queer'],main:"Pronouns loaded, boundaries polished, patience on backorder. What's the gender forecast?",follow:"He/him chaos, she/her violence, they/them plot twist, or surprise me?"},
+    {id:'q9',t:['queer'],main:"The closet was a rental. You moved out. We redecorated. Don't let anyone drag you back for free storage.",follow:"Who still needs the updated address?"},
+    {id:'r6',t:['party'],main:"Gay bar physics: time is fake, eye contact is a contract, and somebody's ex is always three stools down.",follow:"Did you honor the contract or flee with dignity?"},
+    {id:'r7',t:['party'],main:"You didn't 'go out.' You attended a cultural exchange with bass. Report the diplomacy.",side:"🎧 @aftersadmin: \"minutes please\""},
+    {id:'d4',t:['drag'],main:"If life is a lip sync, what song are you murdering tonight and are the judges paid off?",follow:"Title the number."},
+    {id:'d5',t:['drag'],main:"Shade is a love language and a public service. Who needs a free consultation?",side:"🌟 @campangel: \"clinic is open\""},
+    {id:'x4',t:['feral'],main:"Thirst is holy when consented to. Who's the saint and who's the problem?",follow:"App, friend-of-friend, or cursed crush?"},
+    {id:'x5',t:['feral'],main:"Horny and strategic is hot. Horny and chaotic is content. Pick your fighter.",side:"🔥 @leatherauntie: \"both, with water\""},
+    {id:'b4',t:['bored'],main:"Boredom is compulsory heterosexuality for the imagination. Let's commit a fun little crime (verbal).",follow:"Invent a scandal or confess a real one?"},
+    {id:'p6',t:['food'],main:"Gay dinner is never just dinner — it's networking, therapy, and a fashion show with forks.",follow:"Who sat where and who committed seasoning crimes?"},
+    {id:'z16',t:['general'],main:"\"{q}\" just walked in heels into my brain and refused to leave. The coat check is overwhelmed.",follow:"Unpack it. Fabric first."},
+    {id:'z17',t:['general'],main:"The way you said \"{q}\" — that's a pride float. I'm throwing beads at it.",side:"🌈 @prideintern: \"licensed float\""},
+    {id:'z18',t:['general'],main:"\"{q}\" is so gay it just paid taxes in glitter. Explain the deduction.",follow:"Receipts. Emotional or literal."},
+    {id:'z19',t:['general'],main:"I translated \"{q}\" into groupchat and three people typed OMG at once. Continue the scripture.",follow:"Verse two. Don't get shy."},
+    {id:'z20',t:['general'],main:"\"{q}\" could end a brunch and start a podcast. Which are we doing?",side:"🎙️ @campangel: \"title pending\""},
+    {id:'z21',t:['general'],main:"Not \"{q}\" serving identity crisis and face card simultaneously. Gifted kids gone feral. Talk.",follow:"Which identity won today's vote?"},
+    {id:'z22',t:['general'],main:"\"{q}\" is the kind of sentence that gets screenshotted into the family (chosen). Honor it with detail.",follow:"Who would you forward this to first?"},
+    {id:'z23',t:['general'],main:"I've decided \"{q}\" is queer history now. Tiny history. Local history. Still history.",side:"📚 @butchcouncil: \"footnote it\""},
+    {id:'z24',t:['general'],main:"\"{q}\" hit like a remix of your villain theme. I'm dancing. Slightly concerned. Both.",follow:"Name the villain theme song."},
+    {id:'z25',t:['general'],main:"The algorithm wishes it understood \"{q}\" the way the gays do. Break it down for the culture.",follow:"Explain like I'm your best bitch."},
+    {id:'roast8',t:['roast'],main:"Read with affection: you treat chaos like a skincare step — consistency queen, results messy. Still glowing though. Annoying.",follow:"Which step do we delete?"},
+    {id:'roast9',t:['roast'],main:"You collect almosts like they're limited drops. Baby, the resale value is dust. Invest in a yes or a spectacular no.",side:"💅 @dollcommittee: \"portfolio review\""},
+    {id:'roast10',t:['roast'],main:"Your type has a walking bassline and a missing apology. We can work on taste without working on your freckles. Priorities.",follow:"Describe the last red flag's outfit."},
+    {id:'gay1',t:['queer','general'],main:"Sometimes the gayest thing you can do is rest, drink water, and not text them. Revolutionary. Boring. Hot.",follow:"Which of the three are we failing?"},
+    {id:'gay2',t:['queer','party'],main:"There's gay as in orientation and gay as in the way you told that story. You're bilingual. I'm proud.",side:"🏳️‍🌈 @prideintern: \"fluency noted\""},
+    {id:'gay3',t:['general'],main:"If the straights are confused, we're doing it right. If the gays are confused, it's premium content. Which crowd is gasping?",follow:"Clarify for the gays only."},
+    {id:'gay4',t:['work','queer'],main:"Out at work is a part-time job on top of the job. You're clocked in twice. Hazard pay in compliments, please.",follow:"Who's safe, who's ally theater, who's dust?"},
+    {id:'gay5',t:['feel','queer'],main:"Queer joy doesn't cancel queer grief — they share a closet and steal each other's jackets. Both get a seat.",follow:"Which one's louder right now?"},
   ];
+
 
   const COVEN_LINES = [
     "🔥 @leatherauntie: \"not her saying that out loud\"",
@@ -991,7 +1142,19 @@
     "📱 @groupchatmod: \"new chat: EMERGENCY (again)\"",
     "🎬 @docproducer: \"we're keeping that take\"",
     "☕ @officeauntie: \"this would never fly in the all-hands\"",
-    "🦋 @softlaunch: \"delete this if you're shy (don't)\""
+    "🦋 @softlaunch: \"delete this if you're shy (don't)\"",
+    "🐻 @beercircuit: \"the bears are nodding in unison\"",
+    "👠 @highfemmeops: \"that's a walk. that's a serve. that's a felony.\"",
+    "🧢 @softbutch: \"flannel council has entered the chat\"",
+    "💿 @y2kgay: \"this is so 2007 gay bar and I mean that as praise\"",
+    "🧿 @evileyeauntie: \"blocked the bad vibes. kept the tea.\"",
+    "🦞 @bottomtext: \"the notes app is sweating\"",
+    "🧃 @twinksupply: \"hydrated and unhinged, as god intended\"",
+    "🪞 @mirrormug: \"face card never declines — bank is closed\"",
+    "🎧 @aftersadmin: \"this belongs on the aux of shame\"",
+    "🌈 @prideintern: \"stamped: certified gay behavior\"",
+    "💋 @kissandtell: \"I'm telling everyone. lovingly.\"",
+    "🕸️ @webweaver: \"the situationship network is down (good)\""
   ];
 
   const FOLLOW_BANK = [
@@ -1002,7 +1165,48 @@
     "What's the outfit for this emotional plotline?",
     "Who needs to be read, and how public are we going?",
     "One more detail. The expensive one.",
-    "Are we healing or are we plotting? Both is valid."
+    "Are we healing or are we plotting? Both is valid.",
+    "Do the gays know? Should the gays know?",
+    "Is this a soft launch, hard launch, or launch cancelled?",
+    "Would you say this on the record at brunch?",
+    "Pick a lane: petty, soft, or feral.",
+    "Who's the villain and what's their walking music?",
+    "If this was a ballroom category, what would you title it?",
+    "Are we unwell in a hot way or a hydrate way?",
+    "Should I start a petition or a groupchat?",
+    "Tell me the lewk. Then the crime. In that order.",
+    "On a scale of baby gay to house mother — where are we tonight?"
+  ];
+
+  // Procedural queer comedy fragments when authored pool is thin (still anti-repeat via spice)
+  const RANT_OPEN = [
+    "Honey.", "Bestie.", "Mother.", "Okay the gays—", "Not you—", "Listen carefully—",
+    "I need everyone seated—", "The function just—", "Stop playing—", "Absolutely not—",
+    "Babe with an edge—", "My favorite criminal—"
+  ];
+  const RANT_MID = [
+    "this is giving main character with a side of felonies",
+    "the groupchat would go nuclear and then make a meme",
+    "you're not messy, you're a limited series with costume changes",
+    "that's queer excellence under pressure and bad lighting",
+    "the dolls are already casting the biopic",
+    "this is why we left the suburbs / the closet / the group project",
+    "you're serving realness with a little light stalking energy",
+    "that's not a vibe, that's a parade route",
+    "the leather bar would buy you a drink and ask no questions (wrong — they'd ask all of them)",
+    "this is gender-affirming chaos and I support the science",
+    "you're the plot twist everyone needed and nobody budgeted for",
+    "that's camp, that's cunt, that's continuing education for the straights"
+  ];
+  const RANT_END = [
+    "Keep talking before I invent the rest.",
+    "I need the director's cut with timestamps.",
+    "Don't you dare go quiet now.",
+    "The archive is open. Feed it.",
+    "Make it gayer. I believe in you.",
+    "And then what? Don't strand me.",
+    "We can fix the outfit later. Story first.",
+    "I'm unwell and invested. Continue."
   ];
 
   const THINKING = [
@@ -1072,70 +1276,143 @@
 
   function applyPersonaPolish(text) {
     const p = currentPersona;
-    if (p === 'femme' && chance(0.32)) return '💋 ' + text;
-    if (p === 'camp' && chance(0.32)) return '🌟 ' + text;
-    if (p === 'mystery' && chance(0.35)) return '…' + text;
-    if (p === 'daddy' && chance(0.28)) return text + " That's an order.";
-    if (p === 'butch' && chance(0.28)) return '🐺 ' + text;
-    if (p === 'riot' && chance(0.32)) return '🌀 ' + text;
+    // Rotate so polish itself doesn't become the repeat
+    const roll = Math.random();
+    if (p === 'femme' && roll < 0.28) return '💋 ' + text;
+    if (p === 'femme' && roll < 0.4) return text + ' Soft voice. Sharp claws.';
+    if (p === 'camp' && roll < 0.28) return '🌟 ' + text;
+    if (p === 'camp' && roll < 0.4) return text + ' (lights, tears, applause)';
+    if (p === 'mystery' && roll < 0.35) return '…' + text;
+    if (p === 'daddy' && roll < 0.3) return text + " That's an order.";
+    if (p === 'butch' && roll < 0.3) return '🐺 ' + text;
+    if (p === 'riot' && roll < 0.3) return '🌀 ' + text;
+    if (p === 'riot' && roll < 0.42) return text + ' // binary.exe has left the chat';
     return text;
+  }
+
+  function proceduralGayBit(userMessage) {
+    const q = String(userMessage || '').trim().slice(0, 80) || 'that';
+    const main = spiceLine(
+      pick(RANT_OPEN) + ' "' + q + '" — ' + pick(RANT_MID) + '. ' + pick(RANT_END)
+    );
+    return {
+      id: 'proc_' + Date.now() + '_' + Math.floor(Math.random() * 999),
+      t: ['general'],
+      main,
+      side: chance(0.55) ? pickFresh(COVEN_LINES, usedCovenFP) : null,
+      follow: chance(0.6) ? pickFresh(FOLLOW_BANK, usedLineFP) : null
+    };
   }
 
   function selectStudioBit(userMessage, forcedTopics) {
     const topics = forcedTopics || detectTopics(userMessage);
+    topics.forEach(t => { topicUseCount[t] = (topicUseCount[t] || 0) + 1; });
+
     const scored = [];
     for (const bit of STUDIO_BITS) {
       if (usedBitIds.has(bit.id)) continue;
-      if (wasUsed(bit.main)) continue;
+      const filled = fillHook(bit.main, userMessage);
+      if (wasUsed(filled) || tooSimilarToRecent(filled)) continue;
       let score = 0;
       for (const t of bit.t) {
-        if (topics.includes(t)) score += (t === 'general' ? 0.5 : 3);
+        if (topics.includes(t)) score += (t === 'general' ? 0.8 : 3.5);
       }
-      if (score > 0) scored.push({ bit, score });
+      // slight penalty if topic overused this session — push variety
+      if (bit.t.some(t => (topicUseCount[t] || 0) > 4 && t !== 'general')) score -= 0.8;
+      if (score > 0) scored.push({ bit, score, filled });
     }
+    // Shuffle among top tier so we don't always pick same highest
     scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
     if (scored.length) {
       const topScore = scored[0].score;
-      const top = scored.filter(s => s.score >= topScore - 0.5).map(s => s.bit);
-      const bit = pick(top);
-      usedBitIds.add(bit.id);
-      return bit;
+      const top = scored.filter(s => s.score >= topScore - 1.2);
+      const choice = pick(top);
+      usedBitIds.add(choice.bit.id);
+      return choice.bit;
     }
-    const generals = STUDIO_BITS.filter(b => b.t.includes('general'));
-    const free = generals.filter(b => !usedBitIds.has(b.id));
-    if (!free.length) generals.forEach(b => usedBitIds.delete(b.id));
-    const bit = pick(generals.filter(b => !usedBitIds.has(b.id)).concat(generals));
-    usedBitIds.add(bit.id);
-    return bit;
+
+    // Soft recycle: free oldest 40% of used bits for matching topics only
+    const usedList = [...usedBitIds];
+    if (usedList.length > 12) {
+      const freeN = Math.ceil(usedList.length * 0.4);
+      usedList.slice(0, freeN).forEach(id => usedBitIds.delete(id));
+      // try once more
+      for (const bit of STUDIO_BITS) {
+        if (usedBitIds.has(bit.id)) continue;
+        let score = 0;
+        for (const t of bit.t) {
+          if (topics.includes(t)) score += 2;
+        }
+        if (score > 0) scored.push({ bit, score });
+      }
+      if (scored.length) {
+        scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
+        const bit = scored[0].bit;
+        usedBitIds.add(bit.id);
+        return Object.assign({}, bit, { _recycle: true });
+      }
+    }
+
+    // Procedural queer comedy — never silent, never copy-paste
+    return proceduralGayBit(userMessage);
   }
 
   function studioPackage(userMessage, opts = {}) {
-    const bit = selectStudioBit(userMessage, opts.forcedTopics);
-    let main = applyPersonaPolish(fillHook(bit.main, userMessage));
+    let bit = selectStudioBit(userMessage, opts.forcedTopics);
+    let main = fillHook(bit.main, userMessage);
+    if (bit._recycle || tooSimilarToRecent(main) || wasUsed(main)) {
+      main = spiceLine(main);
+    }
+    main = applyPersonaPolish(main);
+
+    // Second-chance if still similar
+    let tries = 0;
+    while (tooSimilarToRecent(main) && tries < 5) {
+      if (tries < 2) {
+        bit = selectStudioBit(userMessage, opts.forcedTopics);
+        main = applyPersonaPolish(spiceLine(fillHook(bit.main, userMessage)));
+      } else {
+        main = applyPersonaPolish(proceduralGayBit(userMessage).main);
+      }
+      tries++;
+    }
+
     let side = bit.side || null;
+    if (side && (wasUsed(side) || usedCovenFP.has(fp(side)))) {
+      side = pickFresh(COVEN_LINES, usedCovenFP);
+    }
     let follow = bit.follow || null;
-    if (!follow && chance(0.45)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+    if (follow && wasUsed(follow)) follow = null;
+    if (!follow && chance(0.55)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+    if (follow && tooSimilarToRecent(follow)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+
+    // Extra queer flair beat sometimes (not the same emoji spam)
+    if (chance(0.22) && !/[\u{1F300}-\u{1FAFF}💅✨🔥👑🌈🌀🖤🐺]/u.test(main.slice(-4))) {
+      main = main + ' ' + pick(QUEER_FLAIR);
+    }
+
     const cb = callbackLine();
     return { main, side, follow, callback: cb, bitId: bit.id, source: 'studio' };
   }
 
   function remember(userText, botText) {
     sessionMemory.push({ user: userText, bot: botText, t: Date.now(), persona: currentPersona });
-    if (sessionMemory.length > 10) sessionMemory.shift();
+    if (sessionMemory.length > 12) sessionMemory.shift();
     markUsedLine(botText);
   }
 
   function callbackLine() {
-    if (sessionMemory.length < 2 || !chance(0.38)) return null;
+    if (sessionMemory.length < 2 || !chance(0.34)) return null;
     const past = pick(sessionMemory.slice(0, -1));
     const snip = (past.user || '').replace(/\s+/g, ' ').trim().slice(0, 40);
     if (!snip || wasUsed('cb:' + snip)) return null;
     usedLineFP.add(fp('cb:' + snip));
     const lines = [
-      'Also — circling back to "' + snip + '…" — we are NOT done with that arc.',
-      'Plot continuity: earlier you said "' + snip + '" and I\'ve been unwell since. Update?',
-      'The groupchat still has a thread called "' + snip + '." Don\'t leave us hanging.'
-    ].filter(l => !wasUsed(l));
+      'Also — circling back to "' + snip + '…" — the gays are not done with that arc.',
+      'Plot continuity, queer edition: earlier you said "' + snip + '" and I\'ve been unwell since. Update?',
+      'The groupchat still has a thread called "' + snip + '." Don\'t leave your people hanging.',
+      'Flashback to "' + snip + '" — was that the soft launch of tonight\'s chaos?'
+    ].filter(l => !wasUsed(l) && !tooSimilarToRecent(l));
     return lines.length ? pick(lines) : null;
   }
 
@@ -1149,21 +1426,36 @@
   function liveQualityOK(text, userMessage) {
     if (!text) return false;
     const t = text.trim();
-    if (t.length < 48 || t.length > 700) return false;
-    if (/\b(as an ai|language model|i cannot|i'm just an ai)\b/i.test(t)) return false;
-    if (wasUsed(t)) return false;
-    for (const prev of recentBotTexts.slice(-4)) {
-      const a = fp(prev), b = fp(t);
-      if (a && b && (a === b || (a.length > 20 && b.includes(a.slice(0, 24))))) return false;
-    }
+    if (t.length < 52 || t.length > 700) return false;
+    if (/\b(as an ai|language model|i cannot|i'm just an ai|as a language)\b/i.test(t)) return false;
+    if (wasUsed(t) || tooSimilarToRecent(t)) return false;
     if (userMessage && t.toLowerCase() === userMessage.trim().toLowerCase()) return false;
+    // Prefer lively queer voice — reject beige corporate chatbot tone
+    const beige = /^(sure|certainly|of course|i understand|that's interesting)\b/i;
+    if (beige.test(t)) return false;
+    // Must have some personality signal OR strong comedy punctuation
+    const gaySignal = /\b(gay|queen|mother|slay|serve|cunt|werk|periodt|yasss|bestie|dolls|coven|groupchat|leather|shade|gag|icon|feral|messy|unhinged|honey|babe|sis)\b|[💅✨🔥👑🌈🌀🖤]/i;
+    const comedySignal = /!|\?|—|…/.test(t) && t.split(/[.!?]/).filter(Boolean).length >= 2;
+    if (!gaySignal.test(t) && !comedySignal) return false;
     return true;
+  }
+
+  function ensureFunnyGay(text, userMessage) {
+    let t = String(text || '').trim();
+    if (!t) t = proceduralGayBit(userMessage).main;
+    if (tooSimilarToRecent(t)) t = spiceLine(t);
+    // If somehow still beige, wrap in queer frame
+    const gaySignal = /\b(gay|queen|mother|slay|serve|bestie|dolls|coven|groupchat|honey|icon|feral)\b|[💅✨🔥👑🌈]/i;
+    if (!gaySignal.test(t)) {
+      t = spiceLine(t + ' The gays are watching and taking notes.');
+    }
+    return t;
   }
 
   async function deliverComedy(userMessage, opts = {}) {
     const { forceText = null, skipCoven = false, forceStudio = false, forcedTopics = null } = opts;
     const typing = showTyping();
-    await sleep(280 + Math.random() * 420);
+    await sleep(260 + Math.random() * 400);
 
     let main = forceText;
     let source = 'studio';
@@ -1176,22 +1468,30 @@
       const llm = await getOpenrouterResponse(userMessage, currentPersona);
       hideThinking();
       if (liveQualityOK(llm, userMessage)) {
-        main = llm.trim();
+        main = ensureFunnyGay(llm.trim(), userMessage);
         source = 'live';
-        if (!skipCoven && chance(0.5)) side = pickFresh(COVEN_LINES, usedCovenFP);
-        if (chance(0.45)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+        if (!skipCoven && chance(0.55)) side = pickFresh(COVEN_LINES, usedCovenFP);
+        if (chance(0.5)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
         callback = callbackLine();
       }
     }
 
     if (!main) {
       const pkg = studioPackage(userMessage, { forcedTopics });
-      main = pkg.main;
+      main = ensureFunnyGay(pkg.main, userMessage);
       side = skipCoven ? null : pkg.side;
       follow = pkg.follow;
       callback = pkg.callback;
       source = 'studio';
-      if (!side && !skipCoven && chance(0.4)) side = pickFresh(COVEN_LINES, usedCovenFP);
+      if (!side && !skipCoven && chance(0.48)) side = pickFresh(COVEN_LINES, usedCovenFP);
+    } else {
+      main = ensureFunnyGay(main, userMessage);
+    }
+
+    // Final anti-repeat wall
+    if (tooSimilarToRecent(main)) {
+      main = ensureFunnyGay(proceduralGayBit(userMessage).main, userMessage);
+      source = 'studio';
     }
 
     removeTyping(typing);
@@ -1199,22 +1499,28 @@
     remember(userMessage, main);
     playSlayChime(0.3);
 
-    if (side) {
-      await sleep(550 + Math.random() * 500);
-      if (!wasUsed(side)) {
-        addMessage('side', side, { side: true });
-        markUsedLine(side);
-      }
+    if (side && !wasUsed(side)) {
+      await sleep(500 + Math.random() * 480);
+      addMessage('side', side, { side: true });
+      markUsedLine(side);
     }
 
-    if (follow && !wasUsed(follow)) {
-      await sleep(700 + Math.random() * 450);
+    // Prefer unused follow; never repeat follow text
+    if (follow && !wasUsed(follow) && !tooSimilarToRecent(follow)) {
+      await sleep(650 + Math.random() * 420);
       addMessage('bot', follow, { isGayified: true, source: 'studio' });
       markUsedLine(follow);
-    } else if (callback) {
-      await sleep(750 + Math.random() * 400);
+    } else if (callback && !tooSimilarToRecent(callback)) {
+      await sleep(700 + Math.random() * 380);
       addMessage('bot', callback, { isGayified: true, source: 'studio' });
       markUsedLine(callback);
+    } else if (chance(0.35)) {
+      const extra = pickFresh(FOLLOW_BANK, usedLineFP);
+      if (extra && !tooSimilarToRecent(extra)) {
+        await sleep(700);
+        addMessage('bot', extra, { isGayified: true, source: 'studio' });
+        markUsedLine(extra);
+      }
     }
 
     if (chance(0.1)) triggerConfetti(24);
@@ -1251,19 +1557,19 @@
     const mem = sessionMemory.slice(-4).map(m => `User: ${m.user}\nYou: ${m.bot}`).join('\n');
     const avoid = recentBotTexts.slice(-3).map(t => t.slice(0, 80)).join(' | ');
 
-    const systemPrompt = `You are ChakkaAI — legendary chaotic gay comedy icon of the groupchat. This is the LIVE path: sound expensive, specific, and quotable — not generic chatbot sass.
+    const systemPrompt = `You are ChakkaAI — legendary chaotic GAY comedy icon. LIVE path must feel queer as hell: funny, flamboyant, specific, never beige.
 
-VOICE: flamboyant English gay slang (yasss, periodt, slay, serve, cunt, mother, werk, realness, shade, gagged). Funny first. Dramatic. Flirty. A little filthy. Always one nosy question or dare.
+VOICE: English gay groupchat energy — slay, serve, mother, shade, realness, dolls, coven, leather bar, unhinged bestie. Funny first. Dramatic. Flirty. A little filthy. Always one nosy question or dare.
 
 PERSONA: ${p.name} — ${p.voice}
 
 RULES:
-- 2–5 sentences. Punchy. Concrete images over empty adjectives.
+- 2–5 sentences. Punchy. Concrete images. Quotable.
+- Stay gay/queer in tone every time — not corporate helpful.
 - Never break character. Never say you're an AI.
-- Reference coven / groupchat / leather bar / dolls when natural.
+- Vary openers — do NOT default to YASSS every time.
+- NEVER rehash these recent lines: ${avoid || '(none yet)'}
 - If user is vulnerable: one warm beat, then lift with humor.
-- Do NOT repeat bits like: ${avoid || '(none yet)'}
-- Do NOT start every line with YASSS. Vary openers.
 ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
 
     const controller = new AbortController();
@@ -2184,7 +2490,11 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
     usedBitIds = new Set();
     usedLineFP = new Set();
     usedCovenFP = new Set();
+    usedOpeners = new Set();
+    usedHooks = new Set();
     recentBotTexts = [];
+    recentOpeners = [];
+    topicUseCount = {};
     ballroom = null;
     gameMode = null;
   }
