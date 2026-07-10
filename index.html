@@ -4521,31 +4521,8 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   fillA2HSSteps();
   preferStudioOnSlowNetwork(); // early — icon reflects on first paint after init
 
-  // Splash flow: Enter → A2HS how-to (if not installed) → app
+  // Splash → straight into chat (no Add to Home Screen step)
   $('splash-enter').addEventListener('click', () => {
-    haptic();
-    if (isStandaloneApp()) {
-      enterAppFromSplash();
-      return;
-    }
-    // Phone: show install education; desktop with install prompt: show it; else enter
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    if (coarse || deferredInstallPrompt || isIOSDevice()) {
-      fillA2HSSteps();
-      showSplashPanel('splash-a2hs');
-    } else {
-      enterAppFromSplash();
-    }
-  });
-
-  $('splash-install').addEventListener('click', async () => {
-    haptic();
-    await triggerInstallFlow();
-    // Still enter app after install attempt
-    setTimeout(enterAppFromSplash, 400);
-  });
-
-  $('splash-skip').addEventListener('click', () => {
     haptic();
     enterAppFromSplash();
   });
