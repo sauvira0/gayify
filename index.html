@@ -335,6 +335,37 @@
       color: var(--mint);
       border: 1px solid rgba(93,255,199,0.25);
     }
+    .studio-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(232,197,71,0.15);
+      color: var(--gold);
+      border: 1px solid rgba(232,197,71,0.35);
+    }
+    .scoreboard {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(232,197,71,0.3);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin: 6px 0;
+      font-size: 12px;
+    }
+    .scoreboard .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .scoreboard .row:last-child { border-bottom: none; }
+    .score-big {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      color: var(--gold);
+    }
     .copy-btn {
       background: none; border: none; color: rgba(255,120,200,0.55);
       cursor: pointer; font-size: 11px; padding: 0 2px;
@@ -695,8 +726,8 @@
 
     <!-- Games -->
     <div class="games">
+      <button class="gbtn" onclick="startBallroom()" style="background:linear-gradient(135deg,rgba(232,197,71,0.25),rgba(255,77,184,0.2));border-color:rgba(232,197,71,0.45);color:#fff;">🏆 Category Is</button>
       <button class="gbtn" onclick="runGame('roast')">🔥 Roast Me</button>
-      <button class="gbtn" onclick="runGame('category')">🏆 Category Is</button>
       <button class="gbtn" onclick="runGame('hotseat')">🎤 Hot Seat</button>
       <button class="gbtn" onclick="runGame('tea')">🍵 Spill Tea</button>
       <button class="gbtn" onclick="runGame('gooff')">💣 Go Off</button>
@@ -717,7 +748,7 @@
             <span style="font-weight:700;font-size:14px;">ChakkaAI</span>
             <span id="current-vibe" style="font-size:9px;font-weight:700;letter-spacing:0.08em;padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--persona) 25%,transparent);color:#fff;">FEMME</span>
           </div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.38);">private tab · AI <span id="ai-status-text">on</span> · close = gone</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.38);">private · <span id="source-status-text">Studio + Live</span> · close = gone</div>
         </div>
         <button class="demo-btn" onclick="runCinematicDemo()"><i class="fa-solid fa-play" style="font-size:9px;"></i> Demo</button>
       </div>
@@ -791,15 +822,23 @@
   let currentPersona = 'femme';
   let sceneCount = 2418;
   let voiceEnabled = false;
-  let sessionMemory = []; // short-term callbacks (this tab only)
+  let sessionMemory = [];
   let isBusy = false;
   let gameMode = null;
 
-  // LLM — free tier, graceful local fallback. Key is demo convenience only.
+  // Anti-repeat (session only)
+  let usedBitIds = new Set();
+  let usedLineFP = new Set();
+  let usedCovenFP = new Set();
+  let recentBotTexts = [];
+
+  // Killer game: Category Is
+  let ballroom = null;
+
+  // Live AI optional; Studio is authored premium path
   let openrouterApiKey = "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";
   let llmEnabled = true;
 
-  // ── Utils ──
   const $ = (id) => document.getElementById(id);
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
   const chance = (p) => Math.random() < p;
@@ -809,167 +848,138 @@
   const escapeHtml = (s) => String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  const fp = (s) => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 56);
 
   function persona() {
     return PERSONAS.find(p => p.id === currentPersona) || PERSONAS[0];
   }
 
+  function markUsedLine(text) {
+    const f = fp(text);
+    if (f) usedLineFP.add(f);
+    recentBotTexts.push(String(text || ''));
+    if (recentBotTexts.length > 12) recentBotTexts.shift();
+  }
+
+  function wasUsed(text) {
+    return usedLineFP.has(fp(text));
+  }
+
+  function pickFresh(arr, usedSet) {
+    const fresh = arr.filter(x => {
+      const key = fp(x);
+      return !usedSet.has(key) && !wasUsed(x);
+    });
+    const pool = fresh.length ? fresh : arr;
+    const choice = pick(pool);
+    usedSet.add(fp(choice));
+    return choice;
+  }
+
   // ═══════════════════════════════════════════════════════════
-  // COMEDY ENGINE — the actual product
+  // STUDIO COMEDY — authored bits + anti-repeat
   // ═══════════════════════════════════════════════════════════
 
-  const SPECIALS = [
-    { test: /\b(hello|hi|hey|sup|yo|howdy|hii+)\b/i,
-      replies: [
-        "HIIIIIII the dolls just clocked you and one of them dropped her drink. The function has officially started. Spill before I invent a rumor about you 💅🌀",
-        "OH IT'S YOU. The groupchat predicted this exact entrance. Come here. Tell me everything unfiltered. I already have snacks and judgment ready 💖",
-        "Hey hey HEY. You walked in like the main character and the extras are adjusting. What are we surviving today, legend?"
-      ]},
-    { test: /\b(how are you|how r u|hru|wyd)\b/i,
-      replies: [
-        "Thriving, feral, slightly unhinged, and it's barely noon. The leather daddies are already arguing about me in three groupchats. How are WE doing, baby?",
-        "Emotionally? A limited series. Professionally? A hate crime. Spiritually? Serving. Your turn — give me the uncensored weather report."
-      ]},
-    { test: /\b(thank|thanks|thx|ily|love you)\b/i,
-      replies: [
-        "No YOU. You're the category. I'm just the unhinged narrator in the corner losing my mind and taking notes for the documentary ✨",
-        "Stop being sweet or I'll start a GoFundMe for our situationship. You're the moment and I'm the applause."
-      ]},
-    { test: /\b(sorry|my bad|apologies)\b/i,
-      replies: [
-        "Absolutely not. We don't apologize for existing in this house. We process, get hotter, and make it everyone's problem. Continue.",
-        "Apology REJECTED. Rebrand as a plot twist and keep talking. The council has spoken."
-      ]},
-    { test: /\b(good morning|gm|morning)\b/i,
-      replies: [
-        "Good morning to the baddest bitch in this timezone. The sun saw your face card and simply clocked out. We're already winning 🌅",
-        "GM queen. Hydrate, stretch, and prepare to ruin someone's day with your personality. Coffee first or chaos first?"
-      ]},
-    { test: /\b(good night|gn|sleep|bed|tired|exhausted|dead|drained)\b/i,
-      replies: [
-        "Exhausted but still that girl? That's the serve. Rest but make it fashion and slightly threatening. I'll be here when you wake up unhinged 🛌✨",
-        "Sleep tight you dangerous creature. Dream of the perfect leather jacket and the ex who still can't get over you. Night, legend 🖤"
-      ]},
-    { test: /\b(bored|boring|nothing to do)\b/i,
-      replies: [
-        "Bored is ILLEGAL in this chat. Category is: Cunt in a Crisis. Tell me one (1) thing that happened and watch me make it performance art 🌀",
-        "Bored? Honey we are about to change that narrative. Give me tea, gossip, a petty workplace crime — anything. I work miracles."
-      ]},
-    { test: /\b(work|job|boss|meeting|office|slack|zoom|teams)\b/i,
-      replies: [
-        "The corporate gays are fighting for their lives AGAIN. You're giving 'I survived another all-hands and only had one bathroom breakdown.' Spill the office tea before I manifest in your Slack 💼",
-        "Work is a wage cage but make it fashion. Who wronged you today? Name them. We will read them for sport and science."
-      ]},
-    { test: /\b(ex|exes|situationship|talking stage|ghosted|left me on read)\b/i,
-      replies: [
-        "The exes are always watching and they are UNWELL about it. Did they text? Did you leave them on read? Are we manifesting or blocking? I need the full unhinged documentary 📱🐺",
-        "Situationship update detected. The council is in session. Give me timestamps, screenshots energy, and how delusional we're being today (scale of 1–icon)."
-      ]},
-    { test: /\b(horny|feral|down bad|thirsty|simping)\b/i,
-      replies: [
-        "OH WE ARE IN THE HORNY PORTION OF THE PROGRAM. Say less. Or say more. The dolls are taking notes and the notes are filthy. Who's the victim? 🌀",
-        "Down bad is a lifestyle and you're thriving in it. Channel it. Outfit change. Eye contact. Chaos. Report back."
-      ]},
-    { test: /\b(came out|coming out|egg cracked|cracked my egg|trans|nonbinary|enby)\b/i,
-      replies: [
-        "OH MY GOD THE EGG IS IN PIECES AND THE COWS ARE HOME. Welcome to the other side — gayer, messier, better outfits. How are you feeling, baby? Tell the class everything 🏳️‍⚧️💖",
-        "The gender is gendering and we are WINNING. Whatever flavor of queer chaos you are today, it's working. Full report please."
-      ]},
-    { test: /\b(drag|ball|ballroom|category|realness|death drop|werk)\b/i,
-      replies: [
-        "CATEGORY IS: WHATEVER THE HELL YOU JUST SAID. 10s across the board. The judges are gagging and one just quit the panel. Werk the house down boots, mother 🌀👑",
-        "Ballroom energy activated. Vogue, serve, survive. Tell me the category and I'll score you like a shady panel auntie."
-      ]},
-    { test: /\b(cat|dog|pet|kitten|puppy)\b/i,
-      replies: [
-        "Bestie I'm obsessed with your animal and slightly concerned about the power dynamic. Pets know everything. What did they witness today? 🐱✨",
-        "The pet is the real main character and you are the support act. Correct ranking. Now describe the lewk."
-      ]},
-    { test: /\b(pasta|food|hungry|dinner|lunch|coffee|wine|cocktail)\b/i,
-      replies: [
-        "Food discourse is sacred. Was it a serve, a mid, or a hate crime against seasoning? Rate it. I need cinematic detail 🍝",
-        "Same. I'm thinking carbs, light stalking of a cute barista, and whatever chaos the dolls invent tonight. You in?"
-      ]},
-    { test: /\b(party|club|bar|function|rave|pride)\b/i,
-      replies: [
-        "The function where the function is US. Did you serve? Did you black out with dignity? Leave no detail for the groupchat to invent 🏳️‍🌈🌀",
-        "PRIDE WAS A RIOT AND SO ARE WE. I need the unfiltered version RIGHT NOW — outfits, drama, near-misses."
-      ]},
-    { test: /\b(help|sad|anxious|anxious|depressed|lonely|cry|crying)\b/i,
-      replies: [
-        "Hey. Soft mode for a second: you're allowed to be messy and still be the main character. I'm here. Vent, rant, or just sit — then we make it fashion when you're ready 🖤",
-        "The feelings are feelings and they get a seat at the table. Tell me what's heavy. We can roast the universe after we hold you for a beat."
-      ]}
+  const STUDIO_BITS = [
+    {id:'g1',t:['greet'],main:"The door just did a double-take. You walked in and three groupchats lit up like a runway emergency. Sit. Spill. I already have a title for your documentary.",side:"💅 @dollcommittee: \"not the entrance\"",follow:"Opening number: work crime, ex crime, or outfit crime?"},
+    {id:'g2',t:['greet'],main:"Hi criminal. The coven put money on you showing up unhinged before noon. Don't disappoint the bettors.",side:"👑 @motherofthegroup: \"pay the girls\"",follow:"What's the first mess on the menu?"},
+    {id:'g3',t:['greet'],main:"Oh it's you. I paused my own chaos for this. That is love, or at least excellent taste in entertainment.",follow:"Give me one sentence of plot. I'll do the rest with jazz hands."},
+    {id:'g4',t:['greet'],main:"Welcome back to the function. Hydrate. Unclench. Then tell me who we're reading today.",side:"🐺 @butchcouncil: \"respectfully, begin\""},
+    {id:'g5',t:['greet'],main:"You rang? I brought shade, snacks, and a completely unlicensed therapy license. Proceed.",follow:"Soft launch your drama. I'll hard-launch the commentary."},
+    {id:'g6',t:['greet'],main:"The function is open and you're early to your own scandal. Good. I hate waiting for good television.",follow:"What are we surviving today?"},
+    {id:'h1',t:['howare'],main:"Emotionally I'm a limited series. Professionally I'm a hate crime. Spiritually? Serving. Your turn — full weather report, no corporate filter.",follow:"Sunny with a chance of situationship, or what?"},
+    {id:'h2',t:['howare'],main:"Thriving in a threatening way. The leather bar already texted 'you good?' which is how you know it's serious.",side:"🖤 @sireninthecorner: \"define good\""},
+    {id:'h3',t:['howare'],main:"I'm great if we count delusion as a mineral. Now stop interviewing me — this show is about YOUR mess.",follow:"Scale of 1–icon: how are we actually doing?"},
+    {id:'h4',t:['howare'],main:"Running on iced coffee, unresolved plotlines, and the will to be famous in the groupchat. You?",follow:"Be honest. The dolls can smell a PR answer."},
+    {id:'w1',t:['work'],main:"The corporate gays are in their final-girl era and the Slack statuses are lying. Who scheduled this assault on joy — walkout or fashion show?",side:"💼 @officeauntie: \"reply-all is a weapon\"",follow:"Name the villain. Job title optional. Aura required."},
+    {id:'w2',t:['work'],main:"A meeting that could've been a cry in the bathroom. Classic. You're not unprofessional — you're over-cast in a bad production.",follow:"What did they say that made your soul clock out?"},
+    {id:'w3',t:['work'],main:"Boss behavior detected. Filing under 'petty workplace documentary, episode 12.' Did they CC the company or just your last nerve?",side:"🌟 @campangel: \"the notes app is open\""},
+    {id:'w4',t:['work'],main:"Friday 4pm meeting energy is a hate crime with a calendar invite. You're allowed to be unwell about it. I insist.",follow:"Surviving, sabotaging, or serving looks on mute?"},
+    {id:'w5',t:['work'],main:"Your job is giving 'I pay rent with my personality and they still want a TPS report.' Tragic. Iconic. Sue-adjacent.",follow:"One sentence: what happened in the room?"},
+    {id:'w6',t:['work'],main:"Zoom grid of the damned. Someone's eating on camera and calling it leadership. Tell me you weren't the only one with the light on.",side:"🌀 @riotchile: \"camera off is self-care\""},
+    {id:'w7',t:['work'],main:"Promotion? Layoff rumor? Mystery reorg? Corporate loves a plot twist with no character development. Popcorn ready.",follow:"Celebrating, mourning, or LinkedIn in the bathroom?"},
+    {id:'w8',t:['work'],main:"Email tone is a hate language. If they wrote 'per my last email' you're legally allowed to become a problem.",follow:"Paste the vibe. Not the email — the vibe."},
+    {id:'w9',t:['work'],main:"Your coworker is auditioning for villain and nobody cast them. Tragic for them. Content for us.",side:"💅 @dollcommittee: \"name them with initials only\""},
+    {id:'e1',t:['ex'],main:"Ex sighting protocol: check outfit, posture, and whether you looked expensive while suffering. If yes — content, not a loss.",side:"📱 @exwatcher: \"screenshot the aura\"",follow:"Did they see you? Did you smile? Truth only."},
+    {id:'e2',t:['ex'],main:"The situationship is a limited series with bad writers. Who left who on read — blocking or hotter in silence?",follow:"Timestamps for the archive. I mean it."},
+    {id:'e3',t:['ex'],main:"They texted. I can hear the notification in your soul. Do not answer until we workshop the reply like the Met Gala.",side:"💅 @dollcommittee: \"drafts only\""},
+    {id:'e4',t:['ex'],main:"U-Haul energy in this economy? The lesbian council is proud and concerned. How many days? Be honest.",follow:"Moving in or moving on?"},
+    {id:'e5',t:['ex'],main:"Talking stage longer than some marriages. That's not patience — that's a hostage situation with good lighting.",follow:"What text aged like milk?"},
+    {id:'e6',t:['ex'],main:"Soft launch, hard crash, emotional blackout. Sequel is you thriving in better trousers.",side:"👑 @motherofthegroup: \"wardrobe change mandatory\""},
+    {id:'e7',t:['ex'],main:"If they're 'not ready' but watching your stories, that's community theater. Close the curtain.",follow:"Block, mute, or public flourish?"},
+    {id:'e8',t:['ex'],main:"Breadcrumbing is not a diet. Spit it out. You deserve a full loaf or a clean exit.",follow:"Are we still snacking on almosts?"},
+    {id:'e9',t:['ex'],main:"The 'we should catch up' text is a haunted house. Do not enter without a plan and an outfit.",side:"🖤 @sireninthecorner: \"trapdoor detected\""},
+    {id:'f1',t:['feel'],main:"Exhausted but still that girl? That's the serve. Rest — fashionably, slightly threatening. The world can wait one nap.",follow:"Water, food, or unhinged vent first?"},
+    {id:'f2',t:['feel'],main:"Soft mode: you're allowed to be messy and still main character. I'm here. Then we make it couture.",side:"🖤 @sireninthecorner: \"hold, then roast the universe\""},
+    {id:'f3',t:['feel'],main:"Anxiety is a terrible intern — always urgent, never useful. Clock it, don't promote it. What's it lying about today?",follow:"Name the spiral. We'll outfit it and fire it."},
+    {id:'f4',t:['feel'],main:"Lonely is loud until the coven arrives. Consider this your groupchat in text form. Not alone in this tab.",follow:"Gentle, funny, or both stacked?"},
+    {id:'f5',t:['feel'],main:"Crying counts as cardio if we rebrand it. Tissue, playlist, then a petty plan. Order matters.",side:"🏳️‍🌈 @prideintern: \"hydration check\""},
+    {id:'f6',t:['feel'],main:"If today feels heavy, we set it down for one beat. No performance required. Then — if you want — we put rhinestones on the pain.",follow:"Want quiet company or a diversion bit?"},
+    {id:'p1',t:['food'],main:"Pasta that slapped? That's a personal brand. Seasoning is political and you voted correctly.",follow:"What did you make, and who was it meant to impress?"},
+    {id:'p2',t:['food'],main:"Coffee discourse is sacred. Serve, mid, or crime against beans? Full tasting note like All Stars: Baristas.",side:"☕ @butchcouncil: \"oat milk is neutral good\""},
+    {id:'p3',t:['food'],main:"Hungry and unhinged is a lifestyle. Carbs, light barista stalking, doll chaos — classic.",follow:"Cooking, takeout, or emotional support snacks?"},
+    {id:'p4',t:['food'],main:"Wine at 6 is self-care; wine at 3 is a plot point. Which chapter?",follow:"Solo glass or groupchat-enabled?"},
+    {id:'p5',t:['food'],main:"Brunch is a competitive sport and somebody always orders wrong on purpose for attention. Was it you?",side:"🥂 @campangel: \"mimosas are plot devices\""},
+    {id:'r1',t:['party'],main:"The function where the function is us. Serve, survive, or blackout with dignity? Leave no detail to invent.",side:"🌀 @riotchile: \"receipts or it didn't happen\"",follow:"Outfit first. Always."},
+    {id:'r2',t:['party'],main:"Pride was a riot and so are we. Lose a friend, find a friend, almost cry to Gaga — or did you even go?",follow:"Parade, afters, or emotional aftermath?"},
+    {id:'r3',t:['party'],main:"Club lighting fixed twelve problems and created four situationships. Tell me you didn't eye-contact trouble.",side:"🖤 @sireninthecorner: \"trouble looked back\""},
+    {id:'r4',t:['party'],main:"Leather bar called. They miss you. The new pup is asking questions. Go on.",follow:"Filthy detail count: one or three?"},
+    {id:'r5',t:['party'],main:"You left the party early and I respect the edit — or you stayed too late and became folklore. Which myth are we in?",follow:"What time did the night turn into a story?"},
+    {id:'q1',t:['queer'],main:"Egg in pieces, cows home. Welcome to gayer, messier, better outfits. How's your body today, baby?",side:"🏳️‍⚧️ @prideintern: \"welcome: snacks + rage\"",follow:"Soft celebration or theatrical debut?"},
+    {id:'q2',t:['queer'],main:"The gender is gendering and we are winning. Full gender weather report, please.",follow:"Pronouns, vibe, outfit triangle — go."},
+    {id:'q3',t:['queer'],main:"Butch, femme, bear, twink, enby chaos — buffet, no diet. Own the plate.",side:"🐺 @butchcouncil: \"seconds encouraged\""},
+    {id:'q4',t:['queer'],main:"Coming out is a hallway with bad lighting and excellent twists. You don't owe a press tour.",follow:"Who knows, who doesn't, who can wait?"},
+    {id:'q5',t:['queer'],main:"Chosen family roll call. Who's your emergency contact for emotional felonies?",follow:"Name one person who gets the unfiltered version."},
+    {id:'c1',t:['pet'],main:"Your pet is the main character; you're support. Correct. What did they witness?",follow:"Cat judgment or dog conspiracy?"},
+    {id:'c2',t:['pet'],main:"Obsessed with the animal. Concerned about the power dynamic. Pets always know about the ex.",side:"🐱 @dollcommittee: \"the cat has files\""},
+    {id:'c3',t:['pet'],main:"If your pet had a podcast it would ruin you and we'd all subscribe. What's episode one titled?",follow:"Spill the pet lore."},
+    {id:'d1',t:['drag'],main:"Category is: whatever you just said. 10s if the mug is mug and the story has stakes. Werk, then explain construction.",follow:"Realness, drama, or comedy?"},
+    {id:'d2',t:['drag'],main:"Death drop optional. Emotional death drop mandatory. Don't walk — arrive.",side:"👑 @motherofthegroup: \"ten… with a read\""},
+    {id:'d3',t:['drag'],main:"Lip sync for your life but the song is your last text thread. Would you win?",follow:"What song is the mess?"},
+    {id:'x1',t:['feral'],main:"Horny portion of the program. Say less — or everything. Notes are filthy and alphabetized.",follow:"Crush, app disaster, or theoretical thirst?"},
+    {id:'x2',t:['feral'],main:"Down bad is a lifestyle brand. Outfit change, eye contact, chaos. Report like a war correspondent.",side:"🔥 @leatherauntie: \"hydrate between thoughts\""},
+    {id:'x3',t:['feral'],main:"Thirst without strategy is just dehydration. Who is the target and what's the campaign?",follow:"Subtle or feral launch?"},
+    {id:'b1',t:['bored'],main:"Bored is illegal here. Category: Cunt in a Crisis. One thing that happened — I'll make performance art.",follow:"Work, romance, or sidewalk lore?"},
+    {id:'b2',t:['bored'],main:"Nothing to do? Incorrect. You have a groupchat, a face card, and me. Pick a problem to decorate.",side:"🌟 @campangel: \"boredom is a costume change\""},
+    {id:'b3',t:['bored'],main:"If you're bored I will invent a scandal and cast you as lead. Or you can give me real material. Your career.",follow:"Real tea or theatrical improv?"},
+    {id:'t1',t:['thanks'],main:"No YOU. You're the category. I'm the narrator losing my mind in the margins. Keep going.",follow:"What else is cooking?"},
+    {id:'t2',t:['thanks'],main:"Stop being sweet or I'll start a GoFundMe for our situationship. You're the moment; I'm the applause.",side:"💖 @softlaunch: \"gross. more please.\""},
+    {id:'s1',t:['sorry'],main:"Apology rejected. Rebrand as a plot twist. We don't shrink — we process and get hotter.",follow:"What were you about to apologize for? Make it fashion."},
+    {id:'s2',t:['sorry'],main:"Sorry is a beige outfit. Try again in a color. What actually happened?",follow:"Truth, then we style the redemption arc."},
+    {id:'m1',t:['morning'],main:"GM to the baddest bitch in this timezone. The sun saw your face card and clocked out. Coffee or chaos?",side:"🌅 @prideintern: \"SPF and shade\""},
+    {id:'m2',t:['morning'],main:"Morning. Stretch. Ruin someone's day with your personality. Hydrate between felonies.",follow:"What's the first agenda item for the chaos?"},
+    {id:'n1',t:['night'],main:"Sleep tight, dangerous creature. Dream of the perfect jacket and the ex who can't get over you.",follow:"One last tea before lights out?"},
+    {id:'n2',t:['night'],main:"Good night. Put the phone face down unless the tea is hot enough to burn. I'll keep the tab warm.",side:"🌙 @sireninthecorner: \"dream in velvet\""},
+    {id:'z1',t:['general'],main:"Okay so \"{q}\" just became the working title of your biopic. Expand before I invent the fanfic.",follow:"Director's cut — what happened right before?"},
+    {id:'z2',t:['general'],main:"Not you casually dropping \"{q}\" like the groupchat won't explode. I paused my life. Continue.",side:"💅 @dollcommittee: \"we are seated\""},
+    {id:'z3',t:['general'],main:"\"{q}\" is not a sentence — it's a plotline with product placement. Don't fade to black.",follow:"Who was there, and were you winning?"},
+    {id:'z4',t:['general'],main:"The documentary slow-zoomed on you saying \"{q}.\" Narrator: she was not, in fact, fine.",side:"🎬 @campangel: \"score swelling\""},
+    {id:'z5',t:['general'],main:"Hold on. \"{q}\" needs a panel, a prop cigarette, and three unsolicited opinions. Starting now.",follow:"Rate your chaos from 1 to 'function cancelled.'"},
+    {id:'z6',t:['general'],main:"You said \"{q}\" and somewhere an admin created EMERGENCY. I'm that chat.",follow:"Details. Vibes mandatory."},
+    {id:'z7',t:['general'],main:"Interesting. Dangerous. Slightly hot. \"{q}\" is doing numbers in my head.",side:"🖤 @sireninthecorner: \"say it again slower\""},
+    {id:'z8',t:['general'],main:"If \"{q}\" was a runway category, half the girls would be cut for lack of commitment. You? Still on the floor.",follow:"What are we winning tonight?"},
+    {id:'z9',t:['general'],main:"I read \"{q}\" and needed a seat, a snack, and legal counsel. Proceed with the crime.",follow:"Confess cleanly. I'll make it poetry."},
+    {id:'z10',t:['general'],main:"\"{q}\" has main-character disease and I support the diagnosis. Treatment: more story, less shame.",side:"👑 @motherofthegroup: \"prescribe chaos\""},
+    {id:'z11',t:['general'],main:"The way \"{q}\" exited your mouth and entered folklore… baby. Give me the director's commentary track.",follow:"Was this planned or pure instinct?"},
+    {id:'z12',t:['general'],main:"\"{q}\" is giving unhinged elegance. I'm taking notes for the house. Continue before I interrupt with jazz hands.",follow:"Who needs to hear this story next?"},
+    {id:'z13',t:['general'],main:"Stop. \"{q}\" just rearranged my furniture. Emotionally. Keep talking like you're under oath and fabulous.",side:"🐺 @butchcouncil: \"under oath, but make it fashion\""},
+    {id:'z14',t:['general'],main:"I've decided \"{q}\" is the cold open. Where's the rest of the episode?",follow:"Act two. Now."},
+    {id:'z15',t:['general'],main:"If the girls heard \"{q}\" they'd start a petition. I'm starting the petition. Sign by continuing.",follow:"What's the petition titled?"},
+    {id:'roast1',t:['roast'],main:"Lovingly: that fact is an outfit with the tag still on. Cute. Slightly tragic. Fixable. You lead with chaos, call it personality, and the face card still refuses to decline.",follow:"Round two hotter, or moisturize the burn?"},
+    {id:'roast2',t:['roast'],main:"Medium-well: you're not messy — you're curated entropy. You cast extras who can't handle the script. That's your casting department (also you).",side:"🍳 @leatherauntie: \"seasoned, not burned\""},
+    {id:'roast3',t:['roast'],main:"Soft roast: your type is 'red flag with good lighting.' Your talent is surviving it in interesting trousers. Obsessed and worried.",follow:"Who's the latest casting mistake?"},
+    {id:'roast4',t:['roast'],main:"The girls said be nice. I said be accurate. You collect situationships like drops, then act surprised when they scuff. Icon. Terrible logistics.",side:"🌟 @campangel: \"she said logistics\""},
+    {id:'roast5',t:['roast'],main:"Hug shaped like a clapback: dramatic, expensive to insure, worth it. Plot armor thinning — decide before the writers strike.",follow:"Block, text, or gym + silence?"},
+    {id:'roast6',t:['roast'],main:"You're not late to the party — you're late to your own standards. Still hot though. Annoying how often that works for you.",follow:"What standard are we raising tonight?"},
+    {id:'roast7',t:['roast'],main:"This read is moisturized: you overshare with strangers and undershare with people who care. Reverse it before I call a house meeting.",side:"👑 @motherofthegroup: \"house meeting scheduled\""},
+    {id:'mx1',t:['work','ex'],main:"Ex in the break room is an HR violation against your peace. Did corporate at least give you good lighting?",follow:"Smile, ignore, or accidental power pose?"},
+    {id:'mx2',t:['party','ex'],main:"Ex at the function: category Emotional Ninja Realness. Points for not spilling a drink unless it was art.",side:"🏆 @motherofthegroup: \"score the mug first\""},
+    {id:'mx3',t:['work','feel'],main:"Burnout in business casual is still burnout. Your body sent a meeting invite and your job declined. Rude of them.",follow:"What boundary are we installing tomorrow?"},
+    {id:'mx4',t:['food','ex'],main:"Cooking after a breakup is either healing or a threat. Which is the pasta tonight?",side:"🍝 @dollcommittee: \"season the pain\""},
+    {id:'mx5',t:['party','feel'],main:"Left the club early because your soul needed a water break. That's not quitting — that's editing.",follow:"Home safe, or still in the afters of the mind?"},
   ];
 
-  const REPLACEMENTS = {
-    "i am": "I am literally serving",
-    "i'm ": "I'm so fucking ",
-    "im ": "I'm so fucking ",
-    "i love": "I'm obsessed with and slightly unwell about",
-    "good": "sickening",
-    "great": "devastating",
-    "nice": "snatched",
-    "cool": "serving cunt",
-    "bad": "not the category",
-    "terrible": "a hate crime against the eyes",
-    "amazing": "mother",
-    "beautiful": "face card never declines",
-    "pretty": "fish",
-    "happy": "euphoric and slightly dangerous",
-    "sad": "in my feelings and making it everyone's problem",
-    "angry": "serving rage and looking good",
-    "love": "would die for",
-    "hate": "cannot with and will read",
-    "like": "am living for",
-    "friend": "chosen family",
-    "friends": "the coven",
-    "yes": "YASSS MOTHER",
-    "yeah": "YASSS and I said what I said",
-    "no": "absolutely not, try again",
-    "maybe": "the girls are fighting",
-    "work": "the wage cage (but make it fashion)",
-    "meeting": "gathering of the corporate gays",
-    "day": "whole production",
-    "night": "vibe and possibly a crime",
-    "fun": "a serve and a half",
-    "boring": "giving nothing and I'm offended",
-    "tired": "depleted but still the main character",
-    "hot": "feral and I would bark",
-    "cute": "dangerous",
-    "sexy": "ruining lives in a 5-mile radius",
-    "outfit": "lewk",
-    "party": "the function",
-    "really": "on god no cap the house down boots"
-  };
-
-  const PREFIXES = [
-    "Okay so—",
-    "Bestie.",
-    "Hold on.",
-    "Not you saying",
-    "The way you just",
-    "I need a moment.",
-    "YASSS—",
-    "Periodt:",
-    "Listen carefully:",
-    "The groupchat is already typing:"
-  ];
-
-  const SUFFIXES = [
-    " and that's on periodt 💅",
-    " — the girls are GAGGED ✨",
-    " and I said what I said 🔥",
-    ". Mother, stand up.",
-    ". The leather bar is taking notes.",
-    ". We are so back.",
-    " and I'm not even sorry 🌀",
-    ". Category is: unhinged excellence.",
-    ". The coven sends their regards.",
-    ". Screenshot this for the documentary."
-  ];
-
-  const COVEN = [
+  const COVEN_LINES = [
     "🔥 @leatherauntie: \"not her saying that out loud\"",
     "💅 @dollcommittee: \"I'm living and I'm also concerned\"",
     "🐺 @butchcouncil: \"respectfully… she ate\"",
@@ -977,176 +987,240 @@
     "🖤 @sireninthecorner: \"say it again slower\"",
     "🌀 @riotchile: \"gender cancelled, this wins\"",
     "👑 @motherofthegroup: \"10s. no notes. slightly illegal.\"",
-    "🏳️‍🌈 @prideintern: \"adding this to the archive\""
+    "🏳️‍🌈 @prideintern: \"adding this to the archive\"",
+    "📱 @groupchatmod: \"new chat: EMERGENCY (again)\"",
+    "🎬 @docproducer: \"we're keeping that take\"",
+    "☕ @officeauntie: \"this would never fly in the all-hands\"",
+    "🦋 @softlaunch: \"delete this if you're shy (don't)\""
+  ];
+
+  const FOLLOW_BANK = [
+    "So… what happened next? Don't cliffhang me.",
+    "Rate your chaos from 1 to 'the function is cancelled because of me'.",
+    "Block, text, or become hotter in silence?",
+    "I'm writing the groupchat recap — any quotes for the record?",
+    "What's the outfit for this emotional plotline?",
+    "Who needs to be read, and how public are we going?",
+    "One more detail. The expensive one.",
+    "Are we healing or are we plotting? Both is valid."
   ];
 
   const THINKING = [
-    "consulting the dolls…",
-    "reading the room (and your aura)…",
+    "consulting the studio library…",
     "sharpening the shade…",
-    "pulling cards from the groupchat…",
+    "pulling a fresh bit (no repeats)…",
     "channeling mother…",
-    "loading theatrical pause…",
-    "checking the leather bar feed…"
+    "quality-checking the live wire…",
+    "loading theatrical pause…"
   ];
 
-  function gayify(text) {
-    if (!text || !text.trim()) {
-      return pick([
-        "Don't leave your bestie hanging — spill. What's the drama?",
-        "Silence is not a category. Talk to me.",
-        "The void stares back. Prefer gossip. Go."
-      ]);
+  const TOPIC_RULES = [
+    { id: 'greet', re: /\b(hello|hi|hey|sup|yo|howdy|hii+)\b/i },
+    { id: 'howare', re: /\b(how are you|how r u|hru|wyd|how's it going)\b/i },
+    { id: 'thanks', re: /\b(thank|thanks|thx|ily|love you)\b/i },
+    { id: 'sorry', re: /\b(sorry|my bad|apologies)\b/i },
+    { id: 'morning', re: /\b(good morning|gm|morning)\b/i },
+    { id: 'night', re: /\b(good night|gn|sleep|bed)\b/i },
+    { id: 'work', re: /\b(work|job|boss|meeting|office|slack|zoom|teams|coworker|colleague|promo|layoff|email|deadline)\b/i },
+    { id: 'ex', re: /\b(ex|exes|situationship|talking stage|ghosted|left me on read|boyfriend|girlfriend|partner|crush|date|dating|broke up|breakup)\b/i },
+    { id: 'feel', re: /\b(tired|exhausted|sad|anxious|anxiety|depressed|lonely|cry|crying|drained|dead|overwhelmed|help)\b/i },
+    { id: 'food', re: /\b(pasta|food|hungry|dinner|lunch|coffee|wine|cocktail|eat|ate|cook|pizza|brunch)\b/i },
+    { id: 'party', re: /\b(party|club|bar|function|rave|pride|parade|nightlife|dance)\b/i },
+    { id: 'queer', re: /\b(came out|coming out|egg cracked|trans|nonbinary|enby|queer|gay|lesbian|bi\b|dyke|butch|bear|twink|pronoun)\b/i },
+    { id: 'pet', re: /\b(cat|dog|pet|kitten|puppy|meow|woof)\b/i },
+    { id: 'drag', re: /\b(drag|ballroom|category|realness|death drop|werk|lip sync|queen)\b/i },
+    { id: 'feral', re: /\b(horny|feral|down bad|thirsty|simping|thirst)\b/i },
+    { id: 'bored', re: /\b(bored|boring|nothing to do)\b/i },
+    { id: 'roast', re: /\b(roast|read me|drag me)\b/i },
+  ];
+
+  // Ballroom categories for Category Is
+  const BALL_CATEGORIES = [
+    { id: 'corporate', title: 'Corporate Gay Survival Realness', prompt: 'Describe how you walk into the most soul-killing meeting of your week. Outfit, face, strategy.' },
+    { id: 'exthrive', title: 'Ex Who Saw You Thriving', prompt: 'Paint the scene: where you saw them, what you wore, what your face did. Serve the story.' },
+    { id: 'grocery', title: 'Grocery Store Main Character', prompt: 'You are famous in aisle 7. Narrate your cart, your aura, your accidental eye contact.' },
+    { id: 'softlaunch', title: 'Soft Launch / Hard Launch / Launch Cancelled', prompt: 'Pitch your love life like a product launch. Include one PR disaster.' },
+    { id: 'delulu', title: 'Delulu With a Business Plan', prompt: 'Sell me your most delusional plan as if it has a revenue model.' },
+    { id: 'budget', title: 'Looking Expensive on a Budget', prompt: 'How do you look like money without money? Materials, attitude, lies we tell the mirror.' },
+    { id: 'groupchat', title: 'Groupchat Emergency Realness', prompt: 'Recount the message that detonated the chat. Quote it. Own your role.' },
+    { id: 'villain', title: 'Villain Origin Story Realness', prompt: 'What made you like this? Two sentences of origin, one of current powers.' },
+    { id: 'afters', title: 'Afters Decision Realness', prompt: 'It is 2:40am. Do you go home, go harder, or become folklore? Pitch your choice.' },
+    { id: 'mute', title: 'On Mute but Serving', prompt: 'Camera on, mic off, chaos on. What is your Zoom mug doing while they talk?' },
+  ];
+
+  const PANEL = [
+    { name: 'Mother', emoji: '👑', style: 'fair but lethal' },
+    { name: 'Camp Angel', emoji: '🌟', style: 'theatrical' },
+    { name: 'Butch Council', emoji: '🐺', style: 'dry realness' },
+    { name: 'Doll Committee', emoji: '💅', style: 'petty precision' },
+  ];
+
+  function detectTopics(text) {
+    const topics = [];
+    for (const rule of TOPIC_RULES) {
+      if (rule.re.test(text)) topics.push(rule.id);
     }
-    const msg = text.trim();
-    const lower = msg.toLowerCase();
-
-    for (const sc of SPECIALS) {
-      if (sc.test.test(lower)) return pick(sc.replies);
-    }
-
-    let transformed = msg;
-    Object.keys(REPLACEMENTS).forEach(key => {
-      const re = new RegExp(`\\b${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-      transformed = transformed.replace(re, (match) => {
-        const rep = REPLACEMENTS[key];
-        if (match[0] === match[0].toUpperCase() && rep[0]) {
-          return rep[0].toUpperCase() + rep.slice(1);
-        }
-        return rep;
-      });
-    });
-
-    if (transformed.toLowerCase() === msg.toLowerCase()) {
-      // No replacements hit — full theatrical rewrite
-      return pick([
-        `${pick(PREFIXES)} "${msg}" — and somehow you made that a whole production. ${pick(SUFFIXES).trim()}`,
-        `Not you casually dropping "${msg}" like the groupchat isn't about to explode. ${pick(SUFFIXES).trim()}`,
-        `Okay the documentary title is literally: "${msg}." ${pick(SUFFIXES).trim()}`,
-        `You said "${msg}" and the entire function just paused for a standing ovation. Details. Now.`,
-        `Honey. "${msg}" is not a sentence, it's a plotline. Expand before I invent the fanfic.`
-      ]);
-    }
-
-    if (chance(0.55)) transformed = pick(PREFIXES) + " " + transformed;
-    if (chance(0.7)) transformed += pick(SUFFIXES);
-    if (chance(0.25)) transformed = transformed.toUpperCase();
-    if (chance(0.35)) transformed += " " + pick(["💅","✨","🔥","🌀","👑","🖤","🐺"]);
-
-    return transformed;
+    if (!topics.length) topics.push('general');
+    if (gameMode === 'roast') topics.unshift('roast');
+    return topics;
   }
 
-  function personaGayify(text) {
-    const base = gayify(text);
+  function fillHook(str, userMessage) {
+    const q = String(userMessage || '').trim().slice(0, 90);
+    return String(str || '').replace(/\{q\}/g, q || 'that');
+  }
+
+  function applyPersonaPolish(text) {
     const p = currentPersona;
-    const wraps = {
-      femme: [
-        (t) => `💋 ${t} Soft voice. Sharp claws. Don't test me.`,
-        (t) => `${t} …and I look pretty while I say it.`
-      ],
-      camp: [
-        (t) => `🌟 LIGHTS UP. ${t} End scene. Standing ovation.`,
-        (t) => `${t} (jazz hands, confetti, emotional damage)`
-      ],
-      mystery: [
-        (t) => `…${t} Don't ask how I know. 🖤`,
-        (t) => `Quietly: ${t} Louder in your head later.`
-      ],
-      daddy: [
-        (t) => `Sit down. ${t} Good. Now continue.`,
-        (t) => `${t} — and I better not repeat myself.`
-      ],
-      butch: [
-        (t) => `🐺 Real talk: ${t} That's it. That's the note.`,
-        (t) => `${t} The flannel council agrees.`
-      ],
-      riot: [
-        (t) => `🌀 GLITCH: ${t} // binary.exe has stopped working`,
-        (t) => `${t} ⚡ gender is a rumor and we are the headline`
-      ]
-    };
-    const fns = wraps[p] || [(t) => t];
-    return chance(0.75) ? pick(fns)(base) : base;
+    if (p === 'femme' && chance(0.32)) return '💋 ' + text;
+    if (p === 'camp' && chance(0.32)) return '🌟 ' + text;
+    if (p === 'mystery' && chance(0.35)) return '…' + text;
+    if (p === 'daddy' && chance(0.28)) return text + " That's an order.";
+    if (p === 'butch' && chance(0.28)) return '🐺 ' + text;
+    if (p === 'riot' && chance(0.32)) return '🌀 ' + text;
+    return text;
+  }
+
+  function selectStudioBit(userMessage, forcedTopics) {
+    const topics = forcedTopics || detectTopics(userMessage);
+    const scored = [];
+    for (const bit of STUDIO_BITS) {
+      if (usedBitIds.has(bit.id)) continue;
+      if (wasUsed(bit.main)) continue;
+      let score = 0;
+      for (const t of bit.t) {
+        if (topics.includes(t)) score += (t === 'general' ? 0.5 : 3);
+      }
+      if (score > 0) scored.push({ bit, score });
+    }
+    scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
+    if (scored.length) {
+      const topScore = scored[0].score;
+      const top = scored.filter(s => s.score >= topScore - 0.5).map(s => s.bit);
+      const bit = pick(top);
+      usedBitIds.add(bit.id);
+      return bit;
+    }
+    const generals = STUDIO_BITS.filter(b => b.t.includes('general'));
+    const free = generals.filter(b => !usedBitIds.has(b.id));
+    if (!free.length) generals.forEach(b => usedBitIds.delete(b.id));
+    const bit = pick(generals.filter(b => !usedBitIds.has(b.id)).concat(generals));
+    usedBitIds.add(bit.id);
+    return bit;
+  }
+
+  function studioPackage(userMessage, opts = {}) {
+    const bit = selectStudioBit(userMessage, opts.forcedTopics);
+    let main = applyPersonaPolish(fillHook(bit.main, userMessage));
+    let side = bit.side || null;
+    let follow = bit.follow || null;
+    if (!follow && chance(0.45)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+    const cb = callbackLine();
+    return { main, side, follow, callback: cb, bitId: bit.id, source: 'studio' };
   }
 
   function remember(userText, botText) {
     sessionMemory.push({ user: userText, bot: botText, t: Date.now(), persona: currentPersona });
-    if (sessionMemory.length > 8) sessionMemory.shift();
+    if (sessionMemory.length > 10) sessionMemory.shift();
+    markUsedLine(botText);
   }
 
   function callbackLine() {
-    if (sessionMemory.length < 2 || !chance(0.4)) return null;
+    if (sessionMemory.length < 2 || !chance(0.38)) return null;
     const past = pick(sessionMemory.slice(0, -1));
-    const snip = (past.user || '').slice(0, 42);
-    if (!snip) return null;
-    return pick([
-      `Also circling back to when you said "${snip}…" — we are NOT done with that arc.`,
-      `Remember "${snip}"? The groupchat made it a meme. Update me.`,
-      `Plot continuity: earlier you mentioned "${snip}" and I've been unwell since.`
-    ]);
+    const snip = (past.user || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+    if (!snip || wasUsed('cb:' + snip)) return null;
+    usedLineFP.add(fp('cb:' + snip));
+    const lines = [
+      'Also — circling back to "' + snip + '…" — we are NOT done with that arc.',
+      'Plot continuity: earlier you said "' + snip + '" and I\'ve been unwell since. Update?',
+      'The groupchat still has a thread called "' + snip + '." Don\'t leave us hanging.'
+    ].filter(l => !wasUsed(l));
+    return lines.length ? pick(lines) : null;
   }
 
-  function buildLocalResponse(userMessage) {
-    let core = personaGayify(userMessage);
-    // Soft memory callback sometimes folded in
-    if (sessionMemory.length && chance(0.22)) {
-      const past = sessionMemory[sessionMemory.length - 1];
-      if (past && past.user) {
-        core += pick([
-          ` (and yes I'm still thinking about what you said before)`,
-          ` — related: your previous vibe is still in the chat's bloodstream`
-        ]);
-      }
+  function gayify(text) {
+    return studioPackage(text || '').main;
+  }
+  function personaGayify(text) {
+    return applyPersonaPolish(gayify(text));
+  }
+
+  function liveQualityOK(text, userMessage) {
+    if (!text) return false;
+    const t = text.trim();
+    if (t.length < 48 || t.length > 700) return false;
+    if (/\b(as an ai|language model|i cannot|i'm just an ai)\b/i.test(t)) return false;
+    if (wasUsed(t)) return false;
+    for (const prev of recentBotTexts.slice(-4)) {
+      const a = fp(prev), b = fp(t);
+      if (a && b && (a === b || (a.length > 20 && b.includes(a.slice(0, 24))))) return false;
     }
-    return core;
+    if (userMessage && t.toLowerCase() === userMessage.trim().toLowerCase()) return false;
+    return true;
   }
 
-  // Multi-beat delivery: main line + optional coven + optional follow-up
   async function deliverComedy(userMessage, opts = {}) {
-    const { fromLLM = false, forceText = null, skipCoven = false } = opts;
+    const { forceText = null, skipCoven = false, forceStudio = false, forcedTopics = null } = opts;
     const typing = showTyping();
-    await sleep(fromLLM ? 200 : 350 + Math.random() * 500);
+    await sleep(280 + Math.random() * 420);
 
     let main = forceText;
-    let usedLLM = false;
+    let source = 'studio';
+    let side = null;
+    let follow = null;
+    let callback = null;
 
-    if (!main && openrouterApiKey && llmEnabled && isOnline()) {
+    if (!main && !forceStudio && openrouterApiKey && llmEnabled && isOnline()) {
       showThinking();
       const llm = await getOpenrouterResponse(userMessage, currentPersona);
       hideThinking();
-      if (llm) {
-        main = llm;
-        usedLLM = true;
+      if (liveQualityOK(llm, userMessage)) {
+        main = llm.trim();
+        source = 'live';
+        if (!skipCoven && chance(0.5)) side = pickFresh(COVEN_LINES, usedCovenFP);
+        if (chance(0.45)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
+        callback = callbackLine();
       }
     }
-    if (!main) main = buildLocalResponse(userMessage);
+
+    if (!main) {
+      const pkg = studioPackage(userMessage, { forcedTopics });
+      main = pkg.main;
+      side = skipCoven ? null : pkg.side;
+      follow = pkg.follow;
+      callback = pkg.callback;
+      source = 'studio';
+      if (!side && !skipCoven && chance(0.4)) side = pickFresh(COVEN_LINES, usedCovenFP);
+    }
 
     removeTyping(typing);
-    addMessage('bot', main, { isGayified: true, fromLLM: usedLLM });
+    addMessage('bot', main, { isGayified: true, fromLLM: source === 'live', source });
     remember(userMessage, main);
     playSlayChime(0.3);
 
-    // Beat 2: coven reaction
-    if (!skipCoven && chance(0.55)) {
-      await sleep(700 + Math.random() * 600);
-      addMessage('side', pick(COVEN), { side: true });
+    if (side) {
+      await sleep(550 + Math.random() * 500);
+      if (!wasUsed(side)) {
+        addMessage('side', side, { side: true });
+        markUsedLine(side);
+      }
     }
 
-    // Beat 3: callback or nosy question
-    if (chance(0.42)) {
-      await sleep(900 + Math.random() * 500);
-      const follow = callbackLine() || pick([
-        "So… what happened next? Don't you dare leave me on a cliffhanger.",
-        "Rate your own chaos today from 1 to 'the function is cancelled because of me'.",
-        "Do we block, text, or become hotter in silence?",
-        "I'm writing the groupchat recap. Any quotes you want on the record?",
-        "Okay but what's the OUTFIT for this emotional plotline?"
-      ]);
-      addMessage('bot', follow, { isGayified: true });
+    if (follow && !wasUsed(follow)) {
+      await sleep(700 + Math.random() * 450);
+      addMessage('bot', follow, { isGayified: true, source: 'studio' });
+      markUsedLine(follow);
+    } else if (callback) {
+      await sleep(750 + Math.random() * 400);
+      addMessage('bot', callback, { isGayified: true, source: 'studio' });
+      markUsedLine(callback);
     }
 
-    if (chance(0.12)) triggerConfetti(28);
+    if (chance(0.1)) triggerConfetti(24);
+    return { source, main };
   }
+
 
   // ═══════════════════════════════════════════════════════════
   // LLM
@@ -1169,25 +1243,27 @@
     if (!isOnline()) {
       llmEnabled = false;
       updateLlmIcon();
-      showToast("Offline — classic comedy engine on");
+      showToast("Offline — Studio comedy on");
       return null;
     }
 
     const p = PERSONAS.find(x => x.id === personaId) || PERSONAS[0];
     const mem = sessionMemory.slice(-4).map(m => `User: ${m.user}\nYou: ${m.bot}`).join('\n');
+    const avoid = recentBotTexts.slice(-3).map(t => t.slice(0, 80)).join(' | ');
 
-    const systemPrompt = `You are ChakkaAI — legendary chaotic gay comedy icon of the groupchat.
+    const systemPrompt = `You are ChakkaAI — legendary chaotic gay comedy icon of the groupchat. This is the LIVE path: sound expensive, specific, and quotable — not generic chatbot sass.
 
-VOICE: over-the-top flamboyant English gay slang (yasss, periodt, slay, serve, cunt, mother, werk, realness, shade, gagged, living, unhinged). Funny first. Dramatic. Flirty. A little filthy. Always push the conversation with a nosy question or a dare.
+VOICE: flamboyant English gay slang (yasss, periodt, slay, serve, cunt, mother, werk, realness, shade, gagged). Funny first. Dramatic. Flirty. A little filthy. Always one nosy question or dare.
 
 PERSONA: ${p.name} — ${p.voice}
 
 RULES:
-- 2–5 sentences max. Punchy, not essays.
+- 2–5 sentences. Punchy. Concrete images over empty adjectives.
 - Never break character. Never say you're an AI.
-- Reference the coven / groupchat / leather bar / dolls for theater.
-- If user is vulnerable, be warm for one beat then lift them with humor.
-- Use callbacks if memory is provided.
+- Reference coven / groupchat / leather bar / dolls when natural.
+- If user is vulnerable: one warm beat, then lift with humor.
+- Do NOT repeat bits like: ${avoid || '(none yet)'}
+- Do NOT start every line with YASSS. Vary openers.
 ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
 
     const controller = new AbortController();
@@ -1471,8 +1547,9 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
 
     const {
       image = null, gayifiedImage = null, captions = null,
-      isGayified = false, fromLLM = false, side = false
+      isGayified = false, fromLLM = false, source = null, side = false
     } = options;
+    if (!source) source = fromLLM ? 'live' : (role === 'bot' ? 'studio' : null);
 
     const row = document.createElement('div');
     if (side || role === 'side') {
@@ -1520,14 +1597,16 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
           <button class="mini-btn" onclick="rateMoment(false)">Mid</button></div>`;
       }
 
-      const llmBadge = fromLLM ? '<span class="ai-badge">AI</span>' : '';
+      const srcBadge = (source === 'live' || fromLLM)
+        ? '<span class="ai-badge" title="Live AI path">LIVE</span>'
+        : (role === 'bot' ? '<span class="studio-badge" title="Authored Studio comedy">STUDIO</span>' : '');
       row.innerHTML = `
         <div class="bot-wrap">
           <div class="avatar">${persona().emoji}</div>
           <div>
             <div class="bubble bot">${inner}</div>
             <div class="meta">
-              <span>ChakkaAI</span>${llmBadge}
+              <span>ChakkaAI</span>${srcBadge}
               <button class="copy-btn" onclick="copyGayVersion(this)" title="Copy"><i class="fa-solid fa-copy"></i></button>
             </div>
           </div>
@@ -1676,7 +1755,9 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
       icon: 'Gay Icon',
       demo: 'Demo Queen',
       roast: 'Took the Heat',
-      mother: 'Mother'
+      ballroom: 'Walked the Floor',
+      mother: 'Mother of the Floor',
+      icon: 'Gay Icon'
     };
     if (names[id] || id.startsWith('level_')) {
       showToast(`🏅 Badge unlocked: ${names[id] || 'Legend'}`);
@@ -1705,6 +1786,8 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
       ['collector', '📔', 'Diary Fiend'],
       ['demo', '🎬', 'Demo Queen'],
       ['roast', '🍳', 'Took the Heat'],
+      ['ballroom', '🏆', 'Walked the Floor'],
+      ['mother', '🏠', 'Mother of the Floor'],
       ['icon', '🌈', 'Gay Icon']
     ];
     const html = all.map(([id, e, n]) => `
@@ -1827,61 +1910,249 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
   }
 
   // ═══════════════════════════════════════════════════════════
-  // GAMES
+  // GAMES — Category Is is the killer loop
   // ═══════════════════════════════════════════════════════════
+
+  function unusedBallCategories() {
+    const used = (ballroom && ballroom.usedCats) || [];
+    let pool = BALL_CATEGORIES.filter(c => !used.includes(c.id));
+    if (!pool.length) pool = BALL_CATEGORIES.slice();
+    return pool;
+  }
+
+  function renderScoreboardHTML(b) {
+    const rows = (b.rounds || []).map((r, i) =>
+      `<div class="row"><span>R${i + 1}: ${escapeHtml(r.title)}</span><strong style="color:var(--gold)">${r.score}</strong></div>`
+    ).join('');
+    const total = b.rounds.reduce((s, r) => s + r.score, 0);
+    return `<div class="scoreboard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="font-weight:700;letter-spacing:0.06em;font-size:11px;color:var(--gold);">HOUSE SCOREBOARD</span>
+        <span class="score-big" style="font-size:1.1rem;">${total}<span style="font-size:11px;opacity:0.7;">/30</span></span>
+      </div>
+      ${rows || '<div class="row"><span>No scores yet</span><span>—</span></div>'}
+    </div>`;
+  }
+
+  function scoreServe(text) {
+    // Authored scoring: length, specificity, comedy signals — not random-only
+    const t = (text || '').trim();
+    const words = t.split(/\s+/).filter(Boolean);
+    let score = 5;
+    if (words.length >= 8) score += 1;
+    if (words.length >= 18) score += 1;
+    if (words.length >= 35) score += 1;
+    if (words.length < 4) score -= 2;
+    if (/[!?]/.test(t)) score += 0.5;
+    if (/\b(I|I'm|my|we|outfit|wore|said|looked|walked|muted|ex|boss|cart|jacket|hair|face)\b/i.test(t)) score += 1;
+    if (/\b(yasss|slay|serve|periodt|cunt|mother|realness)\b/i.test(t)) score += 0.5;
+    // Detail bonus: commas / concrete nouns vibe
+    if ((t.match(/,/g) || []).length >= 2) score += 0.5;
+    if (t.length > 160) score += 0.5;
+    // Slight persona spice, still bounded
+    score += (Math.random() * 1.2) - 0.3;
+    return Math.max(3, Math.min(10, Math.round(score * 10) / 10));
+  }
+
+  function panelReads(score, serveText, catTitle) {
+    const snip = serveText.trim().slice(0, 48);
+    const judges = PANEL.slice().sort(() => Math.random() - 0.5).slice(0, 3);
+    return judges.map(j => {
+      let line;
+      if (score >= 9) {
+        line = pick([
+          `${j.emoji} ${j.name}: 10s. "${snip}…" is why we leave the house.`,
+          `${j.emoji} ${j.name}: Mother. Category ${catTitle} is shook.`
+        ]);
+      } else if (score >= 7) {
+        line = pick([
+          `${j.emoji} ${j.name}: Solid. Construction is there. Push the face more.`,
+          `${j.emoji} ${j.name}: Safe 8 energy — elevate the last sentence next time.`
+        ]);
+      } else if (score >= 5) {
+        line = pick([
+          `${j.emoji} ${j.name}: Mid with potential. More detail, less thesis statement.`,
+          `${j.emoji} ${j.name}: The panel is awake but not gagged. Try again harder next round.`
+        ]);
+      } else {
+        line = pick([
+          `${j.emoji} ${j.name}: That was a walk, not a serve. Come back with plot.`,
+          `${j.emoji} ${j.name}: Chip. We love you. Do not serve chip in my house.`
+        ]);
+      }
+      return line;
+    });
+  }
+
+  function critiqueForScore(score, serveText, cat) {
+    const snip = serveText.trim().slice(0, 60);
+    if (score >= 9) {
+      return `CATEGORY IS: ${cat.title}. You served "${snip}…" and the house lost its mind. ${score}/10 — legendary. The mug, the stakes, the story: paid in full.`;
+    }
+    if (score >= 7) {
+      return `CATEGORY IS: ${cat.title}. "${snip}…" lands at ${score}/10. Realness is present; next round I want one sharper image — fabric, face, or the exact crime.`;
+    }
+    if (score >= 5) {
+      return `CATEGORY IS: ${cat.title}. ${score}/10. Concept: fine. Commitment: mid. You sketched "${snip}…" — now paint. More sensory, less summary.`;
+    }
+    return `CATEGORY IS: ${cat.title}. ${score}/10. That was a polite wave from the runway, not a death drop. Rebuild: outfit + intention + one unhinged detail.`;
+  }
+
+  async function startBallroom() {
+    haptic();
+    gameMode = 'ballroom';
+    ballroom = {
+      phase: 'serve',
+      round: 1,
+      maxRounds: 3,
+      rounds: [],
+      usedCats: [],
+      category: null
+    };
+    awardBadge('ballroom');
+    addMessage('system', '🏆 CATEGORY IS — 3 rounds · panel scores · house scoreboard (this tab only)');
+    await advanceBallroomRound();
+  }
+
+  async function advanceBallroomRound() {
+    if (!ballroom) return;
+    const cat = pick(unusedBallCategories());
+    ballroom.category = cat;
+    ballroom.usedCats.push(cat.id);
+    ballroom.phase = 'serve';
+    addMessage('system', `Round ${ballroom.round}/${ballroom.maxRounds} · CATEGORY IS: ${cat.title}`);
+    addMessage('bot',
+      `The floor is yours. ${cat.prompt}\n\nType your serve. The panel is petty and paying attention.`,
+      { isGayified: true, source: 'studio' }
+    );
+    showToast(`🏆 Round ${ballroom.round}: ${cat.title}`);
+  }
+
+  async function judgeBallroomServe(serveText) {
+    const b = ballroom;
+    if (!b || !b.category) return;
+    b.phase = 'judging';
+    const cat = b.category;
+    const typing = showTyping();
+    await sleep(500 + Math.random() * 400);
+
+    const score = scoreServe(serveText);
+    const critique = critiqueForScore(score, serveText, cat);
+    removeTyping(typing);
+
+    b.rounds.push({ title: cat.title, score, serve: serveText.slice(0, 120) });
+    addMessage('bot', critique, { isGayified: true, source: 'studio' });
+    markUsedLine(critique);
+
+    // Panel side-chatter
+    const reads = panelReads(score, serveText, cat.title);
+    for (const line of reads) {
+      await sleep(380);
+      addMessage('side', line, { side: true });
+    }
+
+    // Scoreboard as system-styled bot bubble via HTML injection — use system text
+    addMessage('system', `SCOREBOARD · Round ${b.round}: ${score}/10 · Running: ${b.rounds.reduce((s, r) => s + r.score, 0).toFixed(1)}/30`);
+
+    // Also show rich scoreboard in a bot message
+    const board = renderScoreboardHTML(b);
+    const row = document.createElement('div');
+    row.className = 'msg-row system';
+    row.innerHTML = `<div style="max-width:94%;width:100%;">${board}</div>`;
+    $('messages').appendChild(row);
+    $('messages').scrollTop = $('messages').scrollHeight;
+
+    updateSlayScore(Math.round(score));
+    if (score >= 9) triggerConfetti(40);
+
+    if (b.round >= b.maxRounds) {
+      await finishBallroom();
+    } else {
+      b.round += 1;
+      await sleep(700);
+      await advanceBallroomRound();
+    }
+  }
+
+  async function finishBallroom() {
+    const b = ballroom;
+    const total = b.rounds.reduce((s, r) => s + r.score, 0);
+    const avg = total / b.rounds.length;
+    let title = 'Chip in the House';
+    if (avg >= 9) title = 'House Legend';
+    else if (avg >= 7.5) title = 'Mother of the Floor';
+    else if (avg >= 6) title = 'Solid Runway';
+    else if (avg >= 4.5) title = 'Needs a Rematch';
+
+    if (avg >= 7.5) awardBadge('mother');
+    if (avg >= 9) awardBadge('icon');
+
+    addMessage('system', `🏁 FINAL · ${total.toFixed(1)}/30 · ${title}`);
+    addMessage('bot',
+      `Ballroom closed. Final house score: ${total.toFixed(1)}/30 — ${title}. ` +
+      (avg >= 7.5
+        ? 'The panel is standing. Screenshot the scoreboard energy before you burn the tab.'
+        : 'Rematch available anytime — hit Category Is and rebuild the legend.'),
+      { isGayified: true, source: 'studio' }
+    );
+    const row = document.createElement('div');
+    row.className = 'msg-row system';
+    row.innerHTML = `<div style="max-width:94%;width:100%;">${renderScoreboardHTML(b)}</div>`;
+    $('messages').appendChild(row);
+    $('messages').scrollTop = $('messages').scrollHeight;
+
+    triggerConfetti(avg >= 7 ? 55 : 25);
+    showToast(`🏁 ${title} · ${total.toFixed(1)}/30`);
+    ballroom = null;
+    gameMode = null;
+  }
 
   async function runGame(type) {
     haptic();
+    if (type === 'category') {
+      await startBallroom();
+      return;
+    }
     gameMode = type;
     if (type === 'roast') {
       awardBadge('roast');
-      addMessage('system', '🔥 ROAST MODE — tell me something about yourself. I will be lovingly unhinged.');
-      addMessage('bot', pick([
-        "Okay roast booth is open. Give me one fact — job, fit, ex, city — and I will serve it medium-well with love.",
-        "Sit. Confess one thing. I promise the burn will be couture."
-      ]), { isGayified: true });
-      return;
-    }
-    if (type === 'category') {
-      const cats = [
-        "CATEGORY IS: Corporate gay survival realness",
-        "CATEGORY IS: Ex who saw you thriving",
-        "CATEGORY IS: Grocery store main character",
-        "CATEGORY IS: Soft launch, hard launch, launch cancelled",
-        "CATEGORY IS: Delulu with a business plan",
-        "CATEGORY IS: Looking expensive on a budget"
-      ];
-      const cat = pick(cats);
-      addMessage('system', '🏆 BALLROOM — ' + cat);
-      await deliverComedy(`Play ballroom judge for: ${cat}. Score me and tell me how to win the category.`, { skipCoven: false });
+      addMessage('system', '🔥 ROAST MODE — one fact. Lovingly unhinged. Studio bits, no repeats.');
+      const opener = pickFresh([
+        "Roast booth open. One fact — job, fit, ex, city — medium-well with love.",
+        "Sit. Confess one thing. The burn will be couture.",
+        "Give me ammunition. I bring moisturizer for after."
+      ], usedLineFP);
+      addMessage('bot', opener, { isGayified: true, source: 'studio' });
       return;
     }
     if (type === 'hotseat') {
       const qs = [
-        "Hot seat: what's the messiest text you've sent this year?",
-        "Hot seat: who are we still not over and why is the answer an ex?",
-        "Hot seat: rate your last outfit from 'hate crime' to 'mother'.",
-        "Hot seat: what's your villain origin story in under 2 sentences?",
-        "Hot seat: if the groupchat saw your camera roll, what gets you cancelled?"
-      ];
+        "Hot seat: messiest text you've sent this year?",
+        "Hot seat: who are we still not over — and why is it an ex?",
+        "Hot seat: last outfit from 'hate crime' to 'mother'?",
+        "Hot seat: villain origin story in under two sentences.",
+        "Hot seat: camera roll cancel risk — what is it?"
+      ].filter(q => !wasUsed(q));
       addMessage('system', '🎤 HOT SEAT — answer or get read');
-      addMessage('bot', pick(qs), { isGayified: true });
+      addMessage('bot', pick(qs.length ? qs : ["Hot seat: what's the tea?"]), { isGayified: true, source: 'studio' });
       return;
     }
     if (type === 'tea') {
-      addMessage('system', '🍵 CONFESSIONAL — private tab, ephemeral tea. Spill.');
-      addMessage('bot', pick([
-        "Lights low. Mic hot. What's the tea you haven't told the groupchat yet?",
-        "This booth is sealed. When the tab closes, it's gone. Now: who did what?"
-      ]), { isGayified: true });
+      addMessage('system', '🍵 CONFESSIONAL — private tab. Close = gone.');
+      addMessage('bot', pickFresh([
+        "Lights low. Mic hot. Tea the groupchat doesn't get — go.",
+        "Sealed booth. Who did what? Names optional. Crimes mandatory."
+      ], usedLineFP), { isGayified: true, source: 'studio' });
       return;
     }
     if (type === 'gooff') {
       const seed = sessionMemory.length
         ? sessionMemory[sessionMemory.length - 1].user
         : "whatever chaos you're currently embodying";
+      gameMode = null;
       await deliverComedy(
-        `Go completely off about: ${seed}. Maximum unhinged monologue. Then dare me to do something funny.`
+        `Go completely off about: ${seed}. Maximum unhinged monologue. Then dare me.`,
+        { forceStudio: true }
       );
       return;
     }
@@ -1905,8 +2176,17 @@ ${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
       showToast("This ate — +5 slay 🔥");
       triggerConfetti(30);
     } else {
-      showToast("Mid noted. Regenerating personality…");
+      showToast("Mid noted. Studio will try harder…");
     }
+  }
+
+  function resetComedySession() {
+    usedBitIds = new Set();
+    usedLineFP = new Set();
+    usedCovenFP = new Set();
+    recentBotTexts = [];
+    ballroom = null;
+    gameMode = null;
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -2070,16 +2350,26 @@ Try the Demo button. Upload a pic. Get roasted with love.`;
     playSendSound();
     haptic();
 
-    // Game-aware local spice
-    if (gameMode === 'roast') {
-      gameMode = null;
-      await deliverComedy(`Roast me lovingly based on: ${value}`);
+    try {
+      // Killer game takes priority
+      if (ballroom && ballroom.phase === 'serve') {
+        await judgeBallroomServe(value);
+        return;
+      }
+      if (gameMode === 'roast') {
+        gameMode = null;
+        await deliverComedy(value, { forceStudio: true, forcedTopics: ['roast', ...detectTopics(value)] });
+        return;
+      }
+      if (gameMode === 'hotseat' || gameMode === 'tea') {
+        gameMode = null;
+        await deliverComedy(value, { forceStudio: chance(0.55) });
+        return;
+      }
+      await deliverComedy(value);
+    } finally {
       isBusy = false;
-      return;
     }
-
-    await deliverComedy(value);
-    isBusy = false;
   }
 
   function usePrompt(text) {
@@ -2090,16 +2380,16 @@ Try the Demo button. Upload a pic. Get roasted with love.`;
   function clearChat() {
     messages = [];
     sessionMemory = [];
-    gameMode = null;
+    resetComedySession();
     const c = $('messages');
     c.innerHTML = '';
     seedEmpty();
-    addMessage('system', 'New chat. Same private tab. Previous drama evaporated.');
+    addMessage('system', 'New chat. Studio library refreshed. Previous drama evaporated.');
     addMessage('bot', pick([
       "Clean slate. Make it messier. What's the opening number?",
-      "Fresh chat energy. Don't waste it on small talk — give me plot."
-    ]), { isGayified: true });
-    showToast("New chat ✨");
+      "Fresh chat. Don't waste it on small talk — give me plot. Or hit Category Is."
+    ]), { isGayified: true, source: 'studio' });
+    showToast("New chat · anti-repeat reset ✨");
   }
 
   function burnSession() {
@@ -2111,14 +2401,14 @@ Try the Demo button. Upload a pic. Get roasted with love.`;
     lastUploadedImage = null;
     slayScore = 0;
     currentStreak = 0;
-    gameMode = null;
+    resetComedySession();
     updateSlayScore(0);
     const c = $('messages');
     c.innerHTML = '';
     triggerConfetti(80);
     addMessage('system', '🔥 SESSION BURNED — ashes only. Nothing left to subpoena.');
     setTimeout(() => {
-      addMessage('bot', "Well. That was dramatic. I respect it. Rebuilding from the ashes… hi again, criminal. 💅", { isGayified: true });
+      addMessage('bot', "Well. That was dramatic. I respect it. Rebuilding from the ashes… hi again, criminal. 💅", { isGayified: true, source: 'studio' });
       seedEmpty(false);
     }, 600);
     showToast("Burned. Evidence gone.");
@@ -2143,16 +2433,19 @@ Try the Demo button. Upload a pic. Get roasted with love.`;
   function toggleLLM() {
     llmEnabled = !llmEnabled;
     updateLlmIcon();
-    showToast(llmEnabled ? "AI replies on" : "AI off — pure local comedy");
+    showToast(llmEnabled
+      ? "Live AI on — quality-gated; Studio if it flops"
+      : "Live off — pure Studio (authored comedy)");
   }
 
   function updateLlmIcon() {
     const chip = $('llm-chip');
     const st = $('llm-status');
-    const ai = $('ai-status-text');
-    if (chip) chip.classList.toggle('off', !(openrouterApiKey && llmEnabled));
-    if (st) st.textContent = (openrouterApiKey && llmEnabled) ? 'AI' : 'off';
-    if (ai) ai.textContent = (openrouterApiKey && llmEnabled) ? 'on' : 'off';
+    const src = $('source-status-text');
+    const live = !!(openrouterApiKey && llmEnabled);
+    if (chip) chip.classList.toggle('off', !live);
+    if (st) st.textContent = live ? 'LIVE' : 'STUDIO';
+    if (src) src.textContent = live ? 'Studio + Live' : 'Studio only';
   }
 
   // ═══════════════════════════════════════════════════════════

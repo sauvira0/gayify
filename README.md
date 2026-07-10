@@ -1,8 +1,6 @@
 # 💅 gayify
 
-**World-class gay comedy chat.** Type anything → get multi-beat theatrical chaos. Upload a pic → get gayified. Private per-tab. Close = gone forever.
-
-Built to feel like a product, not a toy: cinematic demo, roast/ballroom games, persona theater, local comedy engine + optional free AI layer.
+**Gay comedy chat with authored depth.** Type anything → multi-beat Studio bits (anti-repeat). Optional Live AI when it clears a quality gate. **Category Is** is the killer game (3 rounds, panel, scoreboard). Private per-tab. Close = gone forever.
 
 **🌐 Live:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 

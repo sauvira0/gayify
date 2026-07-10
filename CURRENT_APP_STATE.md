@@ -1,6 +1,6 @@
 # gayify / ChakkaAI — Current App State
 
-**Snapshot:** World-class comedy product upgrade (compete with Fable-tier demos). Full single-file rewrite with multi-beat theater, games, splash, distinctive club/ballroom UI.
+**Snapshot:** Comedy depth upgrade — authored Studio bit library (~95 multi-beat bits), session anti-repeat, honest LIVE vs STUDIO labels, killer multi-round Category Is with panel + scoreboard.
 
 **Live:** https://sauvira0.github.io/gayify/  
 **Repo:** https://github.com/sauvira0/gayify
@@ -16,15 +16,24 @@
 
 ## What ships now
 
-### Comedy engine
-- Expanded special-case replies + replacements + theatrical full rewrites when no word hits
-- Persona wrappers (6 vibes) mutate language
-- **Multi-beat delivery:** main response → optional coven side-chat → optional follow-up/callback
-- Short **sessionMemory** (last 8) for callbacks + LLM context (still ephemeral)
+### Comedy engine (Studio)
+- **STUDIO_BITS**: ~95 authored multi-beat bits (main + optional side + follow), topic-tagged
+- **Anti-repeat**: usedBitIds, usedLineFP, usedCovenFP, recentBotTexts — no same bit twice per session
+- Topic detection → best unused bit; general pool recycles only when exhausted
+- **Multi-beat delivery:** main → coven → follow/callback
+- **sessionMemory** for callbacks + LLM context (ephemeral)
+- Persona polish is light (doesn't smother authored lines)
+
+### Honest AI / local split
+- **STUDIO** (gold badge) = authored comedy — default quality path
+- **LIVE** (mint badge) = OpenRouter free, **quality-gated** (length, anti-repeat, no AI-disclose, not near-dupe)
+- If Live fails the gate → Studio (not a shame path — the written show)
+- Toggle shows LIVE vs STUDIO; header says "Studio + Live" or "Studio only"
 
 ### Games
-- Roast Me, Category Is, Hot Seat, Spill Tea, Go Off, Vibe Roulette
-- Demo = cinematic scripted multi-beat showcase
+- **Category Is (killer game):** 3 rounds, 10 categories, panel reads, scoring rubric, running scoreboard /30, titles (House Legend → Chip), badges
+- Roast Me (force Studio roast topics), Hot Seat, Spill Tea, Go Off, Vibe Roulette
+- Demo = cinematic multi-beat showcase
 
 ### Image
 - Vibe sampling, persona filters, sparkles, bokeh, gold tag, border
