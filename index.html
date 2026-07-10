@@ -116,10 +116,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 24px 20px calc(24px + var(--safe-b));
       background: radial-gradient(circle at 50% 40%, #1a0a24 0%, #07040c 70%);
       transition: opacity 0.55s ease, visibility 0.55s;
     }
     #splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+    .splash-panel { display: none; width: min(360px, 100%); text-align: center; }
+    .splash-panel.active { display: block; animation: pop 0.35s cubic-bezier(0.34, 1.4, 0.64, 1); }
     .splash-logo {
       font-size: clamp(3rem, 12vw, 4.5rem);
       line-height: 1;
@@ -136,6 +139,43 @@
       -webkit-text-fill-color: transparent;
       animation: shimmer-text 3s linear infinite;
     }
+    .splash-btn {
+      margin-top: 20px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff4db8, #b44dff);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 12px 32px -10px rgba(255,77,184,0.65);
+      touch-action: manipulation;
+      min-height: 48px;
+      width: min(100%, 280px);
+    }
+    .splash-btn:active { transform: scale(0.97); }
+    .splash-btn.ghost {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: none;
+      color: rgba(255,255,255,0.75);
+      margin-top: 10px;
+    }
+    .a2hs-steps {
+      text-align: left;
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.8);
+    }
+    .a2hs-steps li { margin: 8px 0; }
+    .a2hs-steps strong { color: #ffb0dc; }
     @keyframes shimmer-text {
       to { background-position: 200% center; }
     }
@@ -784,15 +824,25 @@
   </style>
 </head>
 <body class="grain">
-  <!-- Splash -->
+  <!-- Splash: enter → optional Add to Home Screen → app -->
   <div id="splash">
-    <div class="splash-logo">💅</div>
-    <div class="splash-title">gayify</div>
-    <p style="margin:10px 0 0;color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:0.04em;">dry wit · extremely gay · private · ephemeral</p>
-    <button id="splash-enter" style="margin-top:28px;padding:12px 28px;border-radius:999px;border:none;background:linear-gradient(135deg,#ff4db8,#b44dff);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 12px 32px -10px rgba(255,77,184,0.65);">
-      ENTER THE FUNCTION ✦
-    </button>
-    <p style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.28);">close the tab = evidence gone forever</p>
+    <div class="splash-panel active" id="splash-home">
+      <div class="splash-logo">💅</div>
+      <div class="splash-title">gayify</div>
+      <p style="margin:10px 0 0;color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:0.04em;">dry wit · extremely gay · private · ephemeral</p>
+      <button type="button" class="splash-btn" id="splash-enter">ENTER THE FUNCTION ✦</button>
+      <p style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.28);">close the tab = evidence gone forever</p>
+    </div>
+    <div class="splash-panel" id="splash-a2hs">
+      <div style="font-size:40px;line-height:1;">📱</div>
+      <div class="display" style="font-size:1.45rem;font-weight:800;margin-top:10px;color:#fff;">Add to Home Screen</div>
+      <p style="margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.55);line-height:1.4;">Feels like an app. Chat still dies when you close it — privacy stays.</p>
+      <ol class="a2hs-steps" id="a2hs-steps">
+        <!-- filled by JS for iOS / Android / desktop -->
+      </ol>
+      <button type="button" class="splash-btn" id="splash-install">Install / Add now</button>
+      <button type="button" class="splash-btn ghost" id="splash-skip">Skip — just chat</button>
+    </div>
   </div>
 
   <div class="app theme-femme" id="app">
@@ -953,8 +1003,10 @@
   let ballroom = null;
 
   // Live AI optional; Studio is authored premium path
+  // Default may flip to Studio-only on slow networks (see preferStudioOnSlowNetwork)
   let openrouterApiKey = "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";
   let llmEnabled = true;
+  let studioOnlyReason = null; // session note when we auto-disable Live
 
   const $ = (id) => document.getElementById(id);
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -2857,38 +2909,122 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 
+  function isStandaloneApp() {
+    return window.matchMedia('(display-mode: standalone)').matches || !!navigator.standalone;
+  }
+
+  function isIOSDevice() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  function isAndroidDevice() {
+    return /Android/i.test(navigator.userAgent);
+  }
+
+  function isSlowNetwork() {
+    if (!navigator.onLine) return true;
+    const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!c) return false;
+    if (c.saveData) return true;
+    const t = (c.effectiveType || '').toLowerCase();
+    if (t === 'slow-2g' || t === '2g' || t === '3g') return true;
+    // Very low downlink (Mbps)
+    if (typeof c.downlink === 'number' && c.downlink > 0 && c.downlink < 1.2) return true;
+    if (typeof c.rtt === 'number' && c.rtt > 600) return true;
+    return false;
+  }
+
+  /** Studio-only on slow networks so comedy stays instant & hilarious */
+  function preferStudioOnSlowNetwork() {
+    if (!isOnline() || isSlowNetwork()) {
+      llmEnabled = false;
+      studioOnlyReason = !isOnline() ? 'offline' : 'slow';
+      return true;
+    }
+    return false;
+  }
+
   function setupInstallPrompt() {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
-      maybeShowInstallBanner();
     });
-    // iOS: show manual A2HS tip once per session
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-    if (isIOS && !isStandalone) {
-      setTimeout(() => maybeShowInstallBanner(true), 8000);
-    }
 
     const yes = $('install-yes');
     const no = $('install-no');
     if (yes) yes.addEventListener('click', async () => {
-      if (deferredInstallPrompt) {
-        deferredInstallPrompt.prompt();
-        try { await deferredInstallPrompt.userChoice; } catch (e) {}
-        deferredInstallPrompt = null;
-      } else {
-        // iOS instructions
-        showToast("Share → Add to Home Screen 📱");
-      }
+      await triggerInstallFlow();
       hideInstallBanner();
     });
     if (no) no.addEventListener('click', hideInstallBanner);
   }
 
+  async function triggerInstallFlow() {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      try {
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          showToast("Installed — home screen icon incoming 💅");
+        }
+      } catch (e) {}
+      deferredInstallPrompt = null;
+      return;
+    }
+    if (isIOSDevice()) {
+      showToast("Safari: Share → Add to Home Screen 📱");
+    } else if (isAndroidDevice()) {
+      showToast("Browser menu → Install app / Add to Home screen");
+    } else {
+      showToast("Browser menu → Install gayify (if available)");
+    }
+  }
+
+  function fillA2HSSteps() {
+    const ol = $('a2hs-steps');
+    if (!ol) return;
+    let steps;
+    if (isIOSDevice()) {
+      steps = [
+        'Open this site in <strong>Safari</strong> (not Instagram/Chrome in-app).',
+        'Tap the <strong>Share</strong> button (square with arrow).',
+        'Scroll and tap <strong>Add to Home Screen</strong>.',
+        'Tap <strong>Add</strong> — open from your home screen next time.'
+      ];
+    } else if (isAndroidDevice()) {
+      steps = [
+        'Tap the <strong>⋮ menu</strong> in Chrome (or your browser).',
+        'Choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.',
+        'Confirm — launch gayify like any app.',
+        'Or tap <strong>Install / Add now</strong> below if the prompt appears.'
+      ];
+    } else {
+      steps = [
+        'On phone: open this link in your mobile browser.',
+        'Use the browser menu → <strong>Install</strong> / <strong>Add to Home Screen</strong>.',
+        'Desktop Chrome may show an install icon in the address bar.',
+        'Chat stays private either way — close tab = gone.'
+      ];
+    }
+    ol.innerHTML = steps.map((s) => `<li>${s}</li>`).join('');
+  }
+
+  function showSplashPanel(id) {
+    document.querySelectorAll('.splash-panel').forEach((p) => p.classList.remove('active'));
+    const el = $(id);
+    if (el) el.classList.add('active');
+  }
+
+  function enterAppFromSplash() {
+    $('splash').classList.add('hide');
+    haptic();
+    triggerConfetti(35);
+    init();
+  }
+
   function maybeShowInstallBanner(iosHint) {
-    if (installBannerDismissed) return;
-    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+    if (installBannerDismissed || isStandaloneApp()) return;
     const el = $('install-banner');
     if (!el) return;
     if (!deferredInstallPrompt && !iosHint) return;
@@ -3033,6 +3169,8 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
 
   function toggleLLM() {
     llmEnabled = !llmEnabled;
+    if (llmEnabled) studioOnlyReason = null;
+    else if (!studioOnlyReason) studioOnlyReason = 'manual';
     updateLlmIcon();
     showToast(llmEnabled
       ? "Live AI on — quality-gated; Studio if it flops"
@@ -3118,6 +3256,9 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   // ═══════════════════════════════════════════════════════════
 
   function init() {
+    // Slow network → Studio-only by default (instant comedy, no waiting on free AI)
+    preferStudioOnSlowNetwork();
+
     renderPersonas();
     updateSlayScore(0);
     updateLlmIcon();
@@ -3149,13 +3290,27 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     window.addEventListener('offline', () => {
       if (llmEnabled) {
         llmEnabled = false;
+        studioOnlyReason = 'offline';
         updateLlmIcon();
         showToast("Offline — Studio comedy still works 💅");
       }
     });
     window.addEventListener('online', () => {
-      showToast("Back online — tap LIVE to re-enable AI if you want");
+      showToast("Back online — tap LIVE if you want AI (Studio is always sharp)");
     });
+
+    // Connection quality changes mid-session
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn && conn.addEventListener) {
+      conn.addEventListener('change', () => {
+        if (isSlowNetwork() && llmEnabled) {
+          llmEnabled = false;
+          studioOnlyReason = 'slow';
+          updateLlmIcon();
+          showToast("Network got slow — Studio-only for snappy replies");
+        }
+      });
+    }
 
     // FOMO ticker
     setInterval(() => {
@@ -3164,35 +3319,60 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
       if (el) el.textContent = sceneCount.toLocaleString();
     }, 18000);
 
-    if (openrouterApiKey && llmEnabled) {
-      setTimeout(() => showToast("Live AI ready — Studio is always on 🤖"), 1600);
-    }
+    setTimeout(() => {
+      if (studioOnlyReason === 'slow') {
+        showToast("Slow network → Studio-only (hilarious, instant). Tap LIVE to force AI.");
+      } else if (studioOnlyReason === 'offline') {
+        showToast("Offline → pure Studio comedy 💅");
+      } else if (openrouterApiKey && llmEnabled) {
+        showToast("Live AI ready — Studio is always on 🤖");
+      } else if (!llmEnabled) {
+        showToast("Studio comedy on — tap LIVE for AI");
+      }
+    }, 1400);
 
     // Mobile: don't force-focus (opens keyboard too early). Desktop: focus.
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     if (!coarse) {
       setTimeout(() => $('message-input').focus(), 800);
     }
-    console.log('%c[ gayify ] mobile-first ephemeral comedy. close tab = gone. add to home screen.', 'color:#ff4db8;font-weight:bold;');
+    console.log('%c[ gayify ] mobile-first web. slow net = Studio. A2HS. close tab = gone.', 'color:#ff4db8;font-weight:bold;');
   }
 
   // Boot mobile shell immediately (before splash ends)
   setupMobileChrome();
   registerServiceWorker();
   setupInstallPrompt();
+  fillA2HSSteps();
+  preferStudioOnSlowNetwork(); // early — icon reflects on first paint after init
 
-  // Splash
+  // Splash flow: Enter → A2HS how-to (if not installed) → app
   $('splash-enter').addEventListener('click', () => {
-    $('splash').classList.add('hide');
     haptic();
-    triggerConfetti(35);
-    init();
+    if (isStandaloneApp()) {
+      enterAppFromSplash();
+      return;
+    }
+    // Phone: show install education; desktop with install prompt: show it; else enter
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
+    if (coarse || deferredInstallPrompt || isIOSDevice()) {
+      fillA2HSSteps();
+      showSplashPanel('splash-a2hs');
+    } else {
+      enterAppFromSplash();
+    }
   });
 
-  // Mobile: allow tap anywhere on splash to enter
-  $('splash').addEventListener('click', (e) => {
-    if (e.target.closest('#splash-enter')) return;
-    // only if they tap the void after a moment of reading
+  $('splash-install').addEventListener('click', async () => {
+    haptic();
+    await triggerInstallFlow();
+    // Still enter app after install attempt
+    setTimeout(enterAppFromSplash, 400);
+  });
+
+  $('splash-skip').addEventListener('click', () => {
+    haptic();
+    enterAppFromSplash();
   });
   </script>
 </body>
