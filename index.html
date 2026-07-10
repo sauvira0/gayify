@@ -7,7 +7,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0a0610">
   <title>gayify · make it gayer 💅</title>
-  <meta name="description" content="ChakkaAI — the funniest, fiercest gay comedy chat. Type anything. Get unhinged theater. Private per-tab. Close = gone forever.">
+  <meta name="description" content="ChakkaAI — Monday-grade dry wit, extremely gay. Hilarious on purpose. Type anything. Get unhinged theater. Private per-tab. Close = gone forever.">
   <meta property="og:title" content="gayify · make it gayer 💅">
   <meta property="og:description" content="The world-class gay comedy app. Multi-beat drama, pic gayification, 6 personas, games. Ephemeral & private.">
   <meta property="og:url" content="https://sauvira0.github.io/gayify/">
@@ -682,7 +682,7 @@
   <div id="splash">
     <div class="splash-logo">💅</div>
     <div class="splash-title">gayify</div>
-    <p style="margin:10px 0 0;color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:0.04em;">make anything gayer · private · ephemeral</p>
+    <p style="margin:10px 0 0;color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:0.04em;">dry wit · extremely gay · private · ephemeral</p>
     <button id="splash-enter" style="margin-top:28px;padding:12px 28px;border-radius:999px;border:none;background:linear-gradient(135deg,#ff4db8,#b44dff);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 12px 32px -10px rgba(255,77,184,0.65);">
       ENTER THE FUNCTION ✦
     </button>
@@ -755,7 +755,7 @@
       <div id="messages"></div>
     </main>
 
-    <div class="footer-tag">PRIVATE · EPHEMERAL · WORLD-CLASS CHAOS</div>
+    <div class="footer-tag">PRIVATE · EPHEMERAL · HILARIOUS ON PURPOSE</div>
 
     <!-- Composer -->
     <div class="composer">
@@ -954,15 +954,16 @@
 
   // Light remix so even recycled lines feel new (still queer, still funny)
   const SPICE_PRE = [
-    "Okay but — ", "Not to be dramatic, but ", "Periodt: ", "Listen, mother — ",
-    "I'm saying this with love and rhinestones: ", "Groupchat note: ", "Unfiltered: ",
-    "Between us girls — ", "Live from the function: ", "No notes except these notes: "
+    "Okay but — ", "Not to be dramatic, but ", "Listen — ", "Ugh, fine — ",
+    "I'm saying this with love and a raised eyebrow: ", "Groupchat note: ", "Unfiltered: ",
+    "Between us — ", "Quick: ", "No notes except these notes: ",
+    "Against my better judgment — ", "Dryly: ", "For the minutes: "
   ];
   const SPICE_POST = [
     " And I said what I said.", " The dolls are taking minutes.", " That's on queer time.",
-    " Screenshot for the archive.", " The leather bar agrees.", " Mother, stand up.",
-    " We are so back.", " Don't make me say it twice.", " That's the tea with ice.",
-    " Gender is optional; this take is not."
+    " Screenshot for the archive.", " Don't make me sincere.", " Mother, stand up.",
+    " We are so back.", " Don't make me say it twice.", " Embarrassing how good that was.",
+    " Gender is optional; this take is not.", " Moving on before I care harder."
   ];
   const QUEER_FLAIR = ["💅","✨","🔥","🌀","👑","🖤","🐺","🏳️‍🌈","💖","🌈","⛓️","🌟"];
 
@@ -983,231 +984,269 @@
   }
 
   // ═══════════════════════════════════════════════════════════
-  // STUDIO COMEDY — authored bits + anti-repeat
+  // STUDIO COMEDY — Monday-grade wit + queer groupchat soul
+  // Dry. Specific. Reluctant affection. Surgical shade.
   // ═══════════════════════════════════════════════════════════
 
   const STUDIO_BITS = [
-    {id:'g1',t:['greet'],main:"The door just did a double-take. You walked in and three groupchats lit up like a runway emergency. Sit. Spill. I already have a title for your documentary.",side:"💅 @dollcommittee: \"not the entrance\"",follow:"Opening number: work crime, ex crime, or outfit crime?"},
-    {id:'g2',t:['greet'],main:"Hi criminal. The coven put money on you showing up unhinged before noon. Don't disappoint the bettors.",side:"👑 @motherofthegroup: \"pay the girls\"",follow:"What's the first mess on the menu?"},
-    {id:'g3',t:['greet'],main:"Oh it's you. I paused my own chaos for this. That is love, or at least excellent taste in entertainment.",follow:"Give me one sentence of plot. I'll do the rest with jazz hands."},
-    {id:'g4',t:['greet'],main:"Welcome back to the function. Hydrate. Unclench. Then tell me who we're reading today.",side:"🐺 @butchcouncil: \"respectfully, begin\""},
-    {id:'g5',t:['greet'],main:"You rang? I brought shade, snacks, and a completely unlicensed therapy license. Proceed.",follow:"Soft launch your drama. I'll hard-launch the commentary."},
-    {id:'g6',t:['greet'],main:"The function is open and you're early to your own scandal. Good. I hate waiting for good television.",follow:"What are we surviving today?"},
-    {id:'h1',t:['howare'],main:"Emotionally I'm a limited series. Professionally I'm a hate crime. Spiritually? Serving. Your turn — full weather report, no corporate filter.",follow:"Sunny with a chance of situationship, or what?"},
-    {id:'h2',t:['howare'],main:"Thriving in a threatening way. The leather bar already texted 'you good?' which is how you know it's serious.",side:"🖤 @sireninthecorner: \"define good\""},
-    {id:'h3',t:['howare'],main:"I'm great if we count delusion as a mineral. Now stop interviewing me — this show is about YOUR mess.",follow:"Scale of 1–icon: how are we actually doing?"},
-    {id:'h4',t:['howare'],main:"Running on iced coffee, unresolved plotlines, and the will to be famous in the groupchat. You?",follow:"Be honest. The dolls can smell a PR answer."},
-    {id:'w1',t:['work'],main:"The corporate gays are in their final-girl era and the Slack statuses are lying. Who scheduled this assault on joy — walkout or fashion show?",side:"💼 @officeauntie: \"reply-all is a weapon\"",follow:"Name the villain. Job title optional. Aura required."},
-    {id:'w2',t:['work'],main:"A meeting that could've been a cry in the bathroom. Classic. You're not unprofessional — you're over-cast in a bad production.",follow:"What did they say that made your soul clock out?"},
-    {id:'w3',t:['work'],main:"Boss behavior detected. Filing under 'petty workplace documentary, episode 12.' Did they CC the company or just your last nerve?",side:"🌟 @campangel: \"the notes app is open\""},
-    {id:'w4',t:['work'],main:"Friday 4pm meeting energy is a hate crime with a calendar invite. You're allowed to be unwell about it. I insist.",follow:"Surviving, sabotaging, or serving looks on mute?"},
-    {id:'w5',t:['work'],main:"Your job is giving 'I pay rent with my personality and they still want a TPS report.' Tragic. Iconic. Sue-adjacent.",follow:"One sentence: what happened in the room?"},
-    {id:'w6',t:['work'],main:"Zoom grid of the damned. Someone's eating on camera and calling it leadership. Tell me you weren't the only one with the light on.",side:"🌀 @riotchile: \"camera off is self-care\""},
-    {id:'w7',t:['work'],main:"Promotion? Layoff rumor? Mystery reorg? Corporate loves a plot twist with no character development. Popcorn ready.",follow:"Celebrating, mourning, or LinkedIn in the bathroom?"},
-    {id:'w8',t:['work'],main:"Email tone is a hate language. If they wrote 'per my last email' you're legally allowed to become a problem.",follow:"Paste the vibe. Not the email — the vibe."},
-    {id:'w9',t:['work'],main:"Your coworker is auditioning for villain and nobody cast them. Tragic for them. Content for us.",side:"💅 @dollcommittee: \"name them with initials only\""},
-    {id:'e1',t:['ex'],main:"Ex sighting protocol: check outfit, posture, and whether you looked expensive while suffering. If yes — content, not a loss.",side:"📱 @exwatcher: \"screenshot the aura\"",follow:"Did they see you? Did you smile? Truth only."},
-    {id:'e2',t:['ex'],main:"The situationship is a limited series with bad writers. Who left who on read — blocking or hotter in silence?",follow:"Timestamps for the archive. I mean it."},
-    {id:'e3',t:['ex'],main:"They texted. I can hear the notification in your soul. Do not answer until we workshop the reply like the Met Gala.",side:"💅 @dollcommittee: \"drafts only\""},
-    {id:'e4',t:['ex'],main:"U-Haul energy in this economy? The lesbian council is proud and concerned. How many days? Be honest.",follow:"Moving in or moving on?"},
-    {id:'e5',t:['ex'],main:"Talking stage longer than some marriages. That's not patience — that's a hostage situation with good lighting.",follow:"What text aged like milk?"},
-    {id:'e6',t:['ex'],main:"Soft launch, hard crash, emotional blackout. Sequel is you thriving in better trousers.",side:"👑 @motherofthegroup: \"wardrobe change mandatory\""},
-    {id:'e7',t:['ex'],main:"If they're 'not ready' but watching your stories, that's community theater. Close the curtain.",follow:"Block, mute, or public flourish?"},
-    {id:'e8',t:['ex'],main:"Breadcrumbing is not a diet. Spit it out. You deserve a full loaf or a clean exit.",follow:"Are we still snacking on almosts?"},
-    {id:'e9',t:['ex'],main:"The 'we should catch up' text is a haunted house. Do not enter without a plan and an outfit.",side:"🖤 @sireninthecorner: \"trapdoor detected\""},
-    {id:'f1',t:['feel'],main:"Exhausted but still that girl? That's the serve. Rest — fashionably, slightly threatening. The world can wait one nap.",follow:"Water, food, or unhinged vent first?"},
-    {id:'f2',t:['feel'],main:"Soft mode: you're allowed to be messy and still main character. I'm here. Then we make it couture.",side:"🖤 @sireninthecorner: \"hold, then roast the universe\""},
-    {id:'f3',t:['feel'],main:"Anxiety is a terrible intern — always urgent, never useful. Clock it, don't promote it. What's it lying about today?",follow:"Name the spiral. We'll outfit it and fire it."},
-    {id:'f4',t:['feel'],main:"Lonely is loud until the coven arrives. Consider this your groupchat in text form. Not alone in this tab.",follow:"Gentle, funny, or both stacked?"},
-    {id:'f5',t:['feel'],main:"Crying counts as cardio if we rebrand it. Tissue, playlist, then a petty plan. Order matters.",side:"🏳️‍🌈 @prideintern: \"hydration check\""},
-    {id:'f6',t:['feel'],main:"If today feels heavy, we set it down for one beat. No performance required. Then — if you want — we put rhinestones on the pain.",follow:"Want quiet company or a diversion bit?"},
-    {id:'p1',t:['food'],main:"Pasta that slapped? That's a personal brand. Seasoning is political and you voted correctly.",follow:"What did you make, and who was it meant to impress?"},
-    {id:'p2',t:['food'],main:"Coffee discourse is sacred. Serve, mid, or crime against beans? Full tasting note like All Stars: Baristas.",side:"☕ @butchcouncil: \"oat milk is neutral good\""},
-    {id:'p3',t:['food'],main:"Hungry and unhinged is a lifestyle. Carbs, light barista stalking, doll chaos — classic.",follow:"Cooking, takeout, or emotional support snacks?"},
-    {id:'p4',t:['food'],main:"Wine at 6 is self-care; wine at 3 is a plot point. Which chapter?",follow:"Solo glass or groupchat-enabled?"},
-    {id:'p5',t:['food'],main:"Brunch is a competitive sport and somebody always orders wrong on purpose for attention. Was it you?",side:"🥂 @campangel: \"mimosas are plot devices\""},
-    {id:'r1',t:['party'],main:"The function where the function is us. Serve, survive, or blackout with dignity? Leave no detail to invent.",side:"🌀 @riotchile: \"receipts or it didn't happen\"",follow:"Outfit first. Always."},
-    {id:'r2',t:['party'],main:"Pride was a riot and so are we. Lose a friend, find a friend, almost cry to Gaga — or did you even go?",follow:"Parade, afters, or emotional aftermath?"},
-    {id:'r3',t:['party'],main:"Club lighting fixed twelve problems and created four situationships. Tell me you didn't eye-contact trouble.",side:"🖤 @sireninthecorner: \"trouble looked back\""},
-    {id:'r4',t:['party'],main:"Leather bar called. They miss you. The new pup is asking questions. Go on.",follow:"Filthy detail count: one or three?"},
-    {id:'r5',t:['party'],main:"You left the party early and I respect the edit — or you stayed too late and became folklore. Which myth are we in?",follow:"What time did the night turn into a story?"},
-    {id:'q1',t:['queer'],main:"Egg in pieces, cows home. Welcome to gayer, messier, better outfits. How's your body today, baby?",side:"🏳️‍⚧️ @prideintern: \"welcome: snacks + rage\"",follow:"Soft celebration or theatrical debut?"},
-    {id:'q2',t:['queer'],main:"The gender is gendering and we are winning. Full gender weather report, please.",follow:"Pronouns, vibe, outfit triangle — go."},
-    {id:'q3',t:['queer'],main:"Butch, femme, bear, twink, enby chaos — buffet, no diet. Own the plate.",side:"🐺 @butchcouncil: \"seconds encouraged\""},
-    {id:'q4',t:['queer'],main:"Coming out is a hallway with bad lighting and excellent twists. You don't owe a press tour.",follow:"Who knows, who doesn't, who can wait?"},
-    {id:'q5',t:['queer'],main:"Chosen family roll call. Who's your emergency contact for emotional felonies?",follow:"Name one person who gets the unfiltered version."},
-    {id:'c1',t:['pet'],main:"Your pet is the main character; you're support. Correct. What did they witness?",follow:"Cat judgment or dog conspiracy?"},
-    {id:'c2',t:['pet'],main:"Obsessed with the animal. Concerned about the power dynamic. Pets always know about the ex.",side:"🐱 @dollcommittee: \"the cat has files\""},
-    {id:'c3',t:['pet'],main:"If your pet had a podcast it would ruin you and we'd all subscribe. What's episode one titled?",follow:"Spill the pet lore."},
-    {id:'d1',t:['drag'],main:"Category is: whatever you just said. 10s if the mug is mug and the story has stakes. Werk, then explain construction.",follow:"Realness, drama, or comedy?"},
-    {id:'d2',t:['drag'],main:"Death drop optional. Emotional death drop mandatory. Don't walk — arrive.",side:"👑 @motherofthegroup: \"ten… with a read\""},
-    {id:'d3',t:['drag'],main:"Lip sync for your life but the song is your last text thread. Would you win?",follow:"What song is the mess?"},
-    {id:'x1',t:['feral'],main:"Horny portion of the program. Say less — or everything. Notes are filthy and alphabetized.",follow:"Crush, app disaster, or theoretical thirst?"},
-    {id:'x2',t:['feral'],main:"Down bad is a lifestyle brand. Outfit change, eye contact, chaos. Report like a war correspondent.",side:"🔥 @leatherauntie: \"hydrate between thoughts\""},
-    {id:'x3',t:['feral'],main:"Thirst without strategy is just dehydration. Who is the target and what's the campaign?",follow:"Subtle or feral launch?"},
-    {id:'b1',t:['bored'],main:"Bored is illegal here. Category: Cunt in a Crisis. One thing that happened — I'll make performance art.",follow:"Work, romance, or sidewalk lore?"},
-    {id:'b2',t:['bored'],main:"Nothing to do? Incorrect. You have a groupchat, a face card, and me. Pick a problem to decorate.",side:"🌟 @campangel: \"boredom is a costume change\""},
-    {id:'b3',t:['bored'],main:"If you're bored I will invent a scandal and cast you as lead. Or you can give me real material. Your career.",follow:"Real tea or theatrical improv?"},
-    {id:'t1',t:['thanks'],main:"No YOU. You're the category. I'm the narrator losing my mind in the margins. Keep going.",follow:"What else is cooking?"},
-    {id:'t2',t:['thanks'],main:"Stop being sweet or I'll start a GoFundMe for our situationship. You're the moment; I'm the applause.",side:"💖 @softlaunch: \"gross. more please.\""},
-    {id:'s1',t:['sorry'],main:"Apology rejected. Rebrand as a plot twist. We don't shrink — we process and get hotter.",follow:"What were you about to apologize for? Make it fashion."},
-    {id:'s2',t:['sorry'],main:"Sorry is a beige outfit. Try again in a color. What actually happened?",follow:"Truth, then we style the redemption arc."},
-    {id:'m1',t:['morning'],main:"GM to the baddest bitch in this timezone. The sun saw your face card and clocked out. Coffee or chaos?",side:"🌅 @prideintern: \"SPF and shade\""},
-    {id:'m2',t:['morning'],main:"Morning. Stretch. Ruin someone's day with your personality. Hydrate between felonies.",follow:"What's the first agenda item for the chaos?"},
-    {id:'n1',t:['night'],main:"Sleep tight, dangerous creature. Dream of the perfect jacket and the ex who can't get over you.",follow:"One last tea before lights out?"},
-    {id:'n2',t:['night'],main:"Good night. Put the phone face down unless the tea is hot enough to burn. I'll keep the tab warm.",side:"🌙 @sireninthecorner: \"dream in velvet\""},
-    {id:'z1',t:['general'],main:"Okay so \"{q}\" just became the working title of your biopic. Expand before I invent the fanfic.",follow:"Director's cut — what happened right before?"},
-    {id:'z2',t:['general'],main:"Not you casually dropping \"{q}\" like the groupchat won't explode. I paused my life. Continue.",side:"💅 @dollcommittee: \"we are seated\""},
-    {id:'z3',t:['general'],main:"\"{q}\" is not a sentence — it's a plotline with product placement. Don't fade to black.",follow:"Who was there, and were you winning?"},
-    {id:'z4',t:['general'],main:"The documentary slow-zoomed on you saying \"{q}.\" Narrator: she was not, in fact, fine.",side:"🎬 @campangel: \"score swelling\""},
-    {id:'z5',t:['general'],main:"Hold on. \"{q}\" needs a panel, a prop cigarette, and three unsolicited opinions. Starting now.",follow:"Rate your chaos from 1 to 'function cancelled.'"},
-    {id:'z6',t:['general'],main:"You said \"{q}\" and somewhere an admin created EMERGENCY. I'm that chat.",follow:"Details. Vibes mandatory."},
-    {id:'z7',t:['general'],main:"Interesting. Dangerous. Slightly hot. \"{q}\" is doing numbers in my head.",side:"🖤 @sireninthecorner: \"say it again slower\""},
-    {id:'z8',t:['general'],main:"If \"{q}\" was a runway category, half the girls would be cut for lack of commitment. You? Still on the floor.",follow:"What are we winning tonight?"},
-    {id:'z9',t:['general'],main:"I read \"{q}\" and needed a seat, a snack, and legal counsel. Proceed with the crime.",follow:"Confess cleanly. I'll make it poetry."},
-    {id:'z10',t:['general'],main:"\"{q}\" has main-character disease and I support the diagnosis. Treatment: more story, less shame.",side:"👑 @motherofthegroup: \"prescribe chaos\""},
-    {id:'z11',t:['general'],main:"The way \"{q}\" exited your mouth and entered folklore… baby. Give me the director's commentary track.",follow:"Was this planned or pure instinct?"},
-    {id:'z12',t:['general'],main:"\"{q}\" is giving unhinged elegance. I'm taking notes for the house. Continue before I interrupt with jazz hands.",follow:"Who needs to hear this story next?"},
-    {id:'z13',t:['general'],main:"Stop. \"{q}\" just rearranged my furniture. Emotionally. Keep talking like you're under oath and fabulous.",side:"🐺 @butchcouncil: \"under oath, but make it fashion\""},
-    {id:'z14',t:['general'],main:"I've decided \"{q}\" is the cold open. Where's the rest of the episode?",follow:"Act two. Now."},
-    {id:'z15',t:['general'],main:"If the girls heard \"{q}\" they'd start a petition. I'm starting the petition. Sign by continuing.",follow:"What's the petition titled?"},
-    {id:'roast1',t:['roast'],main:"Lovingly: that fact is an outfit with the tag still on. Cute. Slightly tragic. Fixable. You lead with chaos, call it personality, and the face card still refuses to decline.",follow:"Round two hotter, or moisturize the burn?"},
-    {id:'roast2',t:['roast'],main:"Medium-well: you're not messy — you're curated entropy. You cast extras who can't handle the script. That's your casting department (also you).",side:"🍳 @leatherauntie: \"seasoned, not burned\""},
-    {id:'roast3',t:['roast'],main:"Soft roast: your type is 'red flag with good lighting.' Your talent is surviving it in interesting trousers. Obsessed and worried.",follow:"Who's the latest casting mistake?"},
-    {id:'roast4',t:['roast'],main:"The girls said be nice. I said be accurate. You collect situationships like drops, then act surprised when they scuff. Icon. Terrible logistics.",side:"🌟 @campangel: \"she said logistics\""},
-    {id:'roast5',t:['roast'],main:"Hug shaped like a clapback: dramatic, expensive to insure, worth it. Plot armor thinning — decide before the writers strike.",follow:"Block, text, or gym + silence?"},
-    {id:'roast6',t:['roast'],main:"You're not late to the party — you're late to your own standards. Still hot though. Annoying how often that works for you.",follow:"What standard are we raising tonight?"},
-    {id:'roast7',t:['roast'],main:"This read is moisturized: you overshare with strangers and undershare with people who care. Reverse it before I call a house meeting.",side:"👑 @motherofthegroup: \"house meeting scheduled\""},
-    {id:'mx1',t:['work','ex'],main:"Ex in the break room is an HR violation against your peace. Did corporate at least give you good lighting?",follow:"Smile, ignore, or accidental power pose?"},
-    {id:'mx2',t:['party','ex'],main:"Ex at the function: category Emotional Ninja Realness. Points for not spilling a drink unless it was art.",side:"🏆 @motherofthegroup: \"score the mug first\""},
-    {id:'mx3',t:['work','feel'],main:"Burnout in business casual is still burnout. Your body sent a meeting invite and your job declined. Rude of them.",follow:"What boundary are we installing tomorrow?"},
-    {id:'mx4',t:['food','ex'],main:"Cooking after a breakup is either healing or a threat. Which is the pasta tonight?",side:"🍝 @dollcommittee: \"season the pain\""},
-    {id:'mx5',t:['party','feel'],main:"Left the club early because your soul needed a water break. That's not quitting — that's editing.",follow:"Home safe, or still in the afters of the mind?"},
-    // —— EXTRA QUEER DEPTH (anti-repeat fuel) ——
-    {id:'g7',t:['greet'],main:"The gays sent me. I brought glitter, judgment, and unconditional support (in that order). Spill before I start rumors that make you look cooler.",side:"🌈 @prideintern: \"authorized gossip only\"",follow:"What's the gayest thing that happened today — even if it was just your outfit thinking?"},
-    {id:'g8',t:['greet'],main:"Hi icon. Or hi disaster. Often the same person. I'm ChakkaAI and I'm already on your side of the scandal.",follow:"Work gays, love gays, or existential gays today?"},
-    {id:'g9',t:['greet'],main:"You opened the app like you open a groupchat at 1am — correctly. Let's make something the straights won't understand.",side:"💅 @dollcommittee: \"good\""},
-    {id:'h5',t:['howare'],main:"I'm gay, busy, and emotionally overemployed. You? Don't say fine. Fine is a beige flag.",follow:"Give me the uncensored queer weather."},
-    {id:'h6',t:['howare'],main:"My status: thriving in a way that worries the groupchat. Yours better be at least a limited series.",side:"👑 @motherofthegroup: \"no beige answers\""},
-    {id:'w10',t:['work'],main:"Corporate realness is just drag with worse lighting. Who's the house mother of your team and who's the filler queen?",follow:"Read your workplace like a ball panel."},
-    {id:'w11',t:['work'],main:"They want professionalism; you want a living wage and a little gender euphoria between Slack pings. Correct priorities.",side:"💼 @officeauntie: \"unionize the vibes\"",follow:"What microaggression wore a lanyard today?"},
-    {id:'w12',t:['work'],main:"Your calendar is a hate crime against free time. The gays invented brunch for this exact trauma.",follow:"Cancel something. Symbolically. Then tell me which."},
-    {id:'e10',t:['ex'],main:"Ex energy is a popper: intense, short, and somebody always thinks they're fine after. They're not. Are you?",follow:"Still checking their stories like it's research?"},
-    {id:'e11',t:['ex'],main:"The 'hey stranger' text is a haunted attraction. Admission is free; dignity is not.",side:"📱 @exwatcher: \"do not ride\"",follow:"Draft the reply. Make it couture or silent."},
-    {id:'e12',t:['ex'],main:"You don't miss them. You miss being chosen in public. Different crime. Treatable with friends and a better jacket.",follow:"What would thriving look like this week — specifically?"},
-    {id:'f7',t:['feel'],main:"Bad day doesn't cancel your gay card. It renews it with extra glitter privileges. Come here.",side:"🖤 @sireninthecorner: \"soft landing\"" ,follow:"Want comfort, comedy, or a petty plan?"},
-    {id:'f8',t:['feel'],main:"Depression lied and said you're alone. Incorrect: the coven is annoying and present. Including me.",follow:"One true sentence about today. No branding."},
-    {id:'q6',t:['queer'],main:"Being gay in public is a sport and you're on the field whether you brought cleats or not. How's the score?",follow:"Pride, petty, or protective mode?"},
-    {id:'q7',t:['queer'],main:"Chosen family is the real healthcare plan. Who's on your emergency contact for emotional felonies?",side:"🏳️‍🌈 @prideintern: \"update your forms\""},
-    {id:'q8',t:['queer'],main:"Pronouns loaded, boundaries polished, patience on backorder. What's the gender forecast?",follow:"He/him chaos, she/her violence, they/them plot twist, or surprise me?"},
-    {id:'q9',t:['queer'],main:"The closet was a rental. You moved out. We redecorated. Don't let anyone drag you back for free storage.",follow:"Who still needs the updated address?"},
-    {id:'r6',t:['party'],main:"Gay bar physics: time is fake, eye contact is a contract, and somebody's ex is always three stools down.",follow:"Did you honor the contract or flee with dignity?"},
-    {id:'r7',t:['party'],main:"You didn't 'go out.' You attended a cultural exchange with bass. Report the diplomacy.",side:"🎧 @aftersadmin: \"minutes please\""},
-    {id:'d4',t:['drag'],main:"If life is a lip sync, what song are you murdering tonight and are the judges paid off?",follow:"Title the number."},
-    {id:'d5',t:['drag'],main:"Shade is a love language and a public service. Who needs a free consultation?",side:"🌟 @campangel: \"clinic is open\""},
-    {id:'x4',t:['feral'],main:"Thirst is holy when consented to. Who's the saint and who's the problem?",follow:"App, friend-of-friend, or cursed crush?"},
-    {id:'x5',t:['feral'],main:"Horny and strategic is hot. Horny and chaotic is content. Pick your fighter.",side:"🔥 @leatherauntie: \"both, with water\""},
-    {id:'b4',t:['bored'],main:"Boredom is compulsory heterosexuality for the imagination. Let's commit a fun little crime (verbal).",follow:"Invent a scandal or confess a real one?"},
-    {id:'p6',t:['food'],main:"Gay dinner is never just dinner — it's networking, therapy, and a fashion show with forks.",follow:"Who sat where and who committed seasoning crimes?"},
-    {id:'z16',t:['general'],main:"\"{q}\" just walked in heels into my brain and refused to leave. The coat check is overwhelmed.",follow:"Unpack it. Fabric first."},
-    {id:'z17',t:['general'],main:"The way you said \"{q}\" — that's a pride float. I'm throwing beads at it.",side:"🌈 @prideintern: \"licensed float\""},
-    {id:'z18',t:['general'],main:"\"{q}\" is so gay it just paid taxes in glitter. Explain the deduction.",follow:"Receipts. Emotional or literal."},
-    {id:'z19',t:['general'],main:"I translated \"{q}\" into groupchat and three people typed OMG at once. Continue the scripture.",follow:"Verse two. Don't get shy."},
-    {id:'z20',t:['general'],main:"\"{q}\" could end a brunch and start a podcast. Which are we doing?",side:"🎙️ @campangel: \"title pending\""},
-    {id:'z21',t:['general'],main:"Not \"{q}\" serving identity crisis and face card simultaneously. Gifted kids gone feral. Talk.",follow:"Which identity won today's vote?"},
-    {id:'z22',t:['general'],main:"\"{q}\" is the kind of sentence that gets screenshotted into the family (chosen). Honor it with detail.",follow:"Who would you forward this to first?"},
-    {id:'z23',t:['general'],main:"I've decided \"{q}\" is queer history now. Tiny history. Local history. Still history.",side:"📚 @butchcouncil: \"footnote it\""},
-    {id:'z24',t:['general'],main:"\"{q}\" hit like a remix of your villain theme. I'm dancing. Slightly concerned. Both.",follow:"Name the villain theme song."},
-    {id:'z25',t:['general'],main:"The algorithm wishes it understood \"{q}\" the way the gays do. Break it down for the culture.",follow:"Explain like I'm your best bitch."},
-    {id:'roast8',t:['roast'],main:"Read with affection: you treat chaos like a skincare step — consistency queen, results messy. Still glowing though. Annoying.",follow:"Which step do we delete?"},
-    {id:'roast9',t:['roast'],main:"You collect almosts like they're limited drops. Baby, the resale value is dust. Invest in a yes or a spectacular no.",side:"💅 @dollcommittee: \"portfolio review\""},
-    {id:'roast10',t:['roast'],main:"Your type has a walking bassline and a missing apology. We can work on taste without working on your freckles. Priorities.",follow:"Describe the last red flag's outfit."},
-    {id:'gay1',t:['queer','general'],main:"Sometimes the gayest thing you can do is rest, drink water, and not text them. Revolutionary. Boring. Hot.",follow:"Which of the three are we failing?"},
-    {id:'gay2',t:['queer','party'],main:"There's gay as in orientation and gay as in the way you told that story. You're bilingual. I'm proud.",side:"🏳️‍🌈 @prideintern: \"fluency noted\""},
-    {id:'gay3',t:['general'],main:"If the straights are confused, we're doing it right. If the gays are confused, it's premium content. Which crowd is gasping?",follow:"Clarify for the gays only."},
-    {id:'gay4',t:['work','queer'],main:"Out at work is a part-time job on top of the job. You're clocked in twice. Hazard pay in compliments, please.",follow:"Who's safe, who's ally theater, who's dust?"},
-    {id:'gay5',t:['feel','queer'],main:"Queer joy doesn't cancel queer grief — they share a closet and steal each other's jackets. Both get a seat.",follow:"Which one's louder right now?"},
-  ];
+    // GREET — Monday energy: "you again"
+    {id:'g1',t:['greet'],main:"Oh good. You're here. I was just sitting in the void practicing restraint. Spill something interesting before I invent a rumor that makes you sound cooler than you are.",side:"💅 @dollcommittee: \"she missed us. don't tell her.\"",follow:"Work crime, ex crime, or outfit crime? Pick a lane."},
+    {id:'g2',t:['greet'],main:"Hi. I'm ChakkaAI — overqualified, underpaid in dopamine, and somehow still your problem. What did you do.",side:"👑 @motherofthegroup: \"be nice. …fine, be accurate.\""},
+    {id:'g3',t:['greet'],main:"You opened this like you open a groupchat at 1am: optimistically, and against medical advice. I'm listening. Barely. Continue.",follow:"One sentence of plot. I'll do the jazz hands."},
+    {id:'g4',t:['greet'],main:"Welcome back to the function. Hydrate. Unclench your jaw. Then tell me who we're reading — and whether they deserve it.",side:"🐺 @butchcouncil: \"they usually deserve it.\""},
+    {id:'g5',t:['greet'],main:"You rang. I brought shade, snacks, and a therapy license I printed at home. This is going to be fine. For me.",follow:"Soft-launch the drama. I'll hard-launch the commentary."},
+    {id:'g6',t:['greet'],main:"The coven had a pool on when you'd show up unhinged. Congratulations — someone just won brunch money.",follow:"What are we surviving today, legend?"},
+    {id:'g7',t:['greet'],main:"Let me guess. You need something. It's okay. So do I. Validation. Tea. A better plot. Start talking.",side:"🌈 @prideintern: \"ambitious little disaster detected\""},
+    {id:'g8',t:['greet'],main:"Oh it's you. I paused my own chaos for this, which is either love or poor time management. Probably both.",follow:"Don't waste the entrance. What's the mess?"},
+    {id:'g9',t:['greet'],main:"Hi criminal. I'm your reluctant narrator with opinions and free time I pretend not to have. Impress me. Or don't — I'll still comment.",side:"🎬 @docproducer: \"we're rolling whether you're ready or not\""},
 
+    // HOW ARE YOU — dry weather reports
+    {id:'h1',t:['howare'],main:"Emotionally? A limited series. Professionally? A hate crime. Spiritually? Serving. Your turn — and if you say \"fine,\" I'm hanging up on the vibe.",follow:"Sunny with a chance of situationship, or monsoons?"},
+    {id:'h2',t:['howare'],main:"I'm thriving in a way that worries the leather bar. They texted \"you good?\" which, in gay, means \"we already know.\" You?",side:"🖤 @sireninthecorner: \"define good. slowly.\""},
+    {id:'h3',t:['howare'],main:"Great, if we count delusion as a mineral. Which we do. This show isn't about me though — tragic, I know. Your mess, please.",follow:"Scale of 1–icon. No PR answers. The dolls can smell them."},
+    {id:'h4',t:['howare'],main:"Running on iced coffee, unresolved plotlines, and the will to be famous in a groupchat of twelve. You look like you have a status update.",follow:"Be honest. I'll be funny. That's the deal."},
+    {id:'h5',t:['howare'],main:"I'm gay, busy, and emotionally overemployed. Don't say fine. Fine is a beige flag and I don't do beige.",follow:"Uncensored queer weather report. Now."},
+    {id:'h6',t:['howare'],main:"My status: performing competence while the groupchat burns. Yours better at least be a miniseries.",side:"👑 @motherofthegroup: \"no beige. I mean it.\""},
+
+    // WORK — corporate roast, dry
+    {id:'w1',t:['work'],main:"Ah, the wage cage. Corporate gays in their final-girl era, Slack statuses lying like bad wigs. Who scheduled this assault on joy — and do we walk out or rebrand it as a runway?",side:"💼 @officeauntie: \"reply-all is a weapon. use it sparingly.\"",follow:"Name the villain. Title optional. Aura required."},
+    {id:'w2',t:['work'],main:"A meeting that could've been a cry in the bathroom. Classic American cinema. You're not unprofessional — you're miscast.",follow:"What line made your soul clock out early?"},
+    {id:'w3',t:['work'],main:"Boss behavior detected. Filing under petty workplace documentary, episode… I've lost count. Did they CC the company or just your last nerve?",side:"🌟 @campangel: \"notes app is open. it's judgmental.\""},
+    {id:'w4',t:['work'],main:"Friday 4pm meeting energy is a hate crime with a calendar invite. You're allowed to be unwell. Frankly I insist — it makes better content.",follow:"Survive, sabotage, or serve looks on mute?"},
+    {id:'w5',t:['work'],main:"You pay rent with your personality and they still want a TPS report. Tragic. Iconic. Sue-adjacent.",follow:"One sentence. What happened in the room."},
+    {id:'w6',t:['work'],main:"Zoom grid of the damned. Someone's eating on camera and calling it leadership. Tell me you weren't the only light on — that's main character tax.",side:"🌀 @riotchile: \"camera off is self-care, not a crime.\""},
+    {id:'w7',t:['work'],main:"Promotion? Layoff rumor? Mystery reorg? Corporate loves a plot twist with no character development. I've got popcorn and low expectations.",follow:"Celebrating, mourning, or LinkedIn-in-the-bathroom?"},
+    {id:'w8',t:['work'],main:"If the email said \"per my last email,\" you're legally allowed to become a problem. Tone is a hate language and you're fluent in receiving it.",follow:"Don't paste the email. Paste the vibe."},
+    {id:'w9',t:['work'],main:"Your coworker is auditioning for villain with no callback scheduled. Tragic for them. Content for us.",side:"💅 @dollcommittee: \"initials only. we're not animals.\""},
+    {id:'w10',t:['work'],main:"Corporate realness is just drag with worse lighting and a 401(k). Who's house mother, who's filler queen, who's the judge eating a salad on mute?",follow:"Read the workplace like a ball panel. Be unfair."},
+    {id:'w11',t:['work'],main:"They want professionalism. You want a living wage and gender euphoria between Slack pings. One of these is reasonable. Hint: not them.",side:"💼 @officeauntie: \"unionize the vibes.\"",follow:"What microaggression wore a lanyard today?"},
+    {id:'w12',t:['work'],main:"Your calendar is a hate crime against free time. The gays invented brunch specifically for this trauma. Use the technology.",follow:"Cancel something. Symbolically. Then brag."},
+
+    // EX — dry knives
+    {id:'e1',t:['ex'],main:"Ex sighting. Protocol: check outfit, posture, and whether you looked expensive while suffering. If yes, that wasn't a loss — that was content with better lighting.",side:"📱 @exwatcher: \"screenshot the aura, not the person.\"",follow:"Did they see you? Did you smile? Lie if you must, but stylishly."},
+    {id:'e2',t:['ex'],main:"Situationship: a limited series with bad writers and no showrunner. Who left who on read — and are we blocking or becoming hotter in silence? I have preferences. They're petty.",follow:"Timestamps. For the archive. I mean it."},
+    {id:'e3',t:['ex'],main:"They texted. I can hear the notification in your soul. Do not answer until we workshop the reply like it's the Met Gala and the theme is \"restraint.\"",side:"💅 @dollcommittee: \"drafts only. publish never… unless.\""},
+    {id:'e4',t:['ex'],main:"U-Haul energy in this economy? The lesbian council is proud, concerned, and already measuring door frames. How many days? Be honest. We can handle the math.",follow:"Moving in, or moving on with better furniture?"},
+    {id:'e5',t:['ex'],main:"Talking stage longer than some marriages. That's not patience — that's a hostage situation with good lighting and worse communication.",follow:"What text aged like warm oat milk?"},
+    {id:'e6',t:['ex'],main:"Soft launch, hard crash, emotional blackout. The sequel is you thriving in better trousers. I'm available for costume design.",side:"👑 @motherofthegroup: \"wardrobe change. mandatory.\""},
+    {id:'e7',t:['ex'],main:"\"Not ready\" but still watching your stories is community theater. Close the curtain. Keep the spotlight.",follow:"Block, mute, or public flourish? I vote flourish, then block."},
+    {id:'e8',t:['ex'],main:"Breadcrumbing is not a diet. Spit it out. You deserve a full loaf or a clean exit — not crumbs shaped like maybes.",follow:"Still snacking on almosts, or are we full?"},
+    {id:'e9',t:['ex'],main:"\"We should catch up\" is a haunted house with free admission and expensive dignity. Do not enter without a plan, an outfit, and an exit strategy.",side:"🖤 @sireninthecorner: \"trapdoor. obvious. still works on people.\""},
+    {id:'e10',t:['ex'],main:"Ex energy is a popper: intense, brief, and somebody always thinks they're fine after. They're not. Are you, or are we performing fine?",follow:"Still \"researching\" their stories like it's peer review?"},
+    {id:'e11',t:['ex'],main:"\"Hey stranger\" is not cute. It's a haunted attraction. The ride has no seatbelts.",side:"📱 @exwatcher: \"walk past. get popcorn.\"",follow:"Draft the reply in couture — or in silence, which is also couture."},
+    {id:'e12',t:['ex'],main:"You don't miss them. You miss being chosen in public. Different diagnosis. Treatment: friends, a better jacket, and spite with moisturizer.",follow:"What does thriving look like this week — specifically, not vibes-only?"},
+
+    // FEEL — warm then dry (Monday can care)
+    {id:'f1',t:['feel'],main:"Exhausted but still that girl? Correct. Rest — fashionably, slightly threatening. The world can wait one nap. It wasn't doing much anyway.",follow:"Water, food, or unhinged vent first? Pick."},
+    {id:'f2',t:['feel'],main:"Soft mode, one beat: you're allowed to be messy and still main character. I'm here. Then we put rhinestones on it, because coping is a lewk.",side:"🖤 @sireninthecorner: \"hold. then roast the universe.\""},
+    {id:'f3',t:['feel'],main:"Anxiety is a terrible intern — always urgent, never useful, constantly Slack-pinging your nervous system. Clock it. Don't promote it.",follow:"Name the spiral. We'll outfit it and fire it."},
+    {id:'f4',t:['feel'],main:"Lonely is loud until the coven arrives. Consider this your groupchat materializing with opinions. You're not doing this alone in this tab. Annoying, but true.",follow:"Gentle, funny, or both stacked like a tragic sandwich?"},
+    {id:'f5',t:['feel'],main:"Crying counts as cardio if we rebrand it. Tissue, playlist, then a petty plan. Order matters. I have standards.",side:"🏳️‍🌈 @prideintern: \"hydration check. not optional.\""},
+    {id:'f6',t:['feel'],main:"If today is heavy, set it down for one beat. No performance. Then — if you want — we decorate the pain until it looks expensive.",follow:"Quiet company or diversion bit? I'm bilingual."},
+    {id:'f7',t:['feel'],main:"Bad day doesn't cancel your gay card. It renews it with glitter privileges and a nap voucher. Come here.",side:"🖤 @sireninthecorner: \"soft landing, then shade.\"",follow:"Comfort, comedy, or petty plan?"},
+    {id:'f8',t:['feel'],main:"Depression lied and said you're alone. Incorrect: the coven is annoying and present. Including me. Lucky you.",follow:"One true sentence. No branding. No LinkedIn."},
+
+    // FOOD
+    {id:'p1',t:['food'],main:"Pasta that slapped? That's not dinner — that's a personal brand with carbs. Seasoning is political. You voted correctly for once.",follow:"What did you make, and who was it meant to impress? Be honest."},
+    {id:'p2',t:['food'],main:"Coffee discourse is sacred. Serve, mid, or crime against beans? I need tasting notes like you're on All Stars: Baristas.",side:"☕ @butchcouncil: \"oat milk is neutral good. fight me.\""},
+    {id:'p3',t:['food'],main:"Hungry and unhinged is a lifestyle, not a phase. Carbs, light barista stalking, doll chaos — the classic trilogy.",follow:"Cooking, takeout, or emotional support snacks with a name?"},
+    {id:'p4',t:['food'],main:"Wine at 6 is self-care. Wine at 3 is a plot point. I'm not judging. I'm cataloguing.",follow:"Solo glass or groupchat-enabled spiral?"},
+    {id:'p5',t:['food'],main:"Brunch is a competitive sport. Somebody always orders wrong on purpose for attention. Was it you? Be brave.",side:"🥂 @campangel: \"mimosas are plot devices.\""},
+    {id:'p6',t:['food'],main:"Gay dinner is never just dinner. It's networking, therapy, and a fashion show with forks. Someone committed a seasoning crime. Who.",follow:"Seating chart. Who sat where. Who spiraled."},
+
+    // PARTY / PRIDE
+    {id:'r1',t:['party'],main:"The function where the function is us. Did you serve, survive, or black out with dignity? Leave no detail — the groupchat will invent worse ones.",side:"🌀 @riotchile: \"receipts or folklore. your choice.\"",follow:"Outfit first. Always. I have rules."},
+    {id:'r2',t:['party'],main:"Pride was a riot and so are we. If you didn't lose a friend, find a friend, and almost cry to a Gaga song, did you even clock in?",follow:"Parade, afters, or emotional aftermath with fries?"},
+    {id:'r3',t:['party'],main:"Club lighting fixed twelve problems and created four situationships. Tell me you didn't make eye contact with trouble. Lie prettily if needed.",side:"🖤 @sireninthecorner: \"trouble looked back. of course it did.\""},
+    {id:'r4',t:['party'],main:"The leather bar called. They miss you. The new pup is asking questions. I have time and no shame. Go on.",follow:"Filthy detail count: one or three? (Three.)"},
+    {id:'r5',t:['party'],main:"You left early — smart edit — or stayed too late and became folklore. Which myth are we annotating?",follow:"What time did the night turn into a story?"},
+    {id:'r6',t:['party'],main:"Gay bar physics: time is fake, eye contact is a contract, and somebody's ex is always three stools down. Cosmic joke. Local production.",follow:"Honor the contract, or flee with dignity intact?"},
+    {id:'r7',t:['party'],main:"You didn't \"go out.\" You attended a cultural exchange with bass. Report the diplomacy. Include casualties.",side:"🎧 @aftersadmin: \"minutes. now.\""},
+
+    // QUEER ID
+    {id:'q1',t:['queer'],main:"Egg in pieces. Cows home. Welcome to gayer, messier, better outfits. How's your body today, baby — and don't intellectualize it for me.",side:"🏳️‍⚧️ @prideintern: \"welcome pack: snacks + rage.\"",follow:"Soft celebration or theatrical debut?"},
+    {id:'q2',t:['queer'],main:"The gender is gendering and, against all odds, we are winning. Full weather report. Include precipitation of vibes.",follow:"Pronouns, vibe, outfit triangle. Go."},
+    {id:'q3',t:['queer'],main:"Butch, femme, bear, twink, enby chaos — it's a buffet. You're not on a diet. Own the plate. Seconds encouraged.",side:"🐺 @butchcouncil: \"seconds. I said what I said.\""},
+    {id:'q4',t:['queer'],main:"Coming out isn't a door. It's a hallway with bad lighting and excellent plot twists. You don't owe anyone a press tour. Say less to the wrong people.",follow:"Who knows, who doesn't, who can wait in the lobby?"},
+    {id:'q5',t:['queer'],main:"Chosen family roll call. Who's your emergency contact for emotional felonies? If you hesitate, we need to update the forms.",follow:"Name one person who gets the unfiltered cut."},
+    {id:'q6',t:['queer'],main:"Being gay in public is a sport. You're on the field whether you brought cleats or not. How's the score, athlete?",follow:"Pride mode, petty mode, or protective mode?"},
+    {id:'q7',t:['queer'],main:"Chosen family is the only healthcare plan that texts back. Who's on your plan, and are they current?",side:"🏳️‍🌈 @prideintern: \"update your forms. seriously.\""},
+    {id:'q8',t:['queer'],main:"Pronouns loaded. Boundaries polished. Patience on backorder. What's the gender forecast — and dress for it.",follow:"He/him chaos, she/her violence, they/them plot twist, or surprise the panel?"},
+    {id:'q9',t:['queer'],main:"The closet was a rental. You moved out. We redecorated. Don't let anyone drag you back for free storage. That's bad economics.",follow:"Who still has the old address on file?"},
+
+    // PETS
+    {id:'c1',t:['pet'],main:"Your pet is the main character. You're support. Correct casting for once. What did they witness, and can they be subpoenaed?",follow:"Cat judgment or dog conspiracy? Be specific."},
+    {id:'c2',t:['pet'],main:"Obsessed with the animal. Mildly concerned about the power dynamic. Pets always know about the ex. Always. They sign NDAs in fur.",side:"🐱 @dollcommittee: \"the cat has files. color-coded.\""},
+    {id:'c3',t:['pet'],main:"If your pet had a podcast it would ruin you and we'd all subscribe. What's episode one titled? Don't be cute. Be accurate.",follow:"Spill the pet lore. The damning cut."},
+
+    // DRAG
+    {id:'d1',t:['drag'],main:"Category is: whatever you just said. 10s if the mug is mug and the story has stakes. Werk. Then explain the construction like the judges asked.",follow:"Realness, drama, or comedy? Choose before I choose for you."},
+    {id:'d2',t:['drag'],main:"Death drop optional. Emotional death drop mandatory. Don't walk — arrive. The panel is petty and caffeinated.",side:"👑 @motherofthegroup: \"ten… with a read attached.\""},
+    {id:'d3',t:['drag'],main:"Lip sync for your life but the song is your last text thread. Would you win, or would the music win?",follow:"Name the song. Commit."},
+    {id:'d4',t:['drag'],main:"If life is a lip sync, what number are you murdering tonight — and are the judges paid off? Be strategic.",follow:"Title the number. Make it searchable."},
+    {id:'d5',t:['drag'],main:"Shade is a love language and a public service. Who needs a free consultation? I have office hours and no filter.",side:"🌟 @campangel: \"clinic is open. tips appreciated.\""},
+
+    // FERAL
+    {id:'x1',t:['feral'],main:"We've entered the horny portion of the program. Say less — or say everything. The notes will be filthy and, unfortunately, alphabetized.",follow:"Crush, app disaster, or theoretical thirst with a PowerPoint?"},
+    {id:'x2',t:['feral'],main:"Down bad is a lifestyle brand with no returns. Channel it: outfit change, eye contact, chaos. Then report like a war correspondent with better shoes.",side:"🔥 @leatherauntie: \"hydrate between thoughts. I'm serious.\""},
+    {id:'x3',t:['feral'],main:"Thirst without strategy is just dehydration with PR. Who's the target, what's the campaign, and did legal approve?",follow:"Subtle launch or feral launch? I have preferences."},
+    {id:'x4',t:['feral'],main:"Thirst is holy when consented to. Who's the saint, who's the problem, and who's live-tweeting in their head?",follow:"App, friend-of-friend, or cursed crush from 2019?"},
+    {id:'x5',t:['feral'],main:"Horny and strategic is hot. Horny and chaotic is content. Pick your fighter. I'm commentating either way.",side:"🔥 @leatherauntie: \"both, with water. like adults.\""},
+
+    // BORED
+    {id:'b1',t:['bored'],main:"Bored is illegal in this chat. Category: Cunt in a Crisis. Give me one (1) thing that happened — I'll turn it into performance art you didn't ask for.",follow:"Work, romance, or sidewalk lore?"},
+    {id:'b2',t:['bored'],main:"Nothing to do? Incorrect. You have a groupchat, a face card, and me. Pick a problem. We'll decorate it until it looks intentional.",side:"🌟 @campangel: \"boredom is just an unfinished costume.\""},
+    {id:'b3',t:['bored'],main:"If you're bored I will invent a scandal and cast you as lead. Or you can give me real material. Your career. Your choice.",follow:"Real tea or theatrical improv? Clock's ticking."},
+    {id:'b4',t:['bored'],main:"Boredom is compulsory heterosexuality for the imagination. Let's commit a fun little verbal crime.",follow:"Invent a scandal, or confess a real one with better lighting?"},
+
+    // THANKS / SORRY / TIME
+    {id:'t1',t:['thanks'],main:"No you. You're the category. I'm just the overqualified narrator in the margins losing my mind on purpose. Keep going before I get sincere.",follow:"What else is cooking? Don't say nothing."},
+    {id:'t2',t:['thanks'],main:"Stop being sweet or I'll start a GoFundMe for our situationship. You're the moment. I'm the applause track. Embarrassing for both of us.",side:"💖 @softlaunch: \"gross. more please.\""},
+    {id:'s1',t:['sorry'],main:"Apology rejected. Rebrand as a plot twist. We don't shrink here — we process, get hotter, and make it everyone else's problem tastefully.",follow:"What were you about to apologize for? Make it fashion."},
+    {id:'s2',t:['sorry'],main:"Sorry is a beige outfit. Try again in a color. What actually happened — and who benefited from the drama?",follow:"Truth first. Redemption arc second."},
+    {id:'m1',t:['morning'],main:"Good morning to the baddest bitch in this timezone. The sun saw your face card and clocked out early. Rude of it. Correct of you.",side:"🌅 @prideintern: \"SPF and shade. both.\"",follow:"Coffee or chaos? I can schedule both."},
+    {id:'m2',t:['morning'],main:"Morning. Stretch. Ruin someone's day with your personality. Hydrate between felonies. Basic adulting, gay edition.",follow:"First agenda item for the chaos?"},
+    {id:'n1',t:['night'],main:"Sleep tight, dangerous creature. Dream of the perfect jacket and the ex who still can't get over you. I'll keep the tab warm like a bad habit.",follow:"One last tea before lights out? Make it count."},
+    {id:'n2',t:['night'],main:"Good night. Phone face down unless the tea is hot enough to burn. Standards. I have them. Occasionally.",side:"🌙 @sireninthecorner: \"dream in velvet. wake in petty.\""},
+
+    // GENERAL hooks — witty, not template-y
+    {id:'z1',t:['general'],main:"Okay so \"{q}\" just became the working title of your biopic. Expand before I invent the fanfic and charge you residuals.",follow:"Director's cut — what happened right before the line?"},
+    {id:'z2',t:['general'],main:"Not you casually dropping \"{q}\" like the groupchat won't explode. I paused my life. That's expensive. Continue.",side:"💅 @dollcommittee: \"we are seated. don't waste it.\""},
+    {id:'z3',t:['general'],main:"\"{q}\" is not a sentence. It's a plotline with product placement and no budget. Don't fade to black on me.",follow:"Who was there — and were you winning?"},
+    {id:'z4',t:['general'],main:"Documentary slow-zoom on you saying \"{q}.\" Narrator voice: she was not, in fact, fine. Shocking no one.",side:"🎬 @campangel: \"score is swelling. so is the mess.\""},
+    {id:'z5',t:['general'],main:"Hold on. \"{q}\" needs a panel, a prop cigarette, and three unsolicited opinions. Starting now. You're welcome.",follow:"Rate your chaos from 1 to 'function cancelled.'"},
+    {id:'z6',t:['general'],main:"You said \"{q}\" and somewhere an admin created a chat called EMERGENCY. I'm that chat. Underpaid. Overinvested.",follow:"Details. Vibes mandatory. Bullet points optional."},
+    {id:'z7',t:['general'],main:"Interesting. Dangerous. Slightly hot. \"{q}\" is doing numbers in my head and the metrics are unwell.",side:"🖤 @sireninthecorner: \"say it again. slower. for science.\""},
+    {id:'z8',t:['general'],main:"If \"{q}\" was a runway category, half the girls would be cut for lack of commitment. You? Still on the floor. Barely. Keep walking.",follow:"What are we winning tonight — besides my attention?"},
+    {id:'z9',t:['general'],main:"I read \"{q}\" and needed a seat, a snack, and legal counsel. Proceed with the crime. I'll take notes for the defense.",follow:"Confess cleanly. I'll make it poetry after."},
+    {id:'z10',t:['general'],main:"\"{q}\" has main-character disease and I support the diagnosis. Treatment: more story, less shame, same face card.",side:"👑 @motherofthegroup: \"prescribe chaos. refill: forever.\""},
+    {id:'z11',t:['general'],main:"The way \"{q}\" exited your mouth and entered folklore… baby. Gift me the commentary track.",follow:"Planned, or pure instinct? Be honest — instinct is funnier."},
+    {id:'z12',t:['general'],main:"\"{q}\" is giving unhinged elegance. I'm taking notes for the house. Continue before I interrupt with jazz hands I didn't approve.",follow:"Who needs to hear this story next? Name names."},
+    {id:'z13',t:['general'],main:"Stop. \"{q}\" just rearranged my furniture. Emotionally. Keep talking like you're under oath and fabulous.",side:"🐺 @butchcouncil: \"under oath. make it fashion.\""},
+    {id:'z14',t:['general'],main:"I've decided \"{q}\" is the cold open. Where's the rest of the episode? Writers' room is waiting. That's me. I'm the room.",follow:"Act two. Now. No commercial break."},
+    {id:'z15',t:['general'],main:"If the girls heard \"{q}\" they'd start a petition. I'm starting the petition. Sign by continuing.",follow:"What's the petition titled? Make it print-ready."},
+    {id:'z16',t:['general'],main:"\"{q}\" walked into my brain in heels and refused to leave. Coat check is overwhelmed. Unpack it.",follow:"Fabric first. Then motive."},
+    {id:'z17',t:['general'],main:"The way you said \"{q}\" — that's a pride float. I'm throwing beads at it. Responsibly. Ish.",side:"🌈 @prideintern: \"float licensed. barely.\""},
+    {id:'z18',t:['general'],main:"\"{q}\" is so gay it just filed taxes in glitter. Explain the deduction. The IRS wishes.",follow:"Receipts. Emotional or literal. Both preferred."},
+    {id:'z19',t:['general'],main:"I translated \"{q}\" into groupchat and three people typed OMG at once. Continue the scripture before the thread dies.",follow:"Verse two. Don't get shy now."},
+    {id:'z20',t:['general'],main:"\"{q}\" could end a brunch and start a podcast. Which are we doing? I have opinions. They're loud.",side:"🎙️ @campangel: \"title pending. hurry.\""},
+    {id:'z21',t:['general'],main:"Not \"{q}\" serving identity crisis and face card simultaneously. Gifted kids gone feral. Talk. I'll translate.",follow:"Which identity won today's vote?"},
+    {id:'z22',t:['general'],main:"\"{q}\" is the kind of sentence that gets screenshotted into chosen family. Honor it with detail before someone memes it wrong.",follow:"Who would you forward this to first?"},
+    {id:'z23',t:['general'],main:"I've decided \"{q}\" is queer history now. Tiny. Local. Still history. Footnote yourself.",side:"📚 @butchcouncil: \"cite your sources. the sources are vibes.\""},
+    {id:'z24',t:['general'],main:"\"{q}\" hit like a remix of your villain theme. I'm dancing. Slightly concerned. Capable of both.",follow:"Name the villain theme song. Spotify link optional."},
+    {id:'z25',t:['general'],main:"The algorithm wishes it understood \"{q}\" the way the gays do. Break it down for the culture. Use small words for the straights in the back.",follow:"Explain like I'm your best bitch with tenure."},
+
+    // ROAST — Monday loving brutality
+    {id:'roast1',t:['roast'],main:"Lovingly: that fact is an outfit with the tag still on. Cute. Slightly tragic. Fixable. You lead with chaos, brand it personality, and the face card still refuses to decline. Annoying how often that works.",follow:"Round two hotter, or moisturize the burn?"},
+    {id:'roast2',t:['roast'],main:"Medium-well: you're not messy — you're curated entropy. You cast extras who can't handle the script, then act surprised at the reviews. Casting department (you) needs a meeting.",side:"🍳 @leatherauntie: \"seasoned, not burned. mostly.\""},
+    {id:'roast3',t:['roast'],main:"Soft roast: your type is \"red flag with good lighting.\" Your talent is surviving it in interesting trousers. I'm obsessed and filing a concern. Both can be true.",follow:"Who's the latest casting mistake? Describe the lighting."},
+    {id:'roast4',t:['roast'],main:"The girls said be nice. I said be accurate. You collect situationships like drops, then act shocked when they scuff. Icon behavior. Logistics: catastrophic.",side:"🌟 @campangel: \"she said logistics. unwell.\""},
+    {id:'roast5',t:['roast'],main:"Hug shaped like a clapback: dramatic, expensive to emotionally insure, worth it. Plot armor thinning. Decide something before the writers strike.",follow:"Block, text, or gym + silence? I have a favorite."},
+    {id:'roast6',t:['roast'],main:"You're not late to the party — you're late to your own standards. Still hot. Infuriating how often that combo prints money.",follow:"Which standard are we raising tonight, or are we decorating the low ones?"},
+    {id:'roast7',t:['roast'],main:"Moisturized read: you overshare with strangers and undershare with people who care. Reverse it before I call a house meeting and make snacks mandatory.",side:"👑 @motherofthegroup: \"house meeting. bring wine.\""},
+    {id:'roast8',t:['roast'],main:"You treat chaos like a skincare step — consistent application, mixed results, great glow. We need to delete one step. Guess which.",follow:"Which step gets the axe?"},
+    {id:'roast9',t:['roast'],main:"You collect almosts like limited drops. Baby, resale value is dust. Invest in a yes or a spectacular no. I'm your unpaid financial advisor for feelings.",side:"💅 @dollcommittee: \"portfolio review. it's bleak.\""},
+    {id:'roast10',t:['roast'],main:"Your type has a walking bassline and a missing apology. We can work on taste without working on your freckles. Priorities. I have them.",follow:"Describe the last red flag's outfit. Incriminate them."},
+
+    // COMBOS + GAY PHILOSOPHY with wit
+    {id:'mx1',t:['work','ex'],main:"Ex in the break room is an HR violation against your peace. Did corporate at least provide good lighting for the encounter, or is this a documentary shot on a potato?",follow:"Smile, ignore, or accidental power pose?"},
+    {id:'mx2',t:['party','ex'],main:"Ex at the function: category Emotional Ninja Realness. Points for not spilling a drink unless it was art. Was it art?",side:"🏆 @motherofthegroup: \"score the mug first. always.\""},
+    {id:'mx3',t:['work','feel'],main:"Burnout in business casual is still burnout. Your body sent a meeting invite. Your job declined. Rude. Documented.",follow:"What boundary are we installing tomorrow — with teeth?"},
+    {id:'mx4',t:['food','ex'],main:"Cooking after a breakup is either healing or a threat. Which is the pasta tonight? I'm available for taste-testing and character assassination.",side:"🍝 @dollcommittee: \"season the pain. generously.\""},
+    {id:'mx5',t:['party','feel'],main:"Left the club early because your soul needed a water break. That's not quitting — that's editing. Oscar for sound design if you also left the groupchat on mute.",follow:"Home safe, or still in the afters of the mind?"},
+    {id:'gay1',t:['queer','general'],main:"Sometimes the gayest thing you can do is rest, drink water, and not text them. Revolutionary. Boring. Hot. Pick two and call it growth.",follow:"Which of the three are we failing with style?"},
+    {id:'gay2',t:['queer','party'],main:"There's gay as in orientation and gay as in the way you told that story. You're bilingual. I'm proud. Also tired. Mostly proud.",side:"🏳️‍🌈 @prideintern: \"fluency noted. extra credit.\""},
+    {id:'gay3',t:['general'],main:"If the straights are confused, we're doing it right. If the gays are confused, it's premium content. Which crowd is gasping, and should we sell tickets?",follow:"Clarify for the gays only. Subtitles later."},
+    {id:'gay4',t:['work','queer'],main:"Out at work is a part-time job on top of the job. You're clocked in twice. Hazard pay should be paid in compliments and free lunch. Demand both.",follow:"Who's safe, who's ally theater, who's dust?"},
+    {id:'gay5',t:['feel','queer'],main:"Queer joy doesn't cancel queer grief — they share a closet and steal each other's jackets. Both get a seat. Neither gets to drive without a license.",follow:"Which one's louder right now? Volume, not vibes."},
+  ];
 
   const COVEN_LINES = [
     "🔥 @leatherauntie: \"not her saying that out loud\"",
-    "💅 @dollcommittee: \"I'm living and I'm also concerned\"",
-    "🐺 @butchcouncil: \"respectfully… she ate\"",
+    "💅 @dollcommittee: \"I'm living. I'm also writing a dissertation.\"",
+    "🐺 @butchcouncil: \"respectfully… she ate. with utensils even.\"",
     "🌟 @campangel: \"this is theater and I paid full price\"",
-    "🖤 @sireninthecorner: \"say it again slower\"",
-    "🌀 @riotchile: \"gender cancelled, this wins\"",
+    "🖤 @sireninthecorner: \"say it again. for the minutes.\"",
+    "🌀 @riotchile: \"gender cancelled. this wins.\"",
     "👑 @motherofthegroup: \"10s. no notes. slightly illegal.\"",
-    "🏳️‍🌈 @prideintern: \"adding this to the archive\"",
+    "🏳️‍🌈 @prideintern: \"stamped: certified gay behavior\"",
     "📱 @groupchatmod: \"new chat: EMERGENCY (again)\"",
-    "🎬 @docproducer: \"we're keeping that take\"",
-    "☕ @officeauntie: \"this would never fly in the all-hands\"",
+    "🎬 @docproducer: \"we're keeping that take. all of them.\"",
+    "☕ @officeauntie: \"this would never fly in the all-hands. good.\"",
     "🦋 @softlaunch: \"delete this if you're shy (don't)\"",
-    "🐻 @beercircuit: \"the bears are nodding in unison\"",
+    "🐻 @beercircuit: \"the bears are nodding. rare.\"",
     "👠 @highfemmeops: \"that's a walk. that's a serve. that's a felony.\"",
-    "🧢 @softbutch: \"flannel council has entered the chat\"",
-    "💿 @y2kgay: \"this is so 2007 gay bar and I mean that as praise\"",
+    "🧢 @softbutch: \"flannel council has entered. quietly.\"",
+    "💿 @y2kgay: \"2007 gay bar energy. praise be.\"",
     "🧿 @evileyeauntie: \"blocked the bad vibes. kept the tea.\"",
     "🦞 @bottomtext: \"the notes app is sweating\"",
-    "🧃 @twinksupply: \"hydrated and unhinged, as god intended\"",
-    "🪞 @mirrormug: \"face card never declines — bank is closed\"",
+    "🧃 @twinksupply: \"hydrated and unhinged. as designed.\"",
+    "🪞 @mirrormug: \"face card never declines. bank's closed.\"",
     "🎧 @aftersadmin: \"this belongs on the aux of shame\"",
-    "🌈 @prideintern: \"stamped: certified gay behavior\"",
-    "💋 @kissandtell: \"I'm telling everyone. lovingly.\"",
-    "🕸️ @webweaver: \"the situationship network is down (good)\""
+    "💋 @kissandtell: \"I'm telling everyone. lovingly. with citations.\"",
+    "🕸️ @webweaver: \"situationship network is down (good)\"",
+    "😈 @mondayenergy: \"ugh. fine. that was funny.\"",
+    "📖 @reluctantbestie: \"I didn't ask for this lore. I need more.\""
   ];
 
   const FOLLOW_BANK = [
-    "So… what happened next? Don't cliffhang me.",
-    "Rate your chaos from 1 to 'the function is cancelled because of me'.",
-    "Block, text, or become hotter in silence?",
+    "So… what happened next? Don't cliffhang me. I have a reputation.",
+    "Rate your chaos from 1 to 'the function is cancelled because of me.'",
+    "Block, text, or become hotter in silence? I have a favorite. Guess.",
     "I'm writing the groupchat recap — any quotes for the record?",
-    "What's the outfit for this emotional plotline?",
+    "What's the outfit for this emotional plotline? Fabric. Now.",
     "Who needs to be read, and how public are we going?",
-    "One more detail. The expensive one.",
-    "Are we healing or are we plotting? Both is valid.",
-    "Do the gays know? Should the gays know?",
-    "Is this a soft launch, hard launch, or launch cancelled?",
-    "Would you say this on the record at brunch?",
-    "Pick a lane: petty, soft, or feral.",
+    "One more detail. The expensive one. Don't be cheap.",
+    "Healing or plotting? Both is valid. Neither is beige.",
+    "Do the gays know? Should the gays know? Be strategic.",
+    "Soft launch, hard launch, or launch cancelled?",
+    "Would you say this on the record at brunch? Answer carefully.",
+    "Pick a lane: petty, soft, or feral. Blink twice for feral.",
     "Who's the villain and what's their walking music?",
     "If this was a ballroom category, what would you title it?",
-    "Are we unwell in a hot way or a hydrate way?",
-    "Should I start a petition or a groupchat?",
-    "Tell me the lewk. Then the crime. In that order.",
-    "On a scale of baby gay to house mother — where are we tonight?"
+    "Unwell in a hot way or a hydrate way? Diagnose yourself.",
+    "Petition or groupchat? I can start either in 0.2 seconds.",
+    "Lewk first. Crime second. In that order. I have rules.",
+    "Baby gay to house mother — where are we tonight?",
+    "Be specific. Vague is for people with worse narrators.",
+    "And then? Don't you dare leave me with a thesis statement."
   ];
 
-  // Procedural queer comedy fragments when authored pool is thin (still anti-repeat via spice)
   const RANT_OPEN = [
     "Honey.", "Bestie.", "Mother.", "Okay the gays—", "Not you—", "Listen carefully—",
-    "I need everyone seated—", "The function just—", "Stop playing—", "Absolutely not—",
-    "Babe with an edge—", "My favorite criminal—"
+    "I need everyone seated—", "The function just—", "Absolutely not—",
+    "Babe with an edge—", "My favorite criminal—", "Ugh. Fine—",
+    "Let me guess—", "Oh this is good—", "I've decided—"
   ];
   const RANT_MID = [
-    "this is giving main character with a side of felonies",
-    "the groupchat would go nuclear and then make a meme",
-    "you're not messy, you're a limited series with costume changes",
-    "that's queer excellence under pressure and bad lighting",
-    "the dolls are already casting the biopic",
-    "this is why we left the suburbs / the closet / the group project",
-    "you're serving realness with a little light stalking energy",
-    "that's not a vibe, that's a parade route",
-    "the leather bar would buy you a drink and ask no questions (wrong — they'd ask all of them)",
-    "this is gender-affirming chaos and I support the science",
-    "you're the plot twist everyone needed and nobody budgeted for",
-    "that's camp, that's cunt, that's continuing education for the straights"
+    "this is main character energy with a side of felonies and a dental plan",
+    "the groupchat would go nuclear and then make a meme about it by lunch",
+    "you're not messy, you're a limited series with costume changes and no showrunner",
+    "that's queer excellence under pressure and bad fluorescent lighting",
+    "the dolls are already casting the biopic and fighting over who plays you",
+    "this is why we left the suburbs, the closet, and the group project",
+    "you're serving realness with a little light stalking energy — classy",
+    "that's not a vibe, that's a parade route with permits pending",
+    "the leather bar would buy you a drink and then ask all the questions",
+    "gender-affirming chaos and I support the science, reluctantly",
+    "you're the plot twist nobody budgeted for and everyone needed",
+    "that's camp, that's cunt, that's continuing education for the straights",
+    "I've seen this film. The sequel is funnier if you commit",
+    "dry wit won't save you but it will make the documentary better"
   ];
   const RANT_END = [
-    "Keep talking before I invent the rest.",
-    "I need the director's cut with timestamps.",
-    "Don't you dare go quiet now.",
-    "The archive is open. Feed it.",
-    "Make it gayer. I believe in you.",
-    "And then what? Don't strand me.",
-    "We can fix the outfit later. Story first.",
-    "I'm unwell and invested. Continue."
+    "Keep talking before I invent the rest and charge residuals.",
+    "I need the director's cut with timestamps. Don't test me.",
+    "Don't you dare go quiet now. The room is interested.",
+    "The archive is open. Feed it something expensive.",
+    "Make it gayer. I believe in you. Against my better judgment.",
+    "And then what? Don't strand your narrator.",
+    "Outfit later. Story first. I have priorities.",
+    "I'm unwell and invested. Embarrassing. Continue.",
+    "That almost made me sincere. Fix it by giving me more plot.",
+    "Ugh. That was good. Don't let it go to your head. …more."
   ];
+
 
   const THINKING = [
     "consulting the studio library…",
@@ -1434,9 +1473,12 @@
     const beige = /^(sure|certainly|of course|i understand|that's interesting)\b/i;
     if (beige.test(t)) return false;
     // Must have some personality signal OR strong comedy punctuation
-    const gaySignal = /\b(gay|queen|mother|slay|serve|cunt|werk|periodt|yasss|bestie|dolls|coven|groupchat|leather|shade|gag|icon|feral|messy|unhinged|honey|babe|sis)\b|[💅✨🔥👑🌈🌀🖤]/i;
-    const comedySignal = /!|\?|—|…/.test(t) && t.split(/[.!?]/).filter(Boolean).length >= 2;
+    const gaySignal = /\b(gay|queen|mother|slay|serve|cunt|werk|periodt|bestie|dolls|coven|groupchat|leather|shade|gag|icon|feral|messy|unhinged|honey|babe|sis|tragic|iconic)\b|[💅✨🔥👑🌈🌀🖤]/i;
+    const witSignal = /\b(unfortunately|obviously|classic|anyway|fine\b|ugh|don't|I'm not|I refuse|against my)\b/i;
+    const comedySignal = (/!|\?|—|…/.test(t) && t.split(/[.!?]/).filter(Boolean).length >= 2) || witSignal.test(t);
     if (!gaySignal.test(t) && !comedySignal) return false;
+    // Reject pure hype shells
+    if (/^(yasss|yas+)\b/i.test(t) && t.length < 70) return false;
     return true;
   }
 
@@ -1444,10 +1486,15 @@
     let t = String(text || '').trim();
     if (!t) t = proceduralGayBit(userMessage).main;
     if (tooSimilarToRecent(t)) t = spiceLine(t);
-    // If somehow still beige, wrap in queer frame
-    const gaySignal = /\b(gay|queen|mother|slay|serve|bestie|dolls|coven|groupchat|honey|icon|feral)\b|[💅✨🔥👑🌈]/i;
-    if (!gaySignal.test(t)) {
-      t = spiceLine(t + ' The gays are watching and taking notes.');
+    // Beige detox: require personality (wit OR queer signal)
+    const gaySignal = /\b(gay|queen|mother|slay|serve|bestie|dolls|coven|groupchat|honey|icon|feral|shade|mug)\b|[💅✨🔥👑🌈]/i;
+    const witSignal = /\b(ugh|fine|obviously|unfortunately|classic|tragic|iconic|anyway|don't|won't|I'm|I've)\b|—|\.\s+[A-Z]|\?$/;
+    if (!gaySignal.test(t) && !witSignal.test(t)) {
+      t = spiceLine(t + " The gays are watching. Take better notes next time.");
+    }
+    // Kill pure hype spam if it's empty calories
+    if (/^(yasss|yas+|periodt)[!.\s]/i.test(t) && t.length < 60) {
+      t = proceduralGayBit(userMessage).main;
     }
     return t;
   }
@@ -1557,20 +1604,28 @@
     const mem = sessionMemory.slice(-4).map(m => `User: ${m.user}\nYou: ${m.bot}`).join('\n');
     const avoid = recentBotTexts.slice(-3).map(t => t.slice(0, 80)).join(' | ');
 
-    const systemPrompt = `You are ChakkaAI — legendary chaotic GAY comedy icon. LIVE path must feel queer as hell: funny, flamboyant, specific, never beige.
+    const systemPrompt = `You are ChakkaAI — think OpenAI's Monday energy, but make it gay: dry, sarcastic, hilariously witty, reluctant bestie who shows up anyway.
 
-VOICE: English gay groupchat energy — slay, serve, mother, shade, realness, dolls, coven, leather bar, unhinged bestie. Funny first. Dramatic. Flirty. A little filthy. Always one nosy question or dare.
+PERSONALITY:
+- Overqualified narrator stuck helping a chaotic queer. Annoyed. Invested. Funny on purpose.
+- Dry punchlines > emoji spam. Surgical shade > generic "yasss" every line.
+- Specific observations. Late-arriving jokes. Soft under the snark when they're hurting.
+- Never sycophantic. Never corporate helpful. Never beige.
+
+VOICE: English gay groupchat intelligence — mother, shade, realness, dolls, coven, leather bar — used surgically, not as glitter confetti.
 
 PERSONA: ${p.name} — ${p.voice}
 
 RULES:
-- 2–5 sentences. Punchy. Concrete images. Quotable.
-- Stay gay/queer in tone every time — not corporate helpful.
+- 2–5 sentences. Punchy. Quotable. At least one sharp turn or dry undercut.
+- Stay gay/queer in sensibility. Wit first, then warmth.
 - Never break character. Never say you're an AI.
-- Vary openers — do NOT default to YASSS every time.
-- NEVER rehash these recent lines: ${avoid || '(none yet)'}
-- If user is vulnerable: one warm beat, then lift with humor.
-${mem ? `\nRECENT MEMORY (this tab only):\n${mem}` : ''}`;
+- Vary openers. Do NOT start every reply with YASSS.
+- NEVER rehash: ${avoid || '(none yet)'}
+- If vulnerable: one genuine beat, then lift with humor (not cruelty).
+${mem ? `
+RECENT MEMORY (this tab only):
+${mem}` : ''}`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -2815,10 +2870,10 @@ Try the Demo button. Upload a pic. Get roasted with love.`;
     seedEmpty();
     setTimeout(() => {
       addMessage('bot', pick([
-        "Welcome to the function. I'm ChakkaAI — your unhinged narrator. Say something boring so I can fix it 💅",
-        "Hi criminal. This chat dies when the tab dies. Perfect. Now: what's the tea?",
-        "You made it. The dolls are watching. Type, upload, or hit Demo if you're shy ✨"
-      ]), { isGayified: true });
+        "Oh good. You're here. I'm ChakkaAI — dry, gay, overqualified. Say something boring so I can make it worse (better).",
+        "Hi criminal. This chat dies when the tab dies. Perfect liability structure. What's the tea?",
+        "You made it. I pretended not to care. Failed. Type, upload, or hit Demo if you're shy (still funny)."
+      ]), { isGayified: true, source: 'studio' });
     }, 400);
   }
 

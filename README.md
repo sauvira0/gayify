@@ -1,6 +1,6 @@
 # 💅 gayify
 
-**Gay comedy chat with authored depth.** Type anything → multi-beat Studio bits (anti-repeat). Optional Live AI when it clears a quality gate. **Category Is** is the killer game (3 rounds, panel, scoreboard). Private per-tab. Close = gone forever.
+**Gay comedy chat with Monday-grade wit.** Dry, sarcastic, hilarious on purpose — ChakkaAI is your overqualified reluctant bestie (think OpenAI’s Monday, but extremely gay). Authored Studio bits + anti-repeat. Optional Live AI when it earns it. **Category Is** killer game. Private per-tab. Close = gone forever.
 
 **🌐 Live:** [https://sauvira0.github.io/gayify/](https://sauvira0.github.io/gayify/)
 

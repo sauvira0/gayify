@@ -1,6 +1,6 @@
 # gayify / ChakkaAI — Current App State
 
-**Snapshot:** Comedy depth upgrade — authored Studio bit library (~95 multi-beat bits), session anti-repeat, honest LIVE vs STUDIO labels, killer multi-round Category Is with panel + scoreboard.
+**Snapshot:** Monday-grade dry wit + extremely gay — ChakkaAI as overqualified reluctant bestie (OpenAI Monday energy: sarcastic, specific, invested). ~139 witty Studio bits, aggressive anti-repeat, LIVE quality gates prefer wit over yasss-spam.
 
 **Live:** https://sauvira0.github.io/gayify/  
 **Repo:** https://github.com/sauvira0/gayify
