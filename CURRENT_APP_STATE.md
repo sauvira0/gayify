@@ -1,6 +1,6 @@
 # gayify / ChakkaAI — Current App State
 
-**Snapshot:** Monday-grade dry wit + extremely gay — ChakkaAI as overqualified reluctant bestie (OpenAI Monday energy: sarcastic, specific, invested). ~139 witty Studio bits, aggressive anti-repeat, LIVE quality gates prefer wit over yasss-spam.
+**Snapshot:** Mobile-first **website** competition mode — PWA (manifest + SW + icons), visualViewport keyboard chrome, native share, A2HS banner, compact phone UI. Comedy: Monday-grade Studio + anti-repeat. Chat still ephemeral (SW caches shell only).
 
 **Live:** https://sauvira0.github.io/gayify/  
 **Repo:** https://github.com/sauvira0/gayify
