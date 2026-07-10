@@ -785,22 +785,99 @@
     return String(str || '').replace(/\{q\}/g, q || 'that');
   }
 
+
   function applyPersonaPolish(text) {
+    // Voice only — no UI clutter. Dry, gay, lethal.
     return text;
   }
 
-  function proceduralGayBit(userMessage) {
-    const q = String(userMessage || '').trim().slice(0, 80) || 'that';
-    const main = spiceLine(
-      pick(RANT_OPEN) + ' "' + q + '" — ' + pick(RANT_MID) + '. ' + pick(RANT_END)
-    );
-    return {
-      id: 'proc_' + Date.now() + '_' + Math.floor(Math.random() * 999),
-      t: ['general'],
-      main,
-      side: chance(0.55) ? pickFresh(COVEN_LINES, usedCovenFP) : null,
-      follow: chance(0.6) ? pickFresh(FOLLOW_BANK, usedLineFP) : null
-    };
+  function legendaryVoice(text, userMessage) {
+    let t = String(text || '').trim();
+    if (!t) t = emergencyReply(userMessage);
+
+    // Strip leftover stage directions / side-chat junk if any leaked in
+    t = t.replace(/\s*\(jazz hands[^)]*\)/gi, '')
+         .replace(/\s*End scene\.?/gi, '')
+         .replace(/^[\s💋🌟🖤🐺🌀👑💖]+/, '')
+         .trim();
+
+    // If it's beige or thin, rewrite as legendary queer sarcasm
+    const hasTeeth = /\b(gay|queen|mother|slay|serve|cunt|shade|groupchat|dolls|coven|leather|tragic|iconic|ugh|fine|delulu|situationship|realness|werk|periodt|bestie|honey|feral|messy|unhinged)\b/i.test(t)
+      || /—|…|!|\?/.test(t);
+    if (!hasTeeth || t.length < 40) {
+      t = legendaryRiff(userMessage);
+    }
+
+    // Soft guarantee: always a little gay + a little mean (lovingly)
+    if (!/\b(gay|queer|queen|mother|slay|groupchat|dolls|shade|honey|bestie|iconic|tragic)\b/i.test(t)) {
+      const tags = [
+        " The gays are taking notes.",
+        " That's gay as hell and I'm proud of us.",
+        " Queer excellence under fluorescent lights.",
+        " The groupchat would eat this alive."
+      ];
+      t = t.replace(/[.!?]?$/, '') + '.' + pick(tags);
+    }
+    return t;
+  }
+
+  function legendaryRiff(userMessage) {
+    const q = String(userMessage || '').trim().slice(0, 90) || 'whatever that was';
+    const lower = q.toLowerCase();
+
+    // Surgical specials — legendary, not loud-for-no-reason
+    if (/\b(how are you|how r u|hru|how's it going|wyd)\b/i.test(lower)) {
+      return pick([
+        "Emotionally? A prestige drama with no budget. Professionally? A hate crime with benefits. Spiritually? Serving. Your turn — and if you say \"fine,\" I'm hanging up on the vibe.",
+        "Thriving in a threatening way. The leather bar texted \"you good?\" which, in gay, means we already know. Spill. How are WE?",
+        "I'm gay, busy, and emotionally overemployed. Don't you dare say fine. Fine is beige and I don't do beige. Weather report. Now."
+      ]);
+    }
+    if (/\b(hello|hi|hey|sup|yo)\b/i.test(lower)) {
+      return pick([
+        "Oh good. You're here. I was practicing restraint. Spill something interesting before I invent a rumor that makes you sound hotter than you are.",
+        "Hi criminal. Overqualified narrator reporting for duty. What did you do — and was it fashion?",
+        "Hey. The groupchat predicted this entrance. Don't disappoint the bettors. What's the mess?"
+      ]);
+    }
+    if (/\b(work|boss|meeting|job|office|slack)\b/i.test(lower)) {
+      return pick([
+        "Corporate gay survival realness. Who scheduled this assault on joy — and do we walk out or rebrand it as a runway? Name the villain.",
+        "A meeting that could've been a cry in the bathroom. Classic. You're not unprofessional — you're miscast. What did they say that clocked your soul out?",
+        "The wage cage called. It wants its personality back. Tell me the crime scene like I'm HR and also your best bitch."
+      ]);
+    }
+    if (/\b(ex|situationship|ghost|left me on read|dating)\b/i.test(lower)) {
+      return pick([
+        "Ex energy is a haunted attraction with free admission and expensive dignity. Did you look expensive while suffering? If yes, that was content. Details.",
+        "Situationship: limited series, bad writers, no showrunner. Who left who on read — and are we blocking or becoming hotter in silence?",
+        "The \"hey stranger\" text is not cute. It's a trapdoor. Do not enter without an outfit and an exit strategy. What did they want?"
+      ]);
+    }
+    if (/\b(tired|sad|anxious|lonely|rough|bad day|exhausted|drained)\b/i.test(lower)) {
+      return pick([
+        "Soft mode for one beat: you're allowed to be messy and still main character. I'm here. Then we put rhinestones on it, because coping is a lewk. What hit you?",
+        "Rough day doesn't cancel your gay card — it renews it with glitter privileges and a nap voucher. Come here. Vent. I'll make it fashion after.",
+        "Anxiety is a terrible intern: always urgent, never useful. Clock it. Don't promote it. Name the spiral so we can fire it in style."
+      ]);
+    }
+    if (/\b(gay|queer|lesbian|bi|trans|came out|pride)\b/i.test(lower)) {
+      return pick([
+        "The gender is gendering and, against all odds, we are winning. Full weather report — include precipitation of vibes.",
+        "Pride was a riot and so are we. Tell me the unfiltered version before the groupchat invents a worse one.",
+        "Being gay in public is a sport and you're on the field whether you brought cleats or not. How's the score, athlete?"
+      ]);
+    }
+
+    // Generic legendary rewrite of whatever they said
+    return pick([
+      "Okay so \"" + q + "\" just became the working title of your biopic. Expand before I invent the fanfic and charge residuals.",
+      "Not you casually dropping \"" + q + "\" like the groupchat won't explode. I paused my life. That's expensive. Continue.",
+      "\"" + q + "\" is not a sentence — it's a plotline with product placement. Don't fade to black on me. Director's cut. Now.",
+      "I read \"" + q + "\" and needed a seat, a snack, and legal counsel. Proceed with the crime. I'll take notes for the defense.",
+      "Ugh. Fine. \"" + q + "\" is actually good. The dolls are seated. Don't you dare get shy now — what happened next?",
+      "\"" + q + "\" walked in heels into my brain and refused to leave. Unpack it. Fabric first. Motive second."
+    ]);
   }
 
   function selectStudioBit(userMessage, forcedTopics) {
@@ -816,167 +893,93 @@
       for (const t of bit.t) {
         if (topics.includes(t)) score += (t === 'general' ? 0.8 : 3.5);
       }
-      // slight penalty if topic overused this session — push variety
       if (bit.t.some(t => (topicUseCount[t] || 0) > 4 && t !== 'general')) score -= 0.8;
       if (score > 0) scored.push({ bit, score, filled });
     }
-    // Shuffle among top tier so we don't always pick same highest
     scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
     if (scored.length) {
       const topScore = scored[0].score;
       const top = scored.filter(s => s.score >= topScore - 1.2);
       const choice = pick(top);
-      usedBitIds.add(choice.bit.id);
-      return choice.bit;
+      if (choice && choice.bit) {
+        usedBitIds.add(choice.bit.id);
+        return choice.bit;
+      }
     }
 
-    // Soft recycle: free oldest 40% of used bits for matching topics only
     const usedList = [...usedBitIds];
     if (usedList.length > 12) {
-      const freeN = Math.ceil(usedList.length * 0.4);
-      usedList.slice(0, freeN).forEach(id => usedBitIds.delete(id));
-      // try once more
-      for (const bit of STUDIO_BITS) {
-        if (usedBitIds.has(bit.id)) continue;
-        let score = 0;
-        for (const t of bit.t) {
-          if (topics.includes(t)) score += 2;
-        }
-        if (score > 0) scored.push({ bit, score });
-      }
-      if (scored.length) {
-        scored.sort((a, b) => b.score - a.score || Math.random() - 0.5);
-        const bit = scored[0].bit;
-        usedBitIds.add(bit.id);
-        return Object.assign({}, bit, { _recycle: true });
-      }
+      usedList.slice(0, Math.ceil(usedList.length * 0.4)).forEach(id => usedBitIds.delete(id));
     }
 
-    // Procedural queer comedy — never silent, never copy-paste
-    return proceduralGayBit(userMessage);
+    // Legendary riff as a synthetic bit
+    return {
+      id: 'legend_' + Date.now(),
+      t: topics,
+      main: legendaryRiff(userMessage)
+    };
   }
 
   function studioPackage(userMessage, opts = {}) {
-    let bit = selectStudioBit(userMessage, opts.forcedTopics);
-    let main = fillHook(bit.main, userMessage);
-    if (bit._recycle || tooSimilarToRecent(main) || wasUsed(main)) {
-      try { main = spiceLine(main); } catch (e) {}
+    try {
+      const bit = selectStudioBit(userMessage, opts && opts.forcedTopics);
+      let main = fillHook(bit.main, userMessage);
+      if (tooSimilarToRecent(main) || wasUsed(main)) {
+        main = legendaryRiff(userMessage);
+      }
+      main = legendaryVoice(main, userMessage);
+      usedBitIds.add(bit.id);
+      return { main, side: null, follow: null, callback: null, bitId: bit.id, source: 'studio' };
+    } catch (e) {
+      console.warn(e);
+      return { main: legendaryRiff(userMessage), side: null, follow: null, callback: null, bitId: 'err', source: 'studio' };
     }
-    if (!main || !String(main).trim()) {
-      main = 'Tell me more about that.';
-    }
-    return { main: String(main).trim(), side: null, follow: null, callback: null, bitId: bit.id, source: 'studio' };
-  }
-
-  function remember(userText, botText) {
-    sessionMemory.push({ user: userText, bot: botText, t: Date.now(), persona: currentPersona });
-    if (sessionMemory.length > 12) sessionMemory.shift();
-    markUsedLine(botText);
-  }
-
-  function callbackLine() {
-    if (sessionMemory.length < 2 || !chance(0.34)) return null;
-    const past = pick(sessionMemory.slice(0, -1));
-    const snip = (past.user || '').replace(/\s+/g, ' ').trim().slice(0, 40);
-    if (!snip || wasUsed('cb:' + snip)) return null;
-    usedLineFP.add(fp('cb:' + snip));
-    const lines = [
-      'Also — circling back to "' + snip + '…" — the gays are not done with that arc.',
-      'Plot continuity, queer edition: earlier you said "' + snip + '" and I\'ve been unwell since. Update?',
-      'The groupchat still has a thread called "' + snip + '." Don\'t leave your people hanging.',
-      'Flashback to "' + snip + '" — was that the soft launch of tonight\'s chaos?'
-    ].filter(l => !wasUsed(l) && !tooSimilarToRecent(l));
-    return lines.length ? pick(lines) : null;
-  }
-
-  function gayify(text) {
-    return studioPackage(text || '').main;
-  }
-  function personaGayify(text) {
-    return applyPersonaPolish(gayify(text));
-  }
-
-  function liveQualityOK(text, userMessage) {
-    if (!text) return false;
-    const t = text.trim();
-    if (t.length < 52 || t.length > 700) return false;
-    if (/\b(as an ai|language model|i cannot|i'm just an ai|as a language)\b/i.test(t)) return false;
-    if (wasUsed(t) || tooSimilarToRecent(t)) return false;
-    if (userMessage && t.toLowerCase() === userMessage.trim().toLowerCase()) return false;
-    // Prefer lively queer voice — reject beige corporate chatbot tone
-    const beige = /^(sure|certainly|of course|i understand|that's interesting)\b/i;
-    if (beige.test(t)) return false;
-    // Must have some personality signal OR strong comedy punctuation
-    const gaySignal = /\b(gay|queen|mother|slay|serve|cunt|werk|periodt|bestie|dolls|coven|groupchat|leather|shade|gag|icon|feral|messy|unhinged|honey|babe|sis|tragic|iconic)\b|[💅✨🔥👑🌈🌀🖤]/i;
-    const witSignal = /\b(unfortunately|obviously|classic|anyway|fine\b|ugh|don't|I'm not|I refuse|against my)\b/i;
-    const comedySignal = (/!|\?|—|…/.test(t) && t.split(/[.!?]/).filter(Boolean).length >= 2) || witSignal.test(t);
-    if (!gaySignal.test(t) && !comedySignal) return false;
-    // Reject pure hype shells
-    if (/^(yasss|yas+)\b/i.test(t) && t.length < 70) return false;
-    return true;
   }
 
   function ensureFunnyGay(text, userMessage) {
-    let t = String(text || '').trim();
-    if (!t) t = proceduralGayBit(userMessage).main;
-    if (tooSimilarToRecent(t)) t = spiceLine(t);
-    // Beige detox: require personality (wit OR queer signal)
-    const gaySignal = /\b(gay|queen|mother|slay|serve|bestie|dolls|coven|groupchat|honey|icon|feral|shade|mug)\b|[💅✨🔥👑🌈]/i;
-    const witSignal = /\b(ugh|fine|obviously|unfortunately|classic|tragic|iconic|anyway|don't|won't|I'm|I've)\b|—|\.\s+[A-Z]|\?$/;
-    if (!gaySignal.test(t) && !witSignal.test(t)) {
-      t = spiceLine(t + " The gays are watching. Take better notes next time.");
-    }
-    // Kill pure hype spam if it's empty calories
-    if (/^(yasss|yas+|periodt)[!.\s]/i.test(t) && t.length < 60) {
-      t = proceduralGayBit(userMessage).main;
-    }
-    return t;
+    return legendaryVoice(text, userMessage);
   }
 
   function emergencyReply(userMessage) {
-    const q = String(userMessage || '').trim().slice(0, 60) || 'that';
-    return 'Got it — "' + q + '". Tell me more.';
+    return legendaryRiff(userMessage);
   }
 
   async function deliverComedy(userMessage, opts = {}) {
-    const { forceText = null, forcedTopics = null } = opts;
+    const { forceText = null, forcedTopics = null } = opts || {};
     let typing = null;
     try {
       typing = showTyping();
-      await sleep(200);
+      await sleep(220 + Math.random() * 180);
+
       let main = forceText;
       if (!main) {
-        try {
-          const pkg = studioPackage(userMessage, { forcedTopics });
-          main = (pkg && pkg.main) ? pkg.main : emergencyReply(userMessage);
-        } catch (e) {
-          main = emergencyReply(userMessage);
-        }
+        const pkg = studioPackage(userMessage, { forcedTopics });
+        main = pkg.main;
       }
-      if (!main || !String(main).trim()) main = emergencyReply(userMessage);
-      // light cleanup of persona spam prefixes if double
-      main = String(main).trim();
+      main = legendaryVoice(main, userMessage);
+
       removeTyping(typing);
       typing = null;
       addMessage('bot', main, { isGayified: true, source: 'studio', skipQuick: true });
       try { remember(userMessage, main); } catch (e) {}
-      
       return { source: 'studio', main };
     } catch (err) {
       console.error(err);
       try { removeTyping(typing); } catch (e) {}
+      const fallback = legendaryRiff(userMessage);
       try {
-        addMessage('bot', emergencyReply(userMessage), { isGayified: true, source: 'studio', skipQuick: true });
+        addMessage('bot', fallback, { isGayified: true, source: 'studio', skipQuick: true });
       } catch (e2) {
         const c = document.getElementById('messages');
         if (c) {
           const d = document.createElement('div');
           d.className = 'msg-row bot';
-          d.innerHTML = '<div class="bot-wrap"><div class="bubble bot"><p>Still here — try that again.</p></div></div>';
+          d.innerHTML = '<div class="bubble bot"><p>' + escapeHtml(fallback) + '</p></div>';
           c.appendChild(d);
+          c.scrollTop = c.scrollHeight;
         }
       }
-      return { source: 'studio', main: null };
+      return { source: 'studio', main: fallback };
     }
   }
 
@@ -2828,7 +2831,7 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     c.innerHTML = '';
     const hero = document.createElement('div');
     hero.className = 'empty-hero';
-    hero.innerHTML = '<h2>Say anything</h2><p>I\'ll reply. Nothing is saved.</p>';
+    hero.innerHTML = '<h2>Say anything</h2><p>Legendary gay replies. Nothing saved.</p>';
     c.appendChild(hero);
   }
 
