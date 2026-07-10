@@ -1583,7 +1583,7 @@
 
     <!-- Composer -->
     <div class="composer">
-      <div class="status-line" id="status-line">Just type — or pick Roast / Demo above</div>
+      <div class="status-line" id="status-line">Type a message and hit send ↑</div>
       <div class="composer-row">
         <button type="button" class="upload-btn" onclick="triggerImageUpload()" title="Upload a pic" aria-label="Upload photo">
           <i class="fa-solid fa-camera"></i>
@@ -1676,8 +1676,8 @@
   // Live AI optional; Studio is authored premium path
   // Default may flip to Studio-only on slow networks (see preferStudioOnSlowNetwork)
   let openrouterApiKey = "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";
-  let llmEnabled = true;
-  let studioOnlyReason = null; // session note when we auto-disable Live
+  let llmEnabled = false; // default OFF: first replies always instant Studio
+  let studioOnlyReason = "default"; // session note when we auto-disable Live
   let soundEnabled = true;
   let cinemaMode = false;
   let msgDomCount = 0;
@@ -1701,7 +1701,7 @@
 
 
   const $ = (id) => document.getElementById(id);
-  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const pick = (arr) => (!arr || !arr.length) ? null : arr[Math.floor(Math.random() * arr.length)];
   const chance = (p) => Math.random() < p;
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const haptic = () => { try { navigator.vibrate && navigator.vibrate(12); } catch(e){} };
@@ -2283,7 +2283,7 @@
     if (follow && tooSimilarToRecent(follow)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
 
     // Extra queer flair beat sometimes (not the same emoji spam)
-    if (chance(0.22) && !/[\u{1F300}-\u{1FAFF}💅✨🔥👑🌈🌀🖤🐺]/u.test(main.slice(-4))) {
+    if (chance(0.22) && !/[💅✨🔥👑🌈🌀🖤🐺💖🌟]/.test(main.slice(-4))) {
       main = main + ' ' + pick(QUEER_FLAIR);
     }
 
@@ -2356,79 +2356,112 @@
     return t;
   }
 
+  function emergencyReply(userMessage) {
+    const q = String(userMessage || 'that').trim().slice(0, 80) || 'that';
+    const lines = [
+      "I'm right here. You said \"" + q + "\" — and the groupchat is already typing. Tell me more.",
+      "Got it. \"" + q + "\" is a whole plot. Keep going — I'm listening and slightly unhinged about it.",
+      "Okay. \"" + q + "\". Not boring. Hit me with the next detail.",
+      "Heard. \"" + q + "\" just entered the chat. What's the rest of the story?"
+    ];
+    return lines[Math.floor(Math.random() * lines.length)];
+  }
+
   async function deliverComedy(userMessage, opts = {}) {
     const { forceText = null, skipCoven = false, forceStudio = false, forcedTopics = null } = opts;
-    const typing = showTyping();
-    await sleep(260 + Math.random() * 400);
+    let typing = null;
+    try {
+      typing = showTyping();
+      await sleep(180 + Math.random() * 220);
 
-    let main = forceText;
-    let source = 'studio';
-    let side = null;
-    let follow = null;
-    let callback = null;
+      let main = forceText;
+      let source = 'studio';
+      let side = null;
+      let follow = null;
 
-    if (!main && !forceStudio && openrouterApiKey && llmEnabled && isOnline()) {
-      showThinking();
-      const llm = await getOpenrouterResponse(userMessage, currentPersona);
-      hideThinking();
-      if (liveQualityOK(llm, userMessage)) {
-        main = ensureFunnyGay(llm.trim(), userMessage);
-        source = 'live';
-        if (!skipCoven && chance(0.55)) side = pickFresh(COVEN_LINES, usedCovenFP);
-        if (chance(0.5)) follow = pickFresh(FOLLOW_BANK, usedLineFP);
-        callback = callbackLine();
+      // FIRST IMPRESSIONS: Studio first, always. Never make the user wait on Live AI.
+      // Live AI is optional spice only if already enabled AND forceStudio is false —
+      // but we still prefer Studio for reliability. Live only if forceText not set and
+      // user explicitly enabled Live AND we try with short timeout without blocking studio.
+      // Policy: always Studio for the main reply. Instant. Funny. Guaranteed.
+      if (!main) {
+        try {
+          const pkg = studioPackage(userMessage, { forcedTopics });
+          main = ensureFunnyGay(pkg.main || emergencyReply(userMessage), userMessage);
+          side = skipCoven ? null : pkg.side;
+          follow = pkg.follow;
+          source = 'studio';
+          if (!side && !skipCoven && chance(0.35)) {
+            try { side = pickFresh(COVEN_LINES, usedCovenFP); } catch (e) {}
+          }
+        } catch (e) {
+          console.warn('studioPackage failed', e);
+          main = emergencyReply(userMessage);
+          source = 'studio';
+        }
+      } else {
+        try { main = ensureFunnyGay(main, userMessage); } catch (e) { main = String(main); }
       }
-    }
 
-    if (!main) {
-      const pkg = studioPackage(userMessage, { forcedTopics });
-      main = ensureFunnyGay(pkg.main, userMessage);
-      side = skipCoven ? null : pkg.side;
-      follow = pkg.follow;
-      callback = pkg.callback;
-      source = 'studio';
-      if (!side && !skipCoven && chance(0.48)) side = pickFresh(COVEN_LINES, usedCovenFP);
-    } else {
-      main = ensureFunnyGay(main, userMessage);
-    }
+      if (!main || !String(main).trim()) main = emergencyReply(userMessage);
 
-    // Final anti-repeat wall
-    if (tooSimilarToRecent(main)) {
-      main = ensureFunnyGay(proceduralGayBit(userMessage).main, userMessage);
-      source = 'studio';
-    }
+      removeTyping(typing);
+      typing = null;
+      addMessage('bot', main, { isGayified: true, fromLLM: source === 'live', source: 'studio' });
+      try { remember(userMessage, main); } catch (e) {}
+      try { playSlayChime(0.3); } catch (e) {}
 
-    removeTyping(typing);
-    addMessage('bot', main, { isGayified: true, fromLLM: source === 'live', source });
-    remember(userMessage, main);
-    playSlayChime(0.3);
-
-    if (side && !wasUsed(side)) {
-      await sleep(500 + Math.random() * 480);
-      addMessage('side', side, { side: true });
-      markUsedLine(side);
-    }
-
-    // Prefer unused follow; never repeat follow text
-    if (follow && !wasUsed(follow) && !tooSimilarToRecent(follow)) {
-      await sleep(650 + Math.random() * 420);
-      addMessage('bot', follow, { isGayified: true, source: 'studio' });
-      markUsedLine(follow);
-    } else if (callback && !tooSimilarToRecent(callback)) {
-      await sleep(700 + Math.random() * 380);
-      addMessage('bot', callback, { isGayified: true, source: 'studio' });
-      markUsedLine(callback);
-    } else if (chance(0.35)) {
-      const extra = pickFresh(FOLLOW_BANK, usedLineFP);
-      if (extra && !tooSimilarToRecent(extra)) {
-        await sleep(700);
-        addMessage('bot', extra, { isGayified: true, source: 'studio' });
-        markUsedLine(extra);
+      // Optional: if Live AI is ON, fetch in background and post a second spicy take (never blocks first reply)
+      if (!forceStudio && !forceText && openrouterApiKey && llmEnabled && isOnline()) {
+        getOpenrouterResponse(userMessage, currentPersona).then(llm => {
+          if (!llm || !liveQualityOK(llm, userMessage)) return;
+          try {
+            const liveMain = ensureFunnyGay(llm.trim(), userMessage);
+            if (liveMain && !tooSimilarToRecent(liveMain)) {
+              addMessage('bot', liveMain, { isGayified: true, fromLLM: true, source: 'live', skipQuick: true });
+              remember(userMessage, liveMain);
+            }
+          } catch (e) {}
+        }).catch(() => {});
       }
-    }
 
-    if (chance(0.1)) triggerConfetti(24);
-    return { source, main };
+      if (side) {
+        try {
+          await sleep(400);
+          if (side && !wasUsed(side)) {
+            addMessage('side', side, { side: true });
+            markUsedLine(side);
+          }
+        } catch (e) {}
+      }
+
+      if (follow && !wasUsed(follow) && !tooSimilarToRecent(follow)) {
+        try {
+          await sleep(500);
+          addMessage('bot', follow, { isGayified: true, source: 'studio', skipQuick: true });
+          markUsedLine(follow);
+        } catch (e) {}
+      }
+
+      return { source: 'studio', main };
+    } catch (err) {
+      console.error('deliverComedy fatal', err);
+      try { if (typing) removeTyping(typing); } catch (e) {}
+      try {
+        const fallback = emergencyReply(userMessage);
+        addMessage('bot', fallback, { isGayified: true, source: 'studio', skipQuick: true });
+      } catch (e2) {
+        const c = document.getElementById('messages');
+        if (c) {
+          const d = document.createElement('div');
+          d.className = 'msg-row bot';
+          d.innerHTML = '<div class="bot-wrap"><div class="bubble bot"><p>I\'m here. Try sending that again — glitch on my side.</p></div></div>';
+          c.appendChild(d);
+          c.scrollTop = c.scrollHeight;
+        }
+      }
+      return { source: 'studio', main: null };
+    }
   }
 
 
@@ -2764,9 +2797,10 @@ ${mem}` : ''}`;
 
     const {
       image = null, gayifiedImage = null, captions = null,
-      isGayified = false, fromLLM = false, source = null, side = false,
+      isGayified = false, fromLLM = false, side = false,
       skipQuick = false
     } = options;
+    let source = options.source || null;
     if (!source) source = fromLLM ? 'live' : (role === 'bot' ? 'studio' : null);
 
     const row = document.createElement('div');
@@ -2898,13 +2932,15 @@ ${mem}` : ''}`;
   }
 
   function showTyping() {
-    const container = $('messages');
+    const container = document.getElementById('messages');
+    if (!container) return null;
     const el = document.createElement('div');
     el.id = 'typing-indicator';
     el.className = 'msg-row bot';
+    const em = (typeof persona === 'function' && persona()) ? persona().emoji : '👑';
     el.innerHTML = `
       <div class="bot-wrap">
-        <div class="avatar">${persona().emoji}</div>
+        <div class="avatar">${em}</div>
         <div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>
       </div>`;
     container.appendChild(el);
@@ -2912,9 +2948,11 @@ ${mem}` : ''}`;
     return el;
   }
   function removeTyping(el) {
-    if (el && el.parentNode) el.parentNode.removeChild(el);
-    const t = $('typing-indicator');
-    if (t) t.remove();
+    try {
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+      const t = document.getElementById('typing-indicator');
+      if (t) t.remove();
+    } catch (e) {}
   }
   function showThinking() {
     const t = $('typing-indicator');
@@ -4203,64 +4241,85 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   }
 
   async function sendMessage() {
-    const input = $('message-input');
-    let value = input.value.trim();
-    if (!value || isBusy) return;
-
-    const cmd = value.toLowerCase();
-    if (cmd.startsWith('/')) {
-      input.value = '';
-      haptic();
-      if (cmd === '/help' || cmd === '/?') { showHelpSheet(); return; }
-      if (cmd === '/roast') { runGame('roast'); return; }
-      if (cmd === '/ball' || cmd === '/category' || cmd === '/cat') { startBallroom(); return; }
-      if (cmd === '/today' || cmd === '/cotd') { playCategoryOfDay(); return; }
-      if (cmd === '/tea') { runGame('tea'); return; }
-      if (cmd === '/go' || cmd === '/gooff') { runGame('gooff'); return; }
-      if (cmd === '/demo') { runCinematicDemo(); return; }
-      if (cmd === '/studio') { forceStudioReply(); return; }
-      if (cmd === '/share') { shareWithFriends(); return; }
-      if (cmd === '/burn') { burnSession(); return; }
-      if (cmd === '/undo') { undoLastTurn(); return; }
-      if (cmd === '/cinema') { toggleCinemaMode(); return; }
-      if (cmd === '/compliment') { runGame('compliment'); return; }
-      if (cmd === '/twist') { runGame('twist'); return; }
-      showToast('Unknown command — try /help');
-      return;
-    }
-
-    isBusy = true;
-    input.value = '';
-    addMessage('user', value);
-    playSendSound();
-    haptic();
-
     try {
-      if (ballroom && ballroom.phase === 'serve') {
-        await judgeBallroomServe(value);
+      const input = document.getElementById('message-input');
+      if (!input) return;
+      let value = (input.value || '').trim();
+      if (!value) return;
+      if (isBusy) {
+        // Don't drop the message — queue isn't available; show feedback
+        showToast('One sec — finishing the last bit…');
         return;
       }
-      if (gameMode === 'roast') {
-        gameMode = null;
-        await deliverComedy(value, { forceStudio: true, forcedTopics: ['roast', ...detectTopics(value)] });
+
+      const cmd = value.toLowerCase();
+      if (cmd.startsWith('/')) {
+        input.value = '';
+        haptic();
+        try {
+          if (cmd === '/help' || cmd === '/?') { showHelpSheet(); return; }
+          if (cmd === '/roast') { runGame('roast'); return; }
+          if (cmd === '/ball' || cmd === '/category' || cmd === '/cat') { startBallroom(); return; }
+          if (cmd === '/today' || cmd === '/cotd') { playCategoryOfDay(); return; }
+          if (cmd === '/tea') { runGame('tea'); return; }
+          if (cmd === '/go' || cmd === '/gooff') { runGame('gooff'); return; }
+          if (cmd === '/demo') { runCinematicDemo(); return; }
+          if (cmd === '/studio') { forceStudioReply(); return; }
+          if (cmd === '/share') { shareWithFriends(); return; }
+          if (cmd === '/burn') { burnSession(); return; }
+          if (cmd === '/undo') { undoLastTurn(); return; }
+          if (cmd === '/cinema') { toggleCinemaMode(); return; }
+          if (cmd === '/compliment') { runGame('compliment'); return; }
+          if (cmd === '/twist') { runGame('twist'); return; }
+          showToast('Unknown command — try /help');
+        } catch (e) { showToast('Command failed — just type normally'); }
         return;
       }
-      if (gameMode === 'compliment') {
-        gameMode = null;
-        await deliverComedy('Compliment me sincerely but still witty based on: ' + value, { forceStudio: true });
+
+      isBusy = true;
+      input.value = '';
+      try {
+        addMessage('user', value);
+      } catch (e) {
+        console.error('add user failed', e);
+        // restore input if user bubble failed
+        input.value = value;
+        isBusy = false;
+        showToast('Could not send — try again');
         return;
       }
-      if (gameMode === 'twist') {
-        gameMode = null;
-        await deliverComedy('Give a wild plot twist for: ' + value, { forceStudio: true });
-        return;
+      try { playSendSound(); } catch (e) {}
+      try { haptic(); } catch (e) {}
+
+      try {
+        if (ballroom && ballroom.phase === 'serve') {
+          await judgeBallroomServe(value);
+        } else if (gameMode === 'roast') {
+          gameMode = null;
+          await deliverComedy(value, { forceStudio: true, forcedTopics: ['roast'] });
+        } else if (gameMode === 'compliment') {
+          gameMode = null;
+          await deliverComedy('Compliment me: ' + value, { forceStudio: true });
+        } else if (gameMode === 'twist') {
+          gameMode = null;
+          await deliverComedy('Plot twist for: ' + value, { forceStudio: true });
+        } else if (gameMode === 'hotseat' || gameMode === 'tea') {
+          gameMode = null;
+          await deliverComedy(value, { forceStudio: true });
+        } else {
+          await deliverComedy(value, { forceStudio: true }); // always studio path for reliability
+        }
+      } catch (e) {
+        console.error('reply failed', e);
+        try {
+          addMessage('bot', emergencyReply(value), { isGayified: true, source: 'studio', skipQuick: true });
+        } catch (e2) {
+          showToast('Reply glitched — tap send again');
+        }
       }
-      if (gameMode === 'hotseat' || gameMode === 'tea') {
-        gameMode = null;
-        await deliverComedy(value, { forceStudio: chance(0.55) });
-        return;
-      }
-      await deliverComedy(value);
+    } catch (e) {
+      console.error('sendMessage fatal', e);
+      showToast('Something broke — refresh if it keeps happening');
     } finally {
       isBusy = false;
     }
@@ -4387,34 +4446,41 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   }
 
   function seedEmpty(withHero = true) {
-    const c = $('messages');
-    if (!withHero) return;
-    const cat = (typeof categoryOfDay === 'function') ? categoryOfDay() : { title: 'Category Is' };
+    const c = document.getElementById('messages');
+    if (!c || !withHero) return;
     const hero = document.createElement('div');
     hero.className = 'empty-hero';
     hero.innerHTML = `
-      <div style="font-size:42px;line-height:1;filter:drop-shadow(0 8px 24px rgba(255,79,163,0.45));">👑</div>
-      <h2>Say something. Get roasted with love.</h2>
-      <p>Private to this tab · nothing is saved · close = gone</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:18px;">
-        <button type="button" class="qchip" onclick="playCategoryOfDay()">📅 ${escapeHtml(cat.title)}</button>
+      <div style="font-size:40px;line-height:1;">👑</div>
+      <h2>Type anything below</h2>
+      <p>You'll get a funny reply instantly.<br>Nothing is saved. Close the tab = gone.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;">
+        <button type="button" class="qchip" onclick="usePrompt('how are you')">how are you</button>
+        <button type="button" class="qchip" onclick="usePrompt('I had a rough day')">rough day</button>
         <button type="button" class="qchip" onclick="runGame('roast')">🔥 Roast me</button>
-        <button type="button" class="qchip" onclick="runCinematicDemo()">▶ Watch demo</button>
-      </div>
-      <p style="margin-top:16px;font-size:12px;opacity:0.45;">Or just type in the box below</p>`;
+      </div>`;
     c.appendChild(hero);
   }
 
   function addWelcome() {
     seedEmpty();
     setTimeout(() => {
-      const cotd = typeof categoryOfDay === 'function' ? categoryOfDay() : { title: 'Category Is' };
-      addMessage('bot', pick([
-        "I'm ChakkaAI. Type anything — I'll make it funnier and gayer. Or tap Roast / Demo above. Today's category: " + cotd.title + ".",
-        "Hi. This chat dies when the tab dies (on purpose). What's the tea?",
-        "Start simple: type how your day went. Or hit Demo if you want a free sample."
-      ]), { isGayified: true, source: 'studio' });
-    }, 400);
+      try {
+        addMessage('bot',
+          "Hey. I'm ChakkaAI — type anything and I'll reply. Try: how are you",
+          { isGayified: true, source: 'studio', skipQuick: true }
+        );
+      } catch (e) {
+        console.error(e);
+      }
+      const input = document.getElementById('message-input');
+      if (input) {
+        // Don't auto-open mobile keyboard; desktop OK
+        try {
+          if (!window.matchMedia('(pointer: coarse)').matches) input.focus();
+        } catch (e) {}
+      }
+    }, 200);
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -4495,16 +4561,8 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
     }, 18000);
 
     setTimeout(() => {
-      if (studioOnlyReason === 'slow') {
-        showToast("Slow network → Studio-only (hilarious, instant). Tap LIVE to force AI.");
-      } else if (studioOnlyReason === 'offline') {
-        showToast("Offline → pure Studio comedy 💅");
-      } else if (openrouterApiKey && llmEnabled) {
-        showToast("Live AI ready — Studio is always on 🤖");
-      } else if (!llmEnabled) {
-        showToast("Studio comedy on — tap LIVE for AI");
-      }
-    }, 1400);
+      showToast("You're in — type anything for a reply 💅");
+    }, 600);
 
     // Mobile: don't force-focus (opens keyboard too early). Desktop: focus.
     const coarse = window.matchMedia('(pointer: coarse)').matches;
@@ -4521,11 +4579,31 @@ Demo button. Category Is. Upload a pic. Get roasted with love.`;
   fillA2HSSteps();
   preferStudioOnSlowNetwork(); // early — icon reflects on first paint after init
 
-  // Splash → straight into chat (no Add to Home Screen step)
-  $('splash-enter').addEventListener('click', () => {
-    haptic();
-    enterAppFromSplash();
-  });
+  // Expose for inline onclick (mobile Safari safety)
+  window.sendMessage = sendMessage;
+  window.usePrompt = usePrompt;
+  window.changePersona = changePersona;
+  window.startBallroom = startBallroom;
+  window.playCategoryOfDay = playCategoryOfDay;
+  window.runGame = runGame;
+  window.runCinematicDemo = runCinematicDemo;
+  window.showMoreSheet = showMoreSheet;
+  window.showPlaySheet = showPlaySheet;
+  window.showHelpSheet = showHelpSheet;
+  window.showPrivacySheet = showPrivacySheet;
+  window.showSlayRecap = showSlayRecap;
+  window.toggleLLM = toggleLLM;
+  window.triggerImageUpload = triggerImageUpload;
+
+  // Splash → straight into chat
+  const splashBtn = document.getElementById('splash-enter');
+  if (splashBtn) {
+    splashBtn.addEventListener('click', () => {
+      try { haptic(); } catch (e) {}
+      enterAppFromSplash();
+    });
+  }
+
   </script>
 </body>
 </html>
